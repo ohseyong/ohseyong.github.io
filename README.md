@@ -1,1 +1,0 @@
-# seoh.github.io
