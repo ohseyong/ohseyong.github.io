@@ -17,7 +17,7 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 
 # Site Settings
 locale                   : "ko-KR"
-title                    : "stydy log"
+title                    : "study log"
 title_separator          : "-"
 subtitle                 : "00110100 00110010" # site tagline that appears below site title in masthead
 name                     : "seoh"
@@ -102,10 +102,10 @@ author:
   links:
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
-      # url: "mailto:your.name@email.com"
+      url: "mailto:seiyong@me.com"
     - label: "Website"
       icon: "fas fa-fw fa-link"
-      # url: "https://ohseyong.github.com"
+      url: "https://ohseyong.github.com"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
       # url: "https://twitter.com/"
