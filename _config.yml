@@ -96,9 +96,9 @@ analytics:
 author:
   name             : "seoh"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "I am an **amazing** person."
-  location         : "Somewhere"
-  email            :
+  bio              : "42 born2code cadet"
+  # location         : "Somewhere"
+  email            : "seiyong@me.com"
   links:
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
