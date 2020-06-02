@@ -19,7 +19,7 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 locale                   : "ko-KR"
 title                    : "study log"
 title_separator          : "-"
-subtitle                 : "00110100 00110010" # site tagline that appears below site title in masthead
+subtitle                 : "삽질했던 기록들..." # site tagline that appears below site title in masthead
 name                     : "seoh"
 description              : "42 born2code cadet"
 url                      : "https://ohseyong.github.io"
@@ -33,7 +33,7 @@ words_per_minute         : 200
 comments:
   provider               : "disqus" # false (default), "disqus", "discourse", "facebook", "staticman", "staticman_v2", "utterances", "custom"
   disqus:
-    shortname            : # https://help.disqus.com/customer/portal/articles/466208-what-s-a-shortname-
+    shortname            : "seohblog" # https://help.disqus.com/customer/portal/articles/466208-what-s-a-shortname-
   discourse:
     server               : # https://meta.discourse.org/t/embedding-discourse-comments-via-javascript/31963 , e.g.: meta.discourse.org
   facebook:
