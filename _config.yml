@@ -98,7 +98,7 @@ analytics:
 author:
   name             : "seoh"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "42 born2code cadet<br /><br />개발에 막 입문해서 모르는 내용이 많습니다. 언제든 지적해주시면 감사히 배울게요!"
+  bio              : "42 born2code cadet<br />잘못된 내용은 언제든 지적해주시면 감사히 배우겠습니다"
   location         : "Republic of Korea"
   email            : "seiyong@me.com"
   links:
