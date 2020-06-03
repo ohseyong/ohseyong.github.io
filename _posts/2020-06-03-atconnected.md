@@ -1,7 +1,7 @@
 ---
 title: "제목제목제목제목 이미지테스트"
 date: 2020-06-02 19:26:28 +0900
-categories: 42
+categories: forty_two
 tags: 42 동료학습
 ---
 안녕하세요, 42 SEOUL 사무국입니다.
