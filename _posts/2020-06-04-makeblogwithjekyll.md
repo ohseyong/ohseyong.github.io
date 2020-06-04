@@ -3,6 +3,9 @@ title: "Github pages와 Jekyll로 10분만에 개발자 블로그 만들기"
 date: 2020-06-04 17:00:00 +0900
 categories: blog
 tags: jekyll github blog howto
+
+toc: true  
+toc_sticky: true 
 ---
 
 ### 개발 공부 목적의 블로그, 뭘로 만들지?
