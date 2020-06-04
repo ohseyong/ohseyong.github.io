@@ -1,5 +1,5 @@
 ---
-title: "Github pages와 Jekyll로 10분만에 개발자 블로그 만들기"
+title: "Github pages와 Jekyll로 10분만에 블로그 만들기"
 date: 2020-06-04 17:00:00 +0900
 categories: blog
 tags: jekyll github blog howto
