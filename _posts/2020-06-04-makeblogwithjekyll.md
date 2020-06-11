@@ -1,5 +1,5 @@
 ---
-title: "Github pages와 Jekyll remote로 10분만에 블로그 만들기"
+title: "GitHub Pages와 Jekyll로 10분만에 블로그 만들기"
 # excerpt: "정말 10분이면 만들 수 있다"
 date: 2020-06-04 17:00:00 +0900
 categories: blog
