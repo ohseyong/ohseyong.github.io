@@ -82,6 +82,14 @@ layout: default
     {% endif %}
   </article>
 
+  <script src="https://utteranc.es/client.js"
+  repo="ohseyong/ohseyong.github.io"
+  issue-term="pathname"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+ </script>
+
   {% comment %}<!-- only show related on a post page when `related: true` -->{% endcomment %}
   {% if page.id and page.related and site.related_posts.size > 0 %}
     <div class="page__related">
