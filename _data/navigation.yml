@@ -1,7 +1,7 @@
 main:
-  - title: "Categories"
+  - title: "카테고리"
     url: /categories/
-  - title: "Tags"
+  - title: "태그"
     url: /tags/
 #  - title: "About"
 #    url: /about/
