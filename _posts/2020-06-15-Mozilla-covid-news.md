@@ -3,7 +3,7 @@ title: "[번역]Mozilla, 첫 COVID-19 솔루션 기금 수령자 발표"
 # excerpt: "정말 10분이면 만들 수 있다"
 date: 2020-06-15 00:00:00 +0900
 categories: news
-tags: Mozilla, Firefox, OpenSource, Covid-19
+tags: Mozilla, Firefox, OpenSource
 teaser: 
 
 toc: true  
