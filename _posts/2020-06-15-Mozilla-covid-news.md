@@ -6,8 +6,7 @@ categories: news
 tags: Mozilla, Firefox, OpenSource
 teaser: 
 
-toc: true  
-toc_sticky: true 
+toc: false
 ---
   * 이 글은 <a href="http://www.mozilla.or.kr/community/blog/1611">Mozilla 한국 커뮤니티에 게시</a>되었습니다.
   * 제가 Mozilla 한국 소식 블로그 운영에 글 작성자로 참여하게 되었습니다. 이에 해당 블로그에 게시한 번역 글을 제 블로그에도 업로드합니다.
