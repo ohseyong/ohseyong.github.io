@@ -22,7 +22,7 @@ locale                   : "ko-KR"
 title                    : "SEOHLOG"
 title_separator          : "-"
 subtitle                 : "" # site tagline that appears below site title in masthead
-name                     : "seoh"
+name                     : "SEOHLOG"
 description              : "Today I Learned..."
 url                      : "https://ohseyong.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
