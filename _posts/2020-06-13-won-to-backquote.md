@@ -11,7 +11,7 @@ header:
 toc: true  
 toc_sticky: true 
 ---
-
+![backquote](/assets/backquote.jpg)
 macOS Sierra 이후 버전에서는 macOS의 키보드 입력 모드가 한글인 상태에서는 Backquote( ` ) 키를 누르면 원화 기호( ₩ )가 입력된다. (심지어 최근 신제품에는 키보드에도 백쿼트가 아닌 원화 특수문자가 그려져 있다.) 개발자 등 마크다운 문서를 작성할 일이 많은 사람들에겐 매우 불편한 설정이다.
 
 ### 해결하는 방법
