@@ -3,6 +3,9 @@ title: "블로그를 만들다"
 date: 2020-06-02 19:26:28 +0900
 categories: blog
 tags : blog first
+header:
+  teaser: /assets/blog2.png
+  image: # /assets/mozilla_logo.png 
 ---
 
 ### 블로그를 시작하며...
