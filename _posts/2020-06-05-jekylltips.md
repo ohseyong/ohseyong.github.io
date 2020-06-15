@@ -4,7 +4,9 @@ title: "Jekyll 블로그 운영 시 유용한 사이트 모음"
 date: 2020-06-04 17:00:00 +0900
 categories: blog
 tags: jekyll github blog howto
-teaser: "/assets/jekyll.png"
+header:
+  teaser: "/assets/jekyll.png"
+  image: # /assets/mozilla_logo.png  "/assets/jekyll.png"
 
 toc: true  
 toc_sticky: true 
