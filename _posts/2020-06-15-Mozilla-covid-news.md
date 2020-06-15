@@ -4,8 +4,9 @@ title: "[번역] Mozilla, 첫 COVID-19 솔루션 기금 수령자 발표"
 date: 2020-06-15 00:00:00 +0900
 categories: news
 tags: Mozilla Firefox OpenSource
-teaser: /assets/mozilla_logo.png
-image: /assets/mozilla_logo.png
+header:
+  teaser: /assets/mozilla_logo.png
+  image: /assets/mozilla_logo.png
 
 toc: false
 ---
