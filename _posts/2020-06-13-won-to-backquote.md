@@ -5,7 +5,7 @@ date: 2020-06-13 17:00:00 +0900
 categories: macOS
 tags: keyboard setting markdown howto
 header:
-  teaser: /assets/backquote.png
+  teaser: /assets/backquote.jpg
   image: # /assets/mozilla_logo.png 
 
 toc: true  
