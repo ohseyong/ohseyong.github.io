@@ -5,10 +5,11 @@ date: 2020-06-15 00:00:00 +0900
 categories: news
 tags: Mozilla Firefox OpenSource
 teaser:
-image:  ![mozilla_logo](/assets/mozilla_logo.png)
+image:  /assets/mozilla_logo.png
 
 toc: false
 ---
+
   * 이 글은 <a href="http://www.mozilla.or.kr/community/blog/1611">Mozilla 한국 소식 블로그에 게시</a>되었습니다.
   * 제가 Mozilla 한국 소식 블로그 운영에 글 작성자로 참여하게 되었습니다. 이에 해당 블로그에 제가 번역하여 게시한 글을 제 블로그에도 업로드합니다.
   * 아래 번역글의 원문은 <a href="https://blog.mozilla.org/blog/2020/05/06/mozilla-announces-the-first-three-covid-19-solutions-fund-awardees/" target="_blank" rel="noreferrer noopener">Mozilla announces the first three COVID-19 Solutions Fund Recipients</a> 입니다.
@@ -17,6 +18,7 @@ toc: false
 ---
 
 ### Mozilla, 첫 COVID-19 솔루션 기금 수령자 발표
+![mozilla_logo](../assets/mozilla_logo.png)
 
 <a rel="noreferrer noopener" href="https://blog.mozilla.org/blog/2020/03/31/moss-launches-covid-19-solutions-fund/" target="_blank">지난 3월 설립된 COVID-19 솔루션 기금(COVID-19 Solutions Fund)</a>의 신청이 시작된지 2주도 되지 않아 30여개국에서 160개 이상의 신청들이 접수되었습니다. 그리고 5월 6일, Mozilla 오픈소스 지원 프로그램(Mozilla Open Source Support Program, 이하 MOSS)는 먼저 세 곳의 기업 혹은 단체를 지원 대상으로 선정했습니다.
 
