@@ -4,7 +4,9 @@ title: "맥의 한글 입력 모드에서 `키를 누를 때 ₩가 입력되는
 date: 2020-06-13 17:00:00 +0900
 categories: macOS
 tags: keyboard setting markdown howto
-teaser: 
+header:
+  teaser: /assets/backquote.png
+  image: # /assets/mozilla_logo.png 
 
 toc: true  
 toc_sticky: true 
