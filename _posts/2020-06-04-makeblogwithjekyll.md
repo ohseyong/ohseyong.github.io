@@ -4,7 +4,9 @@ title: "GitHub Pages와 Jekyll로 10분만에 블로그 만들기"
 date: 2020-06-04 17:00:00 +0900
 categories: blog
 tags: jekyll github blog howto
-teaser: "/assets/jekyll.png"
+header:
+  teaser: /assets/10min.png
+  image: # /assets/mozilla_logo.png 
 
 toc: true  
 toc_sticky: true 
