@@ -2,8 +2,8 @@
 title: "[42] Get Next Line 과제를 수행하며"
 # excerpt: "정말 10분이면 만들 수 있다"
 date: 2020-06-29 15:00:00 +0900
-categories: 42
-tags: C GNL 42
+categories: study
+tags: GNL,42,C
 header:
   teaser: # /assets/blog2.png
   image: # /assets/mozilla_logo.png 
