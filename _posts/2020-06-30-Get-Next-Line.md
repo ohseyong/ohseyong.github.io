@@ -48,7 +48,7 @@ size_t read(int fd, void *buf, size_t bytes)
  * file, redirection, stdin 으로부터 읽었을 때 함수가 제대로 작동해야 한다.
  * gcc -d 플래그로 받은 BUFFER_SIZE가 1일 때도, 9999일 때도, 10000000일 때도 함수가 제대로 작동해야 한다.
 
- ### 작동 구조 아이디어
+### 작동 구조 아이디어
   1. 우선, 파일을 read할 임시 버퍼를 만든다.
 ```
 char buf[BUFFER_SIZE];
