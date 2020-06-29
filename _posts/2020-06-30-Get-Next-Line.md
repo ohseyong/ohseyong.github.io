@@ -49,8 +49,14 @@ size_t read(int fd, void *buf, size_t bytes)
  * gcc -d 플래그로 받은 BUFFER_SIZE가 1일 때도, 9999일 때도, 10000000일 때도 함수가 제대로 작동해야 한다.
 
  ### 작동 구조 아이디어
-  1. 파일을 read할 임시 버퍼를 만든다.
+  1. 우선, 파일을 read할 임시 버퍼를 만든다.
 ```
 char buf[BUFFER_SIZE];
 ```
-  2.  read한 버퍼를 백업할 static 버퍼를 만든다.
+  2.  read한 버퍼를 저장해 둘(백업할) static 버퍼를 만든다.
+```
+static char *backup
+```
+  3. `read(fd, buf, BUFFER_SIZE);` 를 해서 버퍼만큼 라인을 읽는다. 그리고 `buf`를 정적 변수 `backup`에 백업한다.
+  4. `backup` 안에 개행문자가 있는지 없는지 검사한다.
+  5. 개행문자가 있으면 다음 단계로 넘어가고, 없으면 개행문자가 있을 때가지 3번으로 돌아가 파일을 계속 읽는다.
