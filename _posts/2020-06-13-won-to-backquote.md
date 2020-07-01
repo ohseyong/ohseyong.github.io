@@ -17,20 +17,20 @@ macOS Sierra 이후 버전에서는 macOS의 키보드 입력 모드가 한글�
 ### 해결하는 방법
 `~/Library` 디렉토리로 이동한 후, KeyBindings 디렉토리로 이동한다. 혹시 없다면 디렉토리를 만든다.
 
-~~~
+~~~shell
 $ cd ~/Library
 $ mkdir KeyBindings (이미 디렉토리가 있다면 생략한다)
 ~~~
 
 `~/Library/KeyBindings` 디렉토리에 `DefaultkeyBinding.dict` 파일을 생성한다.
 
-~~~
+~~~shell
 $ touch DefaultkeyBinding.dict (이미 파일이 있다면 생략한다)
 ~~~
 
 `DefaultkeyBinding.dict` 파일에 아래 내용을 추가한다.
 
-~~~
+~~~shell
 {
     "₩" = ("insertText:", "`");
 }
@@ -41,7 +41,7 @@ $ touch DefaultkeyBinding.dict (이미 파일이 있다면 생략한다)
 ### 더 쉬운 방법
 [어떤 멋진 분께서 이걸 쉽게 할 수 있는 쉘 스크립트를 만들어 두신 것을 발견했다.](https://gist.github.com/redism/43bc51cab62269fa97a220a7bb5e1103) 위 과정을 직접 수행할 필요 없이, 터미널을 열고 아래 명령어 한 줄만 입력하면 바로 설정이 적용된다. <del>쉘 스크립트 만드시는 분들 정말 신기하고 존경스럽다.</del>
 
-~~~
+~~~shell
 curl -sSL https://gist.githubusercontent.com/redism/43bc51cab62269fa97a220a7bb5e1103/raw/0d55b37b60e0e0bd3d0d7f53995de0a722f9820c/kr_won_to_backquote.sh | sh
 ~~~
 
