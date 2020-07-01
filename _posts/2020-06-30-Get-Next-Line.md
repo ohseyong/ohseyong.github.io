@@ -21,9 +21,11 @@ toc_sticky: true
    * 0 : 표준 입력
    * 1 : 표준 출력
    * 2 : 표준 에러
+ * `open()` 함수는 파일을 열고 파일 디스크립터 값을 반환한다. 그 값을 이용하여 이후에도 계속해서 그 열었던 파일에 접근할 수 있다고 한다.
 
-#### read() 함수
-```
+
+#### `read()` 함수
+```c
 size_t read(int fd, void *buf, size_t bytes)
 ```
  * 인자로 받은 bytes의 수 만큼 fd를 읽어 buf에 저장하는 함수다.
@@ -37,7 +39,7 @@ size_t read(int fd, void *buf, size_t bytes)
 #### gcc의 -d 플래그
  * 프로그램 외부에서 `#define`을 정의할 수 있다.
  * 이 과제에서, 채점 시 컴파일은 다음과 같이 진행한다.
-```
+```shell
   $ gcc -Wall -Wextra -Werror -D BUFFER_SIZE=32 get_next_line.c get_next_line_utils.c
 ```
  * 즉 컴파일할 때 BUFFER_SIZE를 정하고 이 버퍼의 크기만큼 파일을 한 번에 읽게 된다.
@@ -50,18 +52,19 @@ size_t read(int fd, void *buf, size_t bytes)
 
 ### 작동 구조 아이디어
   1. 우선, 파일을 read할 임시 버퍼를 만든다.
-```
+```c
 char buf[BUFFER_SIZE];
 ```
   2.  read한 버퍼를 저장해 둘(백업할) static 버퍼를 만든다.
-```
+```c
 static char *backup
 ```
   3. `read(fd, buf, BUFFER_SIZE);` 를 해서 버퍼만큼 라인을 읽는다. 그리고 `buf`를 정적 변수 `backup`에 백업한다.
   4. `backup` 안에 개행문자가 있는지 없는지 검사한다.
   5. 개행문자가 있으면 다음 단계로 넘어가고, 없으면 개행문자가 있을 때가지 3번으로 돌아가 파일을 계속 읽는다.
      * 이와 동시에 기존에 백업한 내용에 계속 합친다. (이 기능을 구현하는 함수 추가)
-  7. 개행문자가 있는 `backup`을 개행문자 전과 후로 잘라서, 개행문자 전까지는 line에 주고, 개행문자 후는 다시 static 변수 `backup`에 넣는다.
+  7. 개행문자가 있는 `backup`을 개행문자 전과 후로 잘라서, 개행문자 전까지는 line에 주고, 개행문자 후는 다시 static 변수 `backup`에 넣는다
+    7. .
 
-  ---
+---
   아직 진행 중인 과제라, 미완성 글입니다. 추후 추가 작성하겠습니다.

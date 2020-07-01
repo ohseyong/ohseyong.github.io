@@ -21,10 +21,10 @@ toc_sticky: true
  * https://drjekyllthemes.github.io/new
 
  
- 
+
 ### 디렉토리 구조 & `config.yml` 파일
  지킬의 구조와 설정값에 대해 잘 정리해둔 사이트다. 이 사이트를 참고해 설정이나 지킬의 변경하고 싶은 부분을 찾아 바꿀 수 있다.
- 
+
   * [Jekyll project 폴더 파일 구조 파헤치기](https://suhwan.dev/2017/06/23/jekyll-project-structure/)
   * https://devhints.io/jekyll
   * https://jekyllrb-ko.github.io/docs/structure/
