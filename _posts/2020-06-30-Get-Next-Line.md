@@ -1,6 +1,6 @@
 ---
 title: "[42 Seoul] Get Next Line 과제를 수행하며"
-# excerpt: "정말 10분이면 만들 수 있다"
+# excerpt: "한줄설명 필요시"
 date: 2020-06-29 15:00:00 +0900
 categories: study
 tags: GNL 42 C
@@ -67,7 +67,7 @@ size_t read(int fd, void *buf, size_t bytes)
  * file, redirection, stdin 으로부터 읽었을 때 함수가 제대로 작동해야 한다.
  * gcc -d 플래그로 받은 BUFFER_SIZE가 1일 때도, 9999일 때도, 10000000일 때도 함수가 제대로 작동해야 한다.
 
-### 작동 구조 고민
+### 생각해본 작동 구조
   1. 우선, 파일을 read할 임시 버퍼를 만든다.
 ```c
 char buf[BUFFER_SIZE];
@@ -80,7 +80,7 @@ static char *backup
   4. `backup` 안에 개행문자가 있는지 없는지 검사한다.
   5. 개행문자가 있으면 다음 단계로 넘어가고, 없으면 개행문자가 있을 때가지 3번으로 돌아가 파일을 계속 읽는다.
      * 이와 동시에 기존에 백업한 내용에 계속 합친다. (이 기능을 구현하는 함수 추가)
- 6. 개행문자가 있는 `backup`을 개행문자 전과 후로 잘라서, 개행문자 전까지는 line에 주고, 개행문자 후는 다시 static 변수 `backup`에 넣는다.
+   6. 개행문자가 있는 `backup`을 개행문자 전과 후로 잘라서, 개행문자 전까지는 line에 주고, 개행문자 후는 다시 static 변수 `backup`에 넣는다.
 
 ---
   아직 진행 중인 과제라, 미완성 글입니다. 추후 추가 작성하겠습니다.
