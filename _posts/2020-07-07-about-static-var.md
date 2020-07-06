@@ -14,7 +14,7 @@ toc_sticky: true
 
 42cursus의 Get Next Line 과제를 수행하는 데 있어 반드시 필요한 개념인 정적 변수(static variable)에 대해 공부하며 정리하게 되었다. 이 개념을 알지 못한다면 절대로 Get Next Line 과제를 해결할 수 없다. **만약 GNL 과제를 통과했음에도 이 개념을 모르는 사람이 있다면 치팅을 의심해봐야 함이 옳다.**
 
-> *이 글을 42 Seoul의 hycho에게 바칩니다.*
+> *이 글을 42 Seoul의 hycho님에게 바칩니다.*
 >
 > ![hycho_scrnshot](/assets/hycho_scrnshot.png)
 >
