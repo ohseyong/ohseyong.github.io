@@ -1,5 +1,5 @@
 ---
-title: "[42 Seoul] C언어의 static 함수에 대하여"
+title: "[42 Seoul] C언어의 static 변수에 대하여"
 # excerpt: "정말 10분이면 만들 수 있다"
 date: 2020-07-07 00:00:00 +0900
 categories: study
