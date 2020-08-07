@@ -1,5 +1,5 @@
 ---
-title: "[ft_printf] GCC 컴파일러에서 외부 정적 라이브러리를 사용해 컴파일하기"
+title: "[ft_printf] GCC 외부 정적 라이브러리를 사용해 컴파일하기"
 excerpt: # "컴파일 옵션 : 외부 라이브러리를 이용한 컴파일 등의 내용들"
 date: 2020-08-07 02:00:00 +0900
 categories: study
