@@ -1,6 +1,6 @@
 ---
 title: "[42 Seoul] ft_printf 과제를 수행하며 알게 된 내용들"
-excerpt: "컴파일 옵션 : 외부 라이브러리를 이용한 컴파일, "
+excerpt: "컴파일 옵션 : 외부 라이브러리를 이용한 컴파일, 이외 내용들"
 date: 2020-08-07 02:00:00 +0900
 categories: study
 tags: vim 42 vimrc ft_printf
