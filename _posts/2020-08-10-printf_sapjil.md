@@ -17,7 +17,7 @@ ft_printf 과제를 하면서 코드를 짜는 과정을 정말 세세하게 하
 
 
 
-### ft_printf 과제가 요구하는 것들
+## ft_printf 과제가 요구하는 것들
 
 - 간단하다. printf 함수를 똑같이 구현하면 된다.
 - 함수의 프로토타입은 `int ft_printf(const char *, ...);` 이다.
@@ -58,7 +58,7 @@ ft_printf 과제를 하면서 코드를 짜는 과정을 정말 세세하게 하
 
 - https://ohseyong.github.io/study/learn-with-printf/ 게시물을 참고
 
-### 단계별 과제 수행 
+## 단계별 과제 수행 
 
 일단 나는 이런 순서대로 수행하고 있다. 
 
