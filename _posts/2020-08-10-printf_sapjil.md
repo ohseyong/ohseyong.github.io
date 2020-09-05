@@ -56,7 +56,9 @@ ft_printf 과제를 하면서 코드를 짜는 과정을 정말 세세하게 하
 
 #### 사전에 알아둬야 할 지식 2 : GCC 외부 라이브러리를 포함한 컴파일
 
-- https://ohseyong.github.io/study/learn-with-printf/ 게시물을 참고
+- [이 게시물을 참고]: https://ohseyong.github.io/study/learn-with-printf/	"이 게시물을 참고하세요"
+
+  
 
 ## 단계별 과제 수행 
 
