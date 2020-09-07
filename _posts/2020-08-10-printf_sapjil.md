@@ -1,5 +1,5 @@
 ---
-title: "[42 Seoul] ft_printf 과제를 수행하며 삽질한 기록들"
+title: "[42 Seoul] ft_printf 과제를 수행한 기록"
 excerpt: # "컴파일 옵션 : 외부 라이브러리를 이용한 컴파일 등의 내용들"
 date: 2020-08-10 02:00:00 +0900
 categories: study
