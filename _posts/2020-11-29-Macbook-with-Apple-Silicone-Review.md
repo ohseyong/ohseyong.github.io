@@ -37,7 +37,8 @@ toc_sticky: true
 
 - [압축 성능 비교](https://www.clien.net/service/board/cm_mac/15635452)
 - [nodejs v15 컴파일 시간 비교](https://www.clien.net/service/board/cm_mac/15634451) 
-- 모두 인텔맥북 16인치 i7 모델보다는 상당히 빠르며, 전력을 10배 가까이 소모하는 라이젠보다는 못힌 수준입니다.
+
+모두 인텔 맥북 16인치 i7 모델보다는 상당히 빠르며, 전력을 10배 가까이 소모하는 라이젠보다는 못힌 수준입니다.
 
 #### 이게 진짜 친환경
 
