@@ -6,7 +6,7 @@ categories: hardware mac
 tags: Mac Macbook MacbookAir AppleSilicon Apple M1 MacbookAir2020Late 
 header:
   teaser: /assets/M1Chip.png
-  image: /assets/M1Chip.png 
+  image: # /assets/M1Chip.png 
 
 toc: true  
 toc_sticky: true 
