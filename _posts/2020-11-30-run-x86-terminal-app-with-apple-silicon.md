@@ -5,7 +5,7 @@ date: 2020-11-30 06:00:00 +0900
 categories: macOS
 tags: AppleSilicon Terminal x86_64 ARM M1 howto
 header:
-  teaser: /assets/backquote.jpg
+  teaser: # /assets/backquote.jpg
   image: # /assets/mozilla_logo.png 
 
 toc: true  
