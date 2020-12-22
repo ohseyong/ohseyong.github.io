@@ -1,5 +1,5 @@
 ---
-title: "[42 Seoul] libasm 과제에 필요한 어셈블리어 기초 살펴보기"
+title: "[42] libasm 과제에 필요한 어셈블리어 기초 살펴보기"
 excerpt: "42 Seoul의 libasm 과제를 수행하기 위해 필요한 어셈블리어와 관련한 기본 지식을 정리합니다. 인텔 문법, macOS 및 NASM 어셈블러를 활용합니다."
 date: 2020-12-21 06:00:00 +0900
 categories: study
