@@ -180,6 +180,14 @@ section .data
     msg db "Hello World"
 ~~~
 
+컴파일 및 실행은 아래와 같이 한다.
+
+~~~shell
+$ nasm -f macho64 hello.s
+$ gcc -o hello hello.o
+$ ./hello
+~~~
+
 
 
 #### 섹션
