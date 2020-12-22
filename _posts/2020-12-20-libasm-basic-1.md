@@ -162,9 +162,27 @@ syscall 번호를 참고하여 사용해야 한다. macOS의 경우 `/usr/includ
 
 먼저 Hello world를 살펴보자.
 
+~~~assembly
+section .text
+    global _main
+
+_main : 
+    mov rax, 0x2000004 ; write 함수 syscall 번호
+    mov rdi, 1
+    mov rsi, msg
+    mov rdx, 12
+    syscall
+    mov rax, 0x2000001 ; exit
+    mov rdi, 0
+    syscall
+
+section .data
+    msg db "Hello World"
+~~~
 
 
-### section
+
+#### 섹션
 
 어셈블리어 프로그램은 섹션으로 분류되어 있다. 기본적으로 data와 text 섹션으로 나뉘며, section.bbs를 사용하는 경우도 있다.
 
@@ -176,7 +194,7 @@ syscall 번호를 참고하여 사용해야 한다. macOS의 경우 `/usr/includ
 * section.bbs
   * 추가적으로 변수를 선언하는 데 사용하는 공간
 
-### 주석
+#### 주석
 
 * 세미콜론을 이용해서 주석 처리를 한다.
 
