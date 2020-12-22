@@ -213,6 +213,10 @@ add rax, rbx ;rax, rbx 더하기
 
 
 
+**아직 반도 못 쓴 것 같다. 곧 내용 마저 채워야지..**
+
+
+
 ### 참고 자료
 
 * [어셈블리를 잘 설명한 유튜브](https://www.youtube.com/watch?v=yf7yFJHTif8)
