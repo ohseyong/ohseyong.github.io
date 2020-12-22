@@ -162,7 +162,7 @@ syscall 번호를 참고하여 사용해야 한다. macOS의 경우 `/usr/includ
 
 먼저 Hello world를 살펴보자.
 
-~~~assembly
+~~~asm
 section .text
     global _main
 
@@ -206,7 +206,7 @@ $ ./hello
 
 * 세미콜론을 이용해서 주석 처리를 한다.
 
-~~~assembly
+~~~asm
 ;주석주석주석
 add rax, rbx ;rax, rbx 더하기
 ~~~
