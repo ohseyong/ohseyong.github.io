@@ -237,10 +237,13 @@ opcode operand1, operand2 ; 주석
 * [스택프레임에 대한 설명](https://blog.kimtae.xyz/9)
 * [스무디 TV - 어셈블리어 스택, 푸시, 팝, 레지스터 ESP](https://www.youtube.com/watch?v=s28wzpg1DAw)
 * [동빈나 - 시스템 해킹 강좌 6강 스택프레임 이해하기](https://www.youtube.com/watch?v=ZFOHvzXcao0&list=PLRx0vPvlEmdAXwJnNtKIVeC27UmwljRYA&index=6)
+* [스택프레임에 대한 자세한 설명 영상](https://youtu.be/HfpP8TIk15E)
 
-**아직 반도 못 쓴 것 같다. 곧 내용 마저 채워야지..**
 
 
+### 어셈블리어를 이용한 과제의 각 함수 구현 방법
+
+* [여기에 너무 잘 정리되어 있다. '구현 과정' 참고](https://www.notion.so/Libasm-f4869fe5de17402b9054a7ca06bfc79c)
 
 ### 그 외 기타 팁들
 
@@ -288,11 +291,17 @@ call free
 
 * [어셈블리를 잘 설명한 유튜브](https://www.youtube.com/watch?v=yf7yFJHTif8)
 * [시스템 콜 테이블(macOS)](https://opensource.apple.com/source/xnu/xnu-1504.3.12/bsd/kern/syscalls.master) 
-* [스택프레임](https://blog.kimtae.xyz/9)
+* [스택프레임 설명 1](https://blog.kimtae.xyz/9)
+* [스택프레임 설명 2](https://redscreen.tistory.com/10)
 * [42Wiki의 과제 정리](https://yeosong1.github.io/libasm)
+* [secho님의 과제 정리](https://velog.io/@secho/어셈블리)
+* [x64 Stack의 개요(은근히 중요한 내용이 많으니 한번 살펴보세요)](https://kuaaan.tistory.com/449)
+* [배은태 교수님(으로 추정)의 어셈블리 강좌(대학 교과목 강의 한학기꺼 통째로)](https://www.youtube.com/channel/UC9wtjOTO24I0sN9tFSwcGVQ)
 * [sancho 님의 과제 정리](https://www.notion.so/Libasm-f4869fe5de17402b9054a7ca06bfc79c)
 * [yechoi님의 "한큐에 정리하는 어셈블리 기초"](https://yechoi.tistory.com/10?category=886398)
 * [daelee님의 "[libasm] 어셈블리 프로그램 구조와 x64 레지스터 이해하기"](https://velog.io/@hidaehyunlee/libasm-어셈블리-프로그램-구조와-x64-레지스터-이해하기)
 * [[libasm] strlen 함수를 어셈블리어로 짠다면?](https://velog.io/@hidaehyunlee/libasm-strlen-함수를-어셈블리어로-짠다면)
+* [Memory Allocation in Assembly](https://www.cs.uaf.edu/2015/fall/cs301/lecture/09_23_allocation.html)
 * https://github.com/gurugio/book_assembly_8086_ko/blob/master/README.md
 * https://aistories.tistory.com/12
+
