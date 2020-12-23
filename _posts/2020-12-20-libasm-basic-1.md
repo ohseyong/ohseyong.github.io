@@ -110,7 +110,7 @@ toc_sticky: true
 
 ![RAX](/assets/RAX.png)
 
-### OPCODE (명령어)
+## OPCODE (명령어)
 
 opcode는 어셈블리어에서의 명령어다. 이게 총 200여가지가 된다고 하는데, 그 중에 이번 과제에 사용되는 명령어 위주로만 정리했다. 
 
@@ -147,7 +147,7 @@ opcode는 어셈블리어에서의 명령어다. 이게 총 200여가지가 된�
 
 ### 어셈블리어에서 syscall 사용하기
 
-syscall 번호를 참고하여 사용해야 한다. macOS의 경우 `/usr/include/sys/syscall.h` 파일에 시스템 콜의 번호들이 나열되어 있다. 예를 들어 read 함수의 syscall 번호는 3번인데, 실제로 사용할 때는 0x2000003 으로 사용하면 된다. 앞에 2가 왜 들어가는지 의아할 텐데, macOS의 경우 syscall 번호를 여러 개의 클래스로 나누어 두었다고 한다. write나 read 등은 unix 클래스로 분류하여 최상단 비트를 2로 설정해 두었기에 저런 식으로 호출하게 된다고 한다.
+syscall 번호를 참고하여 사용해야 한다. macOS의 경우 `/usr/include/sys/syscall.h` 파일에 시스템 콜의 번호들이 나열되어 있다. 예를 들어 read 함수의 syscall 번호는 3번인데, 실제로 사용할 때는 0x2000003 으로 사용하면 된다. 앞에 2가 왜 들어가는지 의아할 텐데, macOS의 경우 syscall 번호를 여러 개의 클래스로 나누어 두었다고 한다. write나 read 등은 unix 클래스로 분류하여 최상단 비트를 2로 설정해 두었기에 저런 식으로 호출하게 된다고 한다. **syscall 명령을 사용할 땐 커널이 rcx와 r11의 값을 변경시킬 수 있으니 유의해야 한다.**
 
 #### error 함수를 이용해 에러 처리하기
 
@@ -156,15 +156,6 @@ syscall 번호를 참고하여 사용해야 한다. macOS의 경우 `/usr/includ
 > fd가 잘못된 write(-3, "abcd", 4)를 사용하면 리턴값은 -1, errno는 9가 저장이 된다. errno 9번은 "Bad file descriptor"이다. (*man 2 errno 문서*)
 >
 > 참고 : [sancho님의 "errno에 대한 설명"](https://www.notion.so/Libasm-f4869fe5de17402b9054a7ca06bfc79c)
-
-
-
-### 어셈블리어의 Data type(자료형)
-
-* BYTE : 부호 없는 1바이트, char과 동일
-* WORD : 부호 없는 2바이트, short
-* DWORD : 부호 없는 4바이트, int
-* QWORD : 부호 없는 8바이트, double
 
 여기까지 어느정도 숙지하였다면 이제 과제를 할 준비가 된 셈이다.
 
@@ -230,7 +221,7 @@ opcode operand1, operand2 ; 주석
 * section.**bbs**
   * 추가적으로 변수를 선언하는 데 사용하는 공간
 
-### 스택프레임
+### 어셈블리어에서의 스택 활용(스택프레임)
 
 반드시 필요한 개념으로 이를 꼭 잘 숙지해 두어야 한다. 훌륭한 글과 영상이 많아 이들 링크로 대체...
 
@@ -239,13 +230,47 @@ opcode operand1, operand2 ; 주석
 * [동빈나 - 시스템 해킹 강좌 6강 스택프레임 이해하기](https://www.youtube.com/watch?v=ZFOHvzXcao0&list=PLRx0vPvlEmdAXwJnNtKIVeC27UmwljRYA&index=6)
 * [스택프레임에 대한 자세한 설명 영상](https://youtu.be/HfpP8TIk15E)
 
-### 어셈블리어를 이용한 과제의 각 함수 구현 방법
+### 어셈블리어의 Data type(자료형)
 
-* [여기에 너무 잘 정리되어 있다. '구현 과정' 참고](https://www.notion.so/Libasm-f4869fe5de17402b9054a7ca06bfc79c)
+* BYTE : 부호 없는 1바이트, char과 동일
+* WORD : 부호 없는 2바이트, short
+* DWORD : 부호 없는 4바이트, int
+* QWORD : 부호 없는 8바이트, double
+
+## 과제의 각 함수 구현하기
+
+* 예를 들어, 가장 간단한 함수인 ft_strlen 함수는 아래와 같이 작성할 수 있다. 처음 작성했던 소스고 어셈블리어의 이해를 위해 주석을 상세하게 달았었다.
+
+~~~c
+; ft_strlen.s
+
+section .text			; 여기서부터 실제 코드를 위한 섹션임을 알림. (section.data는 상수나 초기값을 위한 섹션, bbs도 있다)
+	global _ft_strlen 	; ft_strlen 함수 심볼을 외부에서도 사용 가능하게
+
+_ft_strlen:
+	mov rax, 0		; rax = 0;
+	jmp step			; 없어도 되긴 하는데 프로시저간 이동에 있어 가독성을 위해
+
+step:
+	cmp byte [rdi + rax], 0		; 바이트 단위로 메모리를 직접 비교한다. null인지, 같으면 ZF(Zero Flag)가 1로 정해지고 아니면 0이 된다.
+	je	done					; ZF가 1 이면 done으로 / Jump if equal, 비슷한걸로 ja, jb
+	inc rax						; 1이 아니면 rax 1 증가 (inc 는 ++ 같은 의미)
+	jmp step					; 스스로를 다시 호출 
+
+done:
+	ret							; rax 값을 리턴
+
+; 개별 컴파일 방법
+; $ nasm -f macho64 hello.s
+; $ gcc -o hello hello.o
+; $ ./hello
+~~~
+
+* [그 외 함수들의 작성 알고리즘 또한 여기에 너무 잘 정리되어 있다. '구현 과정' 참고](https://www.notion.so/Libasm-f4869fe5de17402b9054a7ca06bfc79c)
 
 ## 그 외 기타 팁들
 
-#### C언어 소스를 어셈블리어로 변환하여 보기
+### C언어 소스를 어셈블리어로 변환하여 보기
 
 ~~~shell
 $ gcc -S -fno-stack-protector -mpreferred-stack-boundary=4 -z exectack -o name.a name.c
@@ -253,9 +278,9 @@ $ gcc -S -fno-stack-protector -mpreferred-stack-boundary=4 -z exectack -o name.a
 
 출처 : [yechoi님 블로그](https://yechoi.tistory.com/10?category=886398)
 
-#### malloc & free
+### malloc & free
 
-##### malloc하기
+#### malloc하기
 
 ~~~c
 extern malloc
@@ -271,7 +296,7 @@ mov QWORD[rax], 3
 
 malloc은 rax로 포인터를 반환하므로, 해당 포인터를 통해 원하는 값을 넣는다.
 
-##### free하기
+#### free하기
 
 해제할 포인터를 rdi에 넣고, free를 call한다.
 
