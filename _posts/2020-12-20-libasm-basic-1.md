@@ -12,7 +12,7 @@ toc: true
 toc_sticky: true 
 ---
 
-### 하다 하다 어셈블리어라니
+### 으악 어셈블리어라니
 
 42 서울의 교육과정을 처음 접한 사람들은 '와 로우레벨부터 기초를 탄탄히 다지고 가네'라고 말하곤 한다. C언어 과제를 도대체 몇 개나 하는 거냐며, 언제까지 메모리 누수를 잡아야 하냐며 답답해하는 사람도 있다. 한창 C언어를 이용한 과제를 하다가, 이제는 어셈블리어를 익혀야 하는 과제를 만나게 되었다. 과제를 진행하다 보니, 새삼 C언어가 정말 '고오급' 이구나 싶은 생각이 들었다.
 
@@ -40,15 +40,15 @@ toc_sticky: true
   * [함수 호출 규약을 설명한 이 링크도 참고](https://m.blog.naver.com/tjdghkgkdl/10117639381) 
   * 이 콜링 컨벤션에 따라 호출되는 함수는 RBX, RSI, RDI, RBP를 사용한 다음 초기값으로 돌려놓아야 한다.
 
-[^ 1 ]: 어셈블리어를 기계어로 변환해주는 프로그램, C언어의 컴파일러와 비슷하다
+[^ 1]: 어셈블리어를 기계어로 변환해주는 프로그램, C언어의 컴파일러와 비슷하다
 
 ### 어셈블리어란?
 
 > 프로그래밍 언어의 일종으로, 기계어 바로 위 단계에 해당하는 언어이고, 기계어와 함께 단 둘뿐인 저급(Low Level) 언어
 
-사람이 `0101 0001 0000...` 의 연속으로 이뤄지는 기계어를 읽는 것은 쉬운 일이 아니다.[^1] 그래서 이를 보완하기 위해 기계어와 1:1 매칭이 가능하게끔 나온 것이 어셈블리어다. 어셈블리어는 기계어 한 줄당 어셈블리 명령어도 한 줄씩 대응이 되어 있고, 이걸 기계어로 변환하는 프로그램을 어셈블러라고 한다.
+사람이 `0101 0001 0000...` 의 연속으로 이뤄지는 기계어를 읽는 것은 쉬운 일이 아니다.[^2] 그래서 이를 보완하기 위해 기계어와 1:1 매칭이 가능하게끔 나온 것이 어셈블리어다. 어셈블리어는 기계어 한 줄당 어셈블리 명령어도 한 줄씩 대응이 되어 있고, 이걸 기계어로 변환하는 프로그램을 어셈블러라고 한다.
 
-[^1]:원래 '불가능에 가깝다' 라고 쓰려고 했는데, 찾아보니 1980년대까지만 해도 기계어를 직접 입력해서 프로그램을 짜는 게 이상한 일이 아니었다고 한다. 그래서 고침
+[^2]:원래 '불가능에 가깝다' 라고 쓰려고 했는데, 찾아보니 1980년대까지만 해도 기계어를 직접 입력해서 프로그램을 짜는 게 이상한 일이 아니었다고 한다. 그래서 고침
 
 
 
@@ -79,11 +79,11 @@ toc_sticky: true
 * BP : Base Pointer - 스택포인터 대신 스택 내의 데이터를 액세스할 때 사용한다.
 * SI : Source Index - 문자열 처리 시 시작 주소 지정에 사용한다. 데이터를 복사할 때, 복사할 Source 데이터의 주소가 저장된다고 생각하면 된다.
 * DI : Destination Index - 문자열 처리 시 목적지 주소 지정에 사용한다. 데이터를 복사할 때, 복사된 Destination 데이터의 주소가 저장된다.
-* [RSP와 RBP를 활용하기 위해 알아야 하는 스택포인터에 대한 정보](https://blog.kimtae.xyz/9)[^2]
+* [RSP와 RBP를 활용하기 위해 알아야 하는 스택포인터에 대한 정보](https://blog.kimtae.xyz/9)[^3]
 
 **여기까지 다룬 레지스터들은 어떤 프로세서를 사용하냐에 따라 앞에 E 혹은 R을 붙여 사용하게 된다.** 예를 들어 32비트 컴퓨터용 프로그램을 만든다면 EAX, EBP 등을 사용하게 되고, 64비트 프로그램을 만든다면 R을 붙여 RAX, RBP 등을 사용하게 된다. 그냥 AX, BP로 쓰면 16비트용으로 취급한다. 간혹 인터넷에서 RAX와 EBP를 섞어서 쓴 코드를 봤는데, 혼용이 가능하다고 해서 고개를 갸우뚱했고 아직도 그 이유는 잘 모르겠다.
 
-[^2]:yechoi님 블로그 글을 읽다가 발견했는데 도움이 많이 된 글이었다
+[^3]:yechoi님 블로그 글을 읽다가 발견했는데 도움이 많이 된 글이었다
 
 #### 플래그 레지스터
 
@@ -106,7 +106,9 @@ toc_sticky: true
 
 #### 기타 레지스터
 
-64비트에서는 R8 ~ R15까지의 8개 레지스터를 추가로 사용할 수 있고, 각각의 레지스터는 아래 그림처럼 쪼개어 사용할 수 있다.
+64비트에서는 R8 ~ R15까지의 8개 레지스터를 추가로 사용할 수 있고, 각각의 레지스터는 아래 그림처럼 쪼개어 사용할 수 있다. [이미지 출처](https://velog.io/@hidaehyunlee/libasm-어셈블리-프로그램-구조와-x64-레지스터-이해하기)
+
+![RAX](/assets/RAX.png)
 
 ### OPCODE (명령어)
 
@@ -147,6 +149,14 @@ opcode는 어셈블리어에서의 명령어다. 이게 총 200여가지가 된�
 
 syscall 번호를 참고하여 사용해야 한다. macOS의 경우 `/usr/include/sys/syscall.h` 파일에 시스템 콜의 번호들이 나열되어 있다. 예를 들어 read 함수의 syscall 번호는 3번인데, 실제로 사용할 때는 0x2000003 으로 사용하면 된다. 앞에 2가 왜 들어가는지 의아할 텐데, macOS의 경우 syscall 번호를 여러 개의 클래스로 나누어 두었다고 한다. write나 read 등은 unix 클래스로 분류하여 최상단 비트를 2로 설정해 두었기에 저런 식으로 호출하게 된다고 한다.
 
+#### ___error 함수를 이용해 에러 처리하기
+
+만약 syscall 사용 시 에러가 발생했다면, 이는 `___error` 함수를 이용하여 처리해야 한다. syscall들은 오류가 있는 경우 rax에 음수로 **errno**를 반환하며 동시에 CF(Carry Flag)을 True로 바꾼다. 따라서 `jc` (캐리플래그가 1일 때 점프)를 이용하면 에러 처리 분기가 가능하다. [자세한 내용 보기](https://yechoi.tistory.com/17)
+
+> fd가 잘못된 write(-3, "abcd", 4)를 사용하면 리턴값은 -1, errno는 9가 저장이 된다. errno 9번은 "Bad file descriptor"이다. (*man 2 errno 문서*)
+>
+> 참고 : [sancho님의 "errno에 대한 설명"](https://www.notion.so/Libasm-f4869fe5de17402b9054a7ca06bfc79c)
+
 
 
 ### 어셈블리어의 Data type(자료형)
@@ -160,7 +170,7 @@ syscall 번호를 참고하여 사용해야 한다. macOS의 경우 `/usr/includ
 
 ### 어셈블리어의 구문
 
-먼저 Hello world를 살펴보자.
+먼저 Hello world를 살펴보자. 위의 설명과 비교하며 찾아보자면 이것들이 대충 무얼 하는 코드구나, 하고 감이 올 것이다. 
 
 ~~~c
 section .text
@@ -188,32 +198,89 @@ $ gcc -o hello hello.o
 $ ./hello
 ~~~
 
+### 기본 문법과 주석 처리
 
+어셈블리어는 정해진 표준 문법은 없고, CPU 종류에 따라 여러 가지 문법이 존재한다. 이 과제에서는 Intel x64 문법을 사용하며, 아래와 같은 기본적인 형태를 가지고 있다.
+
+~~~c
+opcode operand1, operand2 ; 주석
+~~~
+
+* opcode는 위에서 살펴보았듯 명령어이고, operand는 인자의 값이다.
+* 인텔 문법에서는 두 번째 오퍼랜드(operand2)가 src이고, 첫 번째 오퍼랜드(operand1)가 dest 인자다.
+* 특정 레지스터의 메모리 주소를 참조할 때 대괄호를 사용하며, 여기엔 오프셋 기능이 있다 : 예를 들어 RAX 레지스터에서 +10 만큼 떨어진 메모리 주소를 표기할 때는 [RAX + 4] 와 같이 표현한다.
+* C++에서 // 뒤 내용이 주석이듯, 어셈블리어는 ; 이후 내용이 주석이다.
 
 #### 섹션
 
-어셈블리어 프로그램은 섹션으로 분류되어 있다. 기본적으로 data와 text 섹션으로 나뉘며, section.bbs를 사용하는 경우도 있다.
+어셈블리어 프로그램은 섹션으로 분류되어 있다. 기본적으로 data와 text 섹션으로 나뉘며, section.bbs를 사용하는 경우도 있다. 이는 컴퓨터의 메모리 구조에서 기인하는데, 이는 다음과 같다.
 
-* section.data
+| stack(지역 변수)      |
+| --------------------- |
+| heap(동적 할당)       |
+| **BBS**(unintialized) |
+| **Data**(initialized) |
+| **Text**(코드)        |
+
+* section.**data**
   * 상수 혹은 스태틱 변수를 선언하는 곳
   * 버퍼사이즈, 상수, 파일이름 등을 선언하는데도 사용된다.
-* section.text
+* section.**text**
   * 실행할 코드를 작성하는 섹션
-* section.bbs
+* section.**bbs**
   * 추가적으로 변수를 선언하는 데 사용하는 공간
 
-#### 주석
+#### 스택프레임
 
-* 세미콜론을 이용해서 주석 처리를 한다.
+훌륭한 글과 영상이 많아 이들 링크로 대체한다.
+
+* [스택프레임에 대한 설명](https://blog.kimtae.xyz/9)
+* [스무디 TV - 어셈블리어 스택, 푸시, 팝, 레지스터 ESP](https://www.youtube.com/watch?v=s28wzpg1DAw)
+* [동빈나 - 시스템 해킹 강좌 6강 스택프레임 이해하기](https://www.youtube.com/watch?v=ZFOHvzXcao0&list=PLRx0vPvlEmdAXwJnNtKIVeC27UmwljRYA&index=6)
+
+**아직 반도 못 쓴 것 같다. 곧 내용 마저 채워야지..**
+
+
+
+### 그 외 기타 팁들
+
+#### C언어 소스를 어셈블리어로 변환하여 보기
+
+~~~shell
+$ gcc -S -fno-stack-protector -mpreferred-stack-boundary=4 -z exectack -o name.a name.c
+~~~
+
+출처 : [yechoi님 블로그](https://yechoi.tistory.com/10?category=886398)
+
+#### malloc & free
+
+* malloc 
 
 ~~~c
-;주석주석주석
-add rax, rbx ;rax, rbx 더하기
+extern malloc
+mov rdi, 8
+call malloc
+~~~
+
+rdi에 할당할 바이트 수를 입력하고 malloc을 call한다.
+
+~~~c
+mov QWORD[rax], 3
+~~~
+
+malloc은 rax로 포인터를 반환하므로, 해당 포인터를 통해 원하는 값을 넣는다.
+
+* free하는 방법
+
+해제할 포인터를 rdi에 넣고, free를 call한다.
+
+~~~
+extern free
+mov rdi, rax
+call free
 ~~~
 
 
-
-**아직 반도 못 쓴 것 같다. 곧 내용 마저 채워야지..**
 
 
 
@@ -226,5 +293,6 @@ add rax, rbx ;rax, rbx 더하기
 * [sancho 님의 과제 정리](https://www.notion.so/Libasm-f4869fe5de17402b9054a7ca06bfc79c)
 * [yechoi님의 "한큐에 정리하는 어셈블리 기초"](https://yechoi.tistory.com/10?category=886398)
 * [daelee님의 "[libasm] 어셈블리 프로그램 구조와 x64 레지스터 이해하기"](https://velog.io/@hidaehyunlee/libasm-어셈블리-프로그램-구조와-x64-레지스터-이해하기)
+* [[libasm] strlen 함수를 어셈블리어로 짠다면?](https://velog.io/@hidaehyunlee/libasm-strlen-함수를-어셈블리어로-짠다면)
 * https://github.com/gurugio/book_assembly_8086_ko/blob/master/README.md
 * https://aistories.tistory.com/12
