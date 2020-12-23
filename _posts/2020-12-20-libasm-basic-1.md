@@ -1,9 +1,9 @@
 ---
-title: "[42] libasm 과제에 필요한 어셈블리어 기초 살펴보기"
-excerpt: "42 Seoul의 libasm 과제를 수행하기 위해 필요한 어셈블리어와 관련한 기본 지식을 정리합니다. 인텔 문법, macOS 및 NASM 어셈블러를 활용합니다."
+title: "[42] libasm 과제에 필요한 어셈블리어 기초 총정리"
+excerpt: "42 Seoul의 libasm 과제를 수행하기 위해 필요한 어셈블리어와 관련한 기본 지식을 정리합니다. 인텔 문법, 64비트 macOS 및 NASM 어셈블러를 활용합니다."
 date: 2020-12-21 06:00:00 +0900
 categories: study
-tags: assembly assembly_language libasm 42Seoul 42libasm
+tags: assembly assembly_language libasm 42Seoul 42libasm asm
 header:
   teaser: # /assets/backquote.jpg
   image: # /assets/mozilla_logo.png 
@@ -142,6 +142,7 @@ opcode는 어셈블리어에서의 명령어다. 이게 총 200여가지가 된�
 * inc : 오퍼랜드의 값을 1 증가한다.
 * dec : 위와 반대로 1 감소한다.
 * add : 두 번째 인자 값을 첫 번째 인자에 더한다.
+  
   * `ADD a b` 는 C언어의 `a = a + b` 같은 느낌
 * sub : 두 번째 인자의 값을 첫 번째 인자에서 뺀다.
 
