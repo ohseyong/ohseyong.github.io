@@ -249,16 +249,16 @@ section .text			; 여기서부터 실제 코드를 위한 섹션임을 알림. (
 
 _ft_strlen:
 	mov rax, 0		; rax = 0;
-	jmp step			; 없어도 되긴 하는데 프로시저간 이동에 있어 가독성을 위해
+	jmp step		; 없어도 되긴 하는데 프로시저간 이동에 있어 가독성을 위해
 
 step:
 	cmp byte [rdi + rax], 0		; 바이트 단위로 메모리를 직접 비교한다. null인지, 같으면 ZF(Zero Flag)가 1로 정해지고 아니면 0이 된다.
-	je	done					; ZF가 1 이면 done으로 / Jump if equal, 비슷한걸로 ja, jb
-	inc rax						; 1이 아니면 rax 1 증가 (inc 는 ++ 같은 의미)
-	jmp step					; 스스로를 다시 호출 
+	je	done			; ZF가 1 이면 done으로 / Jump if equal, 비슷한걸로 ja, jb
+	inc rax				; 1이 아니면 rax 1 증가 (inc 는 ++ 같은 의미)
+	jmp step			; 스스로를 다시 호출 
 
 done:
-	ret							; rax 값을 리턴
+	ret						; rax 값을 리턴
 
 ; 개별 컴파일 방법
 ; $ nasm -f macho64 hello.s
