@@ -232,7 +232,7 @@ opcode operand1, operand2 ; 주석
 
 #### 스택프레임
 
-훌륭한 글과 영상이 많아 이들 링크로 대체한다.
+반드시 필요한 개념으로 이를 꼭 잘 숙지해 두어야 한다. 훌륭한 글과 영상이 많아 이들 링크로 대체...
 
 * [스택프레임에 대한 설명](https://blog.kimtae.xyz/9)
 * [스무디 TV - 어셈블리어 스택, 푸시, 팝, 레지스터 ESP](https://www.youtube.com/watch?v=s28wzpg1DAw)
@@ -257,7 +257,7 @@ $ gcc -S -fno-stack-protector -mpreferred-stack-boundary=4 -z exectack -o name.a
 
 #### malloc & free
 
-* malloc 
+##### malloc하기
 
 ~~~c
 extern malloc
@@ -273,7 +273,7 @@ mov QWORD[rax], 3
 
 malloc은 rax로 포인터를 반환하므로, 해당 포인터를 통해 원하는 값을 넣는다.
 
-* free하는 방법
+##### free하기
 
 해제할 포인터를 rdi에 넣고, free를 call한다.
 
