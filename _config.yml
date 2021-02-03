@@ -98,7 +98,7 @@ analytics:
 author:
   name             : "seoh"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "<br />잘못된 내용을 지적해주시면 감사히 배우겠습니다"
+  bio              : "잘못된 내용을 지적해주시면 감사히 배우겠습니다"
   location         : "Republic of Korea"
   email            : "seiyong@me.com"
   links:
