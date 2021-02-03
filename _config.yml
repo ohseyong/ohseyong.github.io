@@ -23,7 +23,7 @@ title                    : "SEOHLOG"
 title_separator          : "-"
 subtitle                 : "" # site tagline that appears below site title in masthead
 name                     : "SEOHLOG"
-description              : "Today I Learned..."
+description              : "알아두면 어딘가엔 쓸모있을 것들"
 url                      : "https://ohseyong.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
@@ -98,7 +98,7 @@ analytics:
 author:
   name             : "seoh"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "42 born2code cadet<br />잘못된 내용은 언제든 지적해주시면 감사히 배우겠습니다"
+  bio              : "<br />잘못된 내용을 지적해주시면 감사히 배우겠습니다"
   location         : "Republic of Korea"
   email            : "seiyong@me.com"
   links:
