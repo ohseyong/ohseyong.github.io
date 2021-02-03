@@ -29,6 +29,10 @@ set cursorline    " 커서가 있는 라인을 밑줄로 강조
 set ignorecase    " 검색 기능 사용 시 대소문자 무시
 set ruler         " 오른쪽 하단에 현재 커서의 위치 표시
 set title         " 현재 열린 파일 이름을 창 타이틀에 표시
+set hlsearch      " 모든 검색결과 하이라이트
+set ignorecase    " 대소문자 무시하고 검색
+set incsearch     " 타이핑할 때마다 검색 결과 표시
+set noswapfile    " 스왑파일 사용안함
   
  call plug#begin('~/.vim/plugged')
      "Plug 'Github계정명/저장소명'"
