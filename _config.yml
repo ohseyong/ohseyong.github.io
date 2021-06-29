@@ -23,7 +23,7 @@ title                    : "SEOHLOG"
 title_separator          : "-"
 subtitle                 : "" # site tagline that appears below site title in masthead
 name                     : "SEOHLOG"
-description              : "알아두면 어딘가엔 쓸모있을 것들"
+description              : "records of overcoming laziness"
 url                      : "https://ohseyong.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
