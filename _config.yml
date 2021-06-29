@@ -24,7 +24,7 @@ title_separator          : "-"
 subtitle                 : "" # site tagline that appears below site title in masthead
 name                     : "SEOHLOG"
 description              : "records of overcoming laziness"
-url                      : "https://ohseyong.github.io"
+url                      : "https://seyong.me"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
@@ -98,7 +98,7 @@ analytics:
 author:
   name             : "seoh"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "잘못된 내용을 지적해주시면 감사히 배우겠습니다"
+  bio              : "records of overcoming laziness"
   location         : "Republic of Korea"
   email            : "seiyong@me.com"
   links:
@@ -117,6 +117,9 @@ author:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/ohseyong"
+    - label: "Storage Server"
+      icon: "fas fa-fw fa-hdd"
+      url: "https://seoh.synology.me"
     - label: "Instagram"
       icon: "fab fa-fw fa-instagram"
       # url: "https://instagram.com/"
