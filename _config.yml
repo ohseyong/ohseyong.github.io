@@ -119,7 +119,7 @@ author:
       url: "https://github.com/ohseyong"
     - label: "Storage Server"
       icon: "fas fa-fw fa-hdd"
-      url: "https://seoh.synology.me"
+      url: "http://seoh.synology.me"
     - label: "Instagram"
       icon: "fab fa-fw fa-instagram"
       # url: "https://instagram.com/"
