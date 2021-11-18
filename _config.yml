@@ -118,7 +118,7 @@ author:
       icon: "fab fa-fw fa-github"
       url: "https://github.com/ohseyong"
     - label: "YouTube"
-      icon: "fa-youtube-play"
+      icon: "fab fa-youtube"
       url: "https://www.youtube.com/channel/UCFQhbeaegWmfzbC0lFGLUrg"
     - label: "Storage Server"
       icon: "fas fa-fw fa-hdd"
