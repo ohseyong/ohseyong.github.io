@@ -23,7 +23,7 @@ layout: archive
 {% if sorted_posts.size != 0 %}
 <ul class="posts-list">
   {% for post in sorted_posts %}
-    {% if post.tags contains "how-to" %}
+    {% if post.tags contains "howto" %}
     <li>
       <a href="{{ post.url }}" class="caption" title="🔖 {{ post.tags | array_to_sentence_string }}">{{post.title}}</a>
     </li>

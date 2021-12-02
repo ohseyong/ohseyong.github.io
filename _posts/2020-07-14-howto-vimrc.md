@@ -3,7 +3,7 @@ title: "[42 Seoul] 알아두면 편리한, 최소한의 VIM 설정법(.vimrc)"
 # excerpt: "정말 10분이면 만들 수 있다"
 date: 2020-07-14 00:00:00 +0900
 categories: study
-tags: vim 42 vimrc
+tags: howto vim 42 vimrc
 header:
   teaser: # /assets/blog2.png
   image: # /assets/mozilla_logo.png 

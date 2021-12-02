@@ -3,7 +3,7 @@ title: "맥의 한글 입력 모드에서 `키를 누를 때 ₩가 입력되는
 # excerpt: "정말 10분이면 만들 수 있다"
 date: 2020-06-13 17:00:00 +0900
 categories: macOS
-tags: keyboard setting markdown howto
+tags: howto keyboard setting markdown
 header:
   teaser: /assets/backquote.jpg
   image: # /assets/mozilla_logo.png 
