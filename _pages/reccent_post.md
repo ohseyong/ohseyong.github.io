@@ -1,6 +1,6 @@
 ---
 title: "Recent Post"
 permalink: /recent/
-layout: archive
+layout: recent
 # author_profile: true
 ---
