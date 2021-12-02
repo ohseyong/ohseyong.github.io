@@ -17,7 +17,6 @@ layout: archive
   {% endfor %}
 </ul>
 {% endif %}
-</section>
 
 <h3 class="archive__subtitle">How-to</h3>
 {% assign sorted_posts = site.posts | sort: "title" %}
@@ -32,7 +31,6 @@ layout: archive
   {% endfor %}
 </ul>
 {% endif %}
-</section>
 
 
 <h3 class="archive__subtitle">{{ site.data.ui-text[site.locale].recent_posts | default: "Recent Posts" }}</h3>
