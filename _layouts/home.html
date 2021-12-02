@@ -5,8 +5,8 @@ layout: archive
 {{ content }}
 
 <h3 class="archive__subtitle">Review</h3>
-{% assign sorted_posts = site.posts | sort: "date" %}
-{% if sorted_posts.size != 0 %}
+<!-- {% assign sorted_posts = site.posts | sort: "date" %}
+{% if sorted_posts.size != 0 %} -->
 <ul class="posts-list">
   {% for post in sorted_posts %}
     {% if post.tags contains "review" %}
@@ -17,7 +17,7 @@ layout: archive
     {% endif %}
   {% endfor %}
 </ul>
-{% endif %}
+<!-- {% endif %} -->
 
 <h3 class="archive__subtitle">How-to</h3>
 {% assign sorted_posts = site.posts | sort: "title" %}
@@ -34,7 +34,7 @@ layout: archive
 </ul>
 {% endif %}
 
-<h2 class="archive__subtitle">How-to</h2>
+<h1 class="archive__subtitle">How-to</h1>
 {% assign sorted_posts = site.posts | sort: "title" %}
 {% if sorted_posts.size != 0 %}
   {% for post in sorted_posts %}
