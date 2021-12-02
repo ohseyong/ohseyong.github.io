@@ -3,7 +3,7 @@ title: "[전자기기] Apple Silicon M1 맥북 에어 간단한 사용기"
 excerpt: # "컴파일 옵션 : 외부 라이브러리를 이용한 컴파일 등의 내용들"
 date: 2020-11-29 02:00:00 +0900
 categories: hardware mac
-tags: Mac Macbook MacbookAir AppleSilicon Apple M1 MacbookAir2020Late 
+tags: Mac Apple AppleSilicon M1 review 
 header:
   teaser: /assets/M1Chip.png
   image: # /assets/M1Chip.png 
