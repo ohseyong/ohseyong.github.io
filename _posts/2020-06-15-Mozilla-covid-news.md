@@ -7,7 +7,7 @@ tags: Mozilla Firefox OpenSource
 header:
   teaser: /assets/mozilla_logo.png
   image: # /assets/mozilla_logo.png
-
+ 
 toc: false
 ---
 
