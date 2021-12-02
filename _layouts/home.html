@@ -11,6 +11,7 @@ layout: archive
   {% for post in sorted_posts %}
     {% if post.tags contains "review" %}
     <li>
+      <span class="post-date">{{ post.date | date_to_string }} »</span>
       <a href="{{ post.url }}" class="caption" title="🔖 {{ post.tags | array_to_sentence_string }}">{{post.title}}</a>
     </li>
     {% endif %}
@@ -25,6 +26,7 @@ layout: archive
   {% for post in sorted_posts %}
     {% if post.tags contains "howto" %}
     <li>
+      <span class="post-date">{{ post.date | date_to_string }} »</span>
       <a href="{{ post.url }}" class="caption" title="🔖 {{ post.tags | array_to_sentence_string }}">{{post.title}}</a>
     </li>
     {% endif %}
