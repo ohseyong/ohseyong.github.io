@@ -1,0 +1,68 @@
+---
+layout: archive
+---
+
+{{ content }}
+
+
+<h3 class="archive__subtitle">{{ site.data.ui-text[site.locale].recent_posts | default: "Recent Posts" }}</h3>
+
+{% if paginator %}
+  {% assign posts = paginator.posts %}
+{% else %}
+  {% assign posts = site.posts %}
+{% endif %}
+
+{% for post in posts %}
+  {% include archive-single.html %}
+{% endfor %}
+
+{% include paginator.html %}
+
+
+<!-- <h3 class="archive__subtitle">Review</h3>
+  <ul class="posts-list">
+    {% for post in site.posts %}
+    {% if post.tags contains "review" %}
+      <li>
+        <span class="post-date">{{ post.date | date_to_string }} »</span>
+        <a href="{{ post.url }}" class="caption" title="🔖 {{ post.tags | array_to_sentence_string }}">{{post.title}}</a>
+      </li>
+      {% endif %}
+    {% endfor %}
+</ul>
+
+<h3 class="archive__subtitle">How-to</h3>
+  <ul class="posts-list">
+    {% for post in site.posts %}
+    {% if post.tags contains "howto" %}
+      <li>
+        <span class="post-date">{{ post.date | date_to_string }} »</span>
+        <a href="{{ post.url }}" class="caption" title="🔖 {{ post.tags | array_to_sentence_string }}">{{post.title}}</a>
+      </li>
+      {% endif %}
+    {% endfor %}
+</ul>
+<h3 class="archive__subtitle">News</h3>
+  <ul class="posts-list">
+    {% for post in site.posts %}
+    {% if post.tags contains "news" %}
+      <li>
+        <span class="post-date">{{ post.date | date_to_string }} »</span>
+        <a href="{{ post.url }}" class="caption" title="🔖 {{ post.tags | array_to_sentence_string }}">{{post.title}}</a>
+      </li>
+      {% endif %}
+    {% endfor %}
+</ul>
+
+
+
+<h1 class="archive__subtitle">How-to</h1>
+{% assign sorted_posts = site.posts | sort: "title" %}
+{% if sorted_posts.size != 0 %}
+  {% for post in sorted_posts %}
+    {% if post.tags contains "howto" %}
+     {% include archive-single.html %}
+    {% endif %}
+  {% endfor %}
+{% endif %} -->
