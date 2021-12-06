@@ -1,6 +1,6 @@
 main:
-  - title: "모든 글"
-    url: /recent/
+#  - title: "모든 글"
+#    url: /recent/
   - title: "카테고리"
     url: /categories/
   - title: "태그"
