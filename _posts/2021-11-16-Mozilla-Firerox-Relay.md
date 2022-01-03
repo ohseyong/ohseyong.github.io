@@ -6,7 +6,7 @@ categories: news
 tags: Mozilla Firefox OpenSource
 header:
   teaser: /assets/2021-11-16-Mozilla-Firerox-Relay/teaser.jpg
-  image: /assets/2021-11-16-Mozilla-Firerox-Relay/teaser.png
+  image: /assets/relay_teaser.png
 
 toc: false
 ---
