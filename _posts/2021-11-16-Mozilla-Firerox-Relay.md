@@ -1,5 +1,5 @@
 ---
-title: "[번역] 스패머로부터 당신의 신원과 이메일을 보호해줄 Firefox Relay Premium"
+title: "[번역] 스패머로부터 당신을 보호해줄 Firefox Relay Premium"
 # excerpt: "정말 10분이면 만들 수 있다"
 date: 2021-11-16 00:00:00 +0900
 categories: news
