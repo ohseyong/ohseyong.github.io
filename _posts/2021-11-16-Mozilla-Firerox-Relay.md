@@ -5,8 +5,8 @@ date: 2021-11-16 00:00:00 +0900
 categories: news
 tags: Mozilla Firefox OpenSource
 header:
-  teaser: /assets/images/new_photo_1.jpg
-  image: # /assets/images/mozilla_logo.png
+  teaser: /assets/2021-11-16-Mozilla-Firerox-Relay/teaser.jpg
+  image: /assets/2021-11-16-Mozilla-Firerox-Relay/teaser.png
 
 toc: false
 ---
