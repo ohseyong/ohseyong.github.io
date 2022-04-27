@@ -1,9 +1,21 @@
-### Swift 기초 : 문자열 보간법, print 함수, 컬렉션 타입
+---
+title: "Swift 기초 : 문자열 보간법, print 함수, 컬렉션 타입"
+# excerpt: "최초의 IBM PC, 수많은 역사적 8비트 컴퓨터들부터 Apple II, Macintosh를 비롯한 애플의 살아있는 역사, Thinkpad 시리즈와 예전에 사용했던 소형 전자기기들을 직접 마음대로 만져보고 경험할 수 있는 제로하나 컴퓨터박물관을 방문한 후기입니다."
+date: 2022-04-16 06:00:00 +0900
+categories: Study
+tags: apple swift
+header:
+  teaser: # /assets/backquote.jpg
+  image: # /assets/mozilla_logo.png 
+toc: true  
+toc_sticky: true 
+
+---
 
 #### 문자열 보간법
 
-- 문자열 보간법 : print 함수를 통해 보다 더 내가 원하는 방향대로 문자열을 출력하는 방법 
-- 문자열 보간법 : 문자열 내에 `\값` 의 형태로 표기하면 값을 문자열로 치환해서 넣어줌
+- print 함수를 통해 보다 더 내가 원하는 방향대로 문자열을 출력하는 방법 
+- 문자열 내에 `\값` 의 형태로 표기하면 값을 문자열로 치환해서 넣어줌
 
 문자열 보간법을 사용하지 않는다면 :
 
