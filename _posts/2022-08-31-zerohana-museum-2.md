@@ -1,7 +1,7 @@
 ---
 title: "제로하나 컴퓨터박물관 방문기 2편 - Apple 전문 전시장과 IBM PC관"
 excerpt: "제로하나 컴퓨터박물관의 3층과 4층의 전시품들을 다룬 글입니다. Apple의 모든 올드맥들이 전시되어 있었고, IBM PC의 살아있는 역사 또한 전시되어 있었습니다."
-date: 2022-08-31 06:00:00 +0900
+date: 2022-08-30 06:00:00 +0900
 categories: review
 tags: review museum apple
 header:
