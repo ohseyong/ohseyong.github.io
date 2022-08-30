@@ -1,7 +1,7 @@
 ---
-title: "제로하나 컴퓨터박물관 방문기 2편 - Apple 전문관과 IBM PC관"
-excerpt: "최초의 IBM PC, 수많은 역사적 8비트 컴퓨터들부터 Apple II, Macintosh를 비롯한 애플의 살아있는 역사, Thinkpad 시리즈와 예전에 사용했던 소형 전자기기들을 직접 마음대로 만져보고 경험할 수 있는 제로하나 컴퓨터박물관을 방문한 후기입니다."
-date: 2021-12-06 06:00:00 +0900
+title: "제로하나 컴퓨터박물관 방문기 2편 - Apple 전문 전시장과 IBM PC관"
+excerpt: "제로하나 컴퓨터박물관의 3층과 4층의 전시품들을 다룬 글입니다. Apple의 모든 올드맥들이 전시되어 있었고, IBM PC의 살아있는 역사 또한 전시되어 있었습니다."
+date: 2022-08-31 06:00:00 +0900
 categories: review
 tags: review museum apple
 header:
@@ -14,17 +14,49 @@ toc_sticky: true
 
 
 
-202
+이 글은 [제로하나 컴퓨터박물관 방문기 1편](/review/zerohana-museum/)에서 이어지는 글입니다.
 
-
+2021년 초에 다녀온 제로하나 컴퓨터박물관의 방문 후기를 2022년 8월이 되어서야 마무리합니다. 워낙 인상깊었던 곳이었기에 늦게라도 적어봅니다. 1편은 2021년 12월에 적었고, 2편은 2022년 8월에 적으니 글 하나를 완성하는데 무려 1년 7개월이 걸린 셈이네요. 시간이 참 많이 지났습니다. <Del>아이고 게을러라...</del>
 
 ## 3층
 
-
+3층에는 두 개의 전시실이 있었는데요. 하나는 IBM PC의 살아있는 역사를 보여주는 전시실이었고, 다른 하나는 옛날 추억의 고전게임들과 PC 관련 서적을 모아볼 수 있게 해 둔 전시실이었습니다.
 
 ### IBM PC관
 
+![IMG_6018](../assets/2022-08-31-zerohana-museum-2/IMG_6018.jpeg)
+
+
+
+![IMG_6022](../assets/2022-08-31-zerohana-museum-2/IMG_6022.jpeg)
+
+
+
+![IMG_6023](../assets/2022-08-31-zerohana-museum-2/IMG_6023.jpeg)
+
+![IMG_6024](../assets/2022-08-31-zerohana-museum-2/IMG_6024.jpeg)
+
+
+
+![IMG_6028](../assets/2022-08-31-zerohana-museum-2/IMG_6028.jpeg)
+
+![IMG_6030](../assets/2022-08-31-zerohana-museum-2/IMG_6030.jpeg)
+
 ### 고전게임 및 잡지 관람관
+
+![IMG_6017](../assets/2022-08-31-zerohana-museum-2/IMG_6017.jpeg)
+
+![IMG_6015 2](../assets/2022-08-31-zerohana-museum-2/IMG_6015 2.jpeg)
+
+![IMG_5995](../assets/2022-08-31-zerohana-museum-2/IMG_5995.jpeg)
+
+![IMG_3894](../assets/2022-08-31-zerohana-museum-2/IMG_3894.jpeg)
+
+![IMG_3893](../assets/2022-08-31-zerohana-museum-2/IMG_3893.jpeg)
+
+![IMG_3898](../assets/2022-08-31-zerohana-museum-2/IMG_3898.jpeg)
+
+
 
 
 
