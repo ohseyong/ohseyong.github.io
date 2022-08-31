@@ -39,7 +39,7 @@ $ touch DefaultkeyBinding.dict (이미 파일이 있다면 생략한다)
 그리고 나서 컴퓨터를 껐다 켜거나, 아니면 `를 입력하고 싶은 애플리케이션을 껐다 켜면 원화 키를 눌러도 백쿼트가 정상적으로 입력되는 것을 확인할 수 있다.
 
 ### 더 쉬운 방법
-[어떤 멋진 분께서 이걸 쉽게 할 수 있는 쉘 스크립트를 만들어 두신 것을 발견했다.](https://gist.github.com/redism/43bc51cab62269fa97a220a7bb5e1103) 위 과정을 직접 수행할 필요 없이, 터미널을 열고 아래 명령어 한 줄만 입력하면 바로 설정이 적용된다. <del>쉘 스크립트 만드시는 분들 정말 신기하고 존경스럽다.</del>
+[어떤 멋진 분께서 이걸 쉽게 할 수 있는 쉘 스크립트를 만들어 두신 것을 발견했다.](https://gist.github.com/redism/43bc51cab62269fa97a220a7bb5e1103) 위 과정을 직접 수행할 필요 없이, 터미널을 열고 아래 명령어 한 줄만 입력하면 바로 설정이 적용된다.
 
 ~~~shell
 curl -sSL https://gist.githubusercontent.com/redism/43bc51cab62269fa97a220a7bb5e1103/raw/0d55b37b60e0e0bd3d0d7f53995de0a722f9820c/kr_won_to_backquote.sh | sh
