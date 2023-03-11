@@ -24,37 +24,37 @@ toc_sticky: true
 
 ### IBM PC관
 
-![IMG_6018](../assets/2022-08-31-zerohana-museum-2/IMG_6018.jpeg)
+![IMG_6018](./assets/2022-08-31-zerohana-museum-2/IMG_6018.jpeg)
 
 
 
-![IMG_6022](../assets/2022-08-31-zerohana-museum-2/IMG_6022.jpeg)
+![IMG_6022](./assets/2022-08-31-zerohana-museum-2/IMG_6022.jpeg)
 
 
 
-![IMG_6023](../assets/2022-08-31-zerohana-museum-2/IMG_6023.jpeg)
+![IMG_6023](./assets/2022-08-31-zerohana-museum-2/IMG_6023.jpeg)
 
-![IMG_6024](../assets/2022-08-31-zerohana-museum-2/IMG_6024.jpeg)
+![IMG_6024](./assets/2022-08-31-zerohana-museum-2/IMG_6024.jpeg)
 
 
 
-![IMG_6028](../assets/2022-08-31-zerohana-museum-2/IMG_6028.jpeg)
+![IMG_6028](./assets/2022-08-31-zerohana-museum-2/IMG_6028.jpeg)
 
-![IMG_6030](../assets/2022-08-31-zerohana-museum-2/IMG_6030.jpeg)
+![IMG_6030](./assets/2022-08-31-zerohana-museum-2/IMG_6030.jpeg)
 
 ### 고전게임 및 잡지 관람관
 
-![IMG_6017](../assets/2022-08-31-zerohana-museum-2/IMG_6017.jpeg)
+![IMG_6017](./assets/2022-08-31-zerohana-museum-2/IMG_6017.jpeg)
 
-![IMG_6015 2](../assets/2022-08-31-zerohana-museum-2/IMG_6015 2.jpeg)
+![IMG_6015 2](./assets/2022-08-31-zerohana-museum-2/IMG_6015 2.jpeg)
 
-![IMG_5995](../assets/2022-08-31-zerohana-museum-2/IMG_5995.jpeg)
+![IMG_5995](./assets/2022-08-31-zerohana-museum-2/IMG_5995.jpeg)
 
-![IMG_3894](../assets/2022-08-31-zerohana-museum-2/IMG_3894.jpeg)
+![IMG_3894](./assets/2022-08-31-zerohana-museum-2/IMG_3894.jpeg)
 
-![IMG_3893](../assets/2022-08-31-zerohana-museum-2/IMG_3893.jpeg)
+![IMG_3893](./assets/2022-08-31-zerohana-museum-2/IMG_3893.jpeg)
 
-![IMG_3898](../assets/2022-08-31-zerohana-museum-2/IMG_3898.jpeg)
+![IMG_3898](./assets/2022-08-31-zerohana-museum-2/IMG_3898.jpeg)
 
 
 
@@ -76,7 +76,7 @@ toc_sticky: true
 
  글을 쓰기 위해 뒤늦게 정보를 찾아보던 중 이곳이 2021년 11월까지만 운영하고, 12월 1일부터는 **운영을 중단**한다는 소식을 접하게 되었습니다.
 
-개인 박물관이고, 홍보가 덜 되어있고, 다소 마니아를 타겟으로 한 박물관인 만큼 제가 방문했을 때도 손님이 없긴 했습니다. 박물관 관장님도 전기세조차 내기 어려울 정도라고 말씀하시며 여러 차례 경영난을 호소하시던 상황이었던지라, 여러모로 운영상의 어려움에 의해 문을 닫게 된 것으로 보입니다. 박물관의 전시물품들은 다른 기관 혹은 지자체 등에 인계하길 희망하고 계시는 상황이라고 합니다.
+개인 박물관이고, 홍보가 덜 되어있고, 다소 마니아를 타겟으로 한 박물관인 만큼 제가 방문했을 때도 손님이 없긴 했습니다. 박물관 관장님도 전기세조차 내기 어려울 정도라고 말씀하시며 여러 차례 경영난을 호소하시던 상황이었던지라, 여러모로 운영상의 어려움에 의해 문을 닫게 된 것으로 보입니다. 박물관의 전시물품들은 다른 기관 혹은 지자체 등에 인계하길 희망하고 계시는 상황이었지만, 좋게 마무리되었는지는 알 수 없습니다.
 
 
 
