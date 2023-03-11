@@ -24,35 +24,35 @@ toc_sticky: true
 
 ### IBM PC관
 
-![IMG_6018](./assets/2022-08-31-zerohana-museum-2/IMG_6018.jpeg)
+![IMG_6018](/assets/2022-08-31-zerohana-museum-2/IMG_6018.jpeg)
 
 
 
-![IMG_6022](./assets/2022-08-31-zerohana-museum-2/IMG_6022.jpeg)
+![IMG_6022](/assets/2022-08-31-zerohana-museum-2/IMG_6022.jpeg)
 
 
 
-![IMG_6023](./assets/2022-08-31-zerohana-museum-2/IMG_6023.jpeg)
+![IMG_6023](/assets/2022-08-31-zerohana-museum-2/IMG_6023.jpeg)
 
-![IMG_6024](./assets/2022-08-31-zerohana-museum-2/IMG_6024.jpeg)
+![IMG_6024](/assets/2022-08-31-zerohana-museum-2/IMG_6024.jpeg)
 
 
 
-![IMG_6028](./assets/2022-08-31-zerohana-museum-2/IMG_6028.jpeg)
+![IMG_6028](/assets/2022-08-31-zerohana-museum-2/IMG_6028.jpeg)
 
-![IMG_6030](./assets/2022-08-31-zerohana-museum-2/IMG_6030.jpeg)
+![IMG_6030](/assets/2022-08-31-zerohana-museum-2/IMG_6030.jpeg)
 
 ### 고전게임 및 잡지 관람관
 
-![IMG_6017](./assets/2022-08-31-zerohana-museum-2/IMG_6017.jpeg)
+![IMG_6017](/assets/2022-08-31-zerohana-museum-2/IMG_6017.jpeg)
 
-![IMG_6015 2](./assets/2022-08-31-zerohana-museum-2/IMG_6015 2.jpeg)
+![IMG_6015 2](/assets/2022-08-31-zerohana-museum-2/IMG_6015 2.jpeg)
 
-![IMG_5995](./assets/2022-08-31-zerohana-museum-2/IMG_5995.jpeg)
+![IMG_5995](/assets/2022-08-31-zerohana-museum-2/IMG_5995.jpeg)
 
-![IMG_3894](./assets/2022-08-31-zerohana-museum-2/IMG_3894.jpeg)
+![IMG_3894](/assets/2022-08-31-zerohana-museum-2/IMG_3894.jpeg)
 
-![IMG_3893](./assets/2022-08-31-zerohana-museum-2/IMG_3893.jpeg)
+![IMG_3893](/assets/2022-08-31-zerohana-museum-2/IMG_3893.jpeg)
 
 ![IMG_3898](./assets/2022-08-31-zerohana-museum-2/IMG_3898.jpeg)
 
