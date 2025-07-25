@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>박지은 생애 첫 내집마련 시뮬레이터</title>
+    <title>박지은 내집마련 시뮬레이터</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -46,8 +46,8 @@
 
     <div class="container mx-auto p-4 md:p-8">
         <header class="text-center mb-10">
-            <h1 class="text-3xl md:text-4xl font-bold text-slate-900">박지은 생애 첫 내집마련 계산기</h1>
-            <p class="mt-3 text-slate-600">현 자산 상황과 향후 미래 전망을 바탕으로 한 시뮬레이터<br>6가지 시나리오를 정밀하게 비교해보자!</p>
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-900">박지은 내집마련 계산기 🐕</h1>
+            <p class="mt-3 text-slate-600">현 자산 상황과 미래 전망을 바탕으로<br>6가지 시나리오를 비교해줍니다</p>
         </header>
 
         <!-- Input Sections -->
@@ -230,12 +230,11 @@
                 
                 const calcNetAsset = (years) => {
                     if (savingsPerMonth <= 0) return initialInvestment;
-                    let fv = initialInvestment * Math.pow(1 + vars.investmentReturn, years);
-                    fv += savingsPerMonth * 12 * ((Math.pow(1 + vars.investmentReturn, years) - 1) / vars.investmentReturn);
-                    return fv;
+                    let fv_of_savings = savingsPerMonth * 12 * ((Math.pow(1 + vars.investmentReturn, years) - 1) / vars.investmentReturn);
+                    return fv_of_savings + initialInvestment;
                 };
                 results = { netAsset5: calcNetAsset(5), netAsset10: calcNetAsset(10) };
-                netAsset5Tooltip = `초기 투자금과 월 ${toWonMonthly(savingsPerMonth)}씩 저축액을 연 ${(vars.investmentReturn * 100).toFixed(1)}% 수익률로 복리 계산한 결과입니다.`;
+                netAsset5Tooltip = `초기 투자금(${toEok(initialInvestment)}) + 월 ${toWonMonthly(savingsPerMonth)}씩 저축액을 연 ${(vars.investmentReturn * 100).toFixed(1)}% 수익률로 복리 계산한 결과입니다.`;
                 netAsset10Tooltip = netAsset5Tooltip;
                 paymentBlockHTML = `<p class="text-2xl md:text-3xl font-bold text-${s.color}-600">${toWonMonthly(monthlyPayment)}</p>
                                     <p class="text-xs text-slate-500 mt-1">대출구성: ${loanDetailsText}</p>
