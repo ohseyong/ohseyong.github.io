@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>박지은 내집마련 시뮬레이터</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
@@ -311,19 +311,19 @@
                     
                     const calcNetAsset = (years) => price * Math.pow(1 + appreciationRate, years) - calculateRemainingBalance(vars.rateDidimdolSingle, years*12, didimdolPayment, didimdolLoan) - calculateRemainingBalance(vars.rateBank, years*12, bankPayment, bankLoan) - minusLoanAmount;
                     results = { netAsset5: calcNetAsset(5), netAsset10: calcNetAsset(10) };
-                    benefitText = `생애최초 혜택(LTV 80%, 한도 3억)이 적용됨.`;
+                    benefitText = `생애최초 혜택(LTV 80%, 한도 3억)이 적용되었습니다.`;
                     netAsset5Tooltip = generateMixedTooltip(5, price, appreciationRate, vars.rateDidimdolSingle, didimdolPayment, didimdolLoan, vars.rateBank, bankPayment, bankLoan, minusLoanAmount, benefitText);
                     netAsset10Tooltip = generateMixedTooltip(10, price, appreciationRate, vars.rateDidimdolSingle, didimdolPayment, didimdolLoan, vars.rateBank, bankPayment, bankLoan, minusLoanAmount, benefitText);
 
                 } else {
                     if (s.type === 'buy_apt_married') {
                         loanRate = vars.rateDidimdolMarried;
-                        benefitText = `생애최초 신혼부부 혜택(LTV 80%, 한도 4억)이 적용됨.`;
+                        benefitText = `생애최초 신혼부부 혜택(LTV 80%, 한도 4억)이 적용되었습니다.`;
                         appliedRateText = `디딤돌(신혼) ${(loanRate * 100).toFixed(1)}%`;
                         loanDetailsText = `부부자본 ${toEok(currentInvestment)} + 디딤돌(신혼) ${toEok(mortgageLoanAmount)}`;
                     } else {
                         loanRate = (s.loan === 'didimdol_single') ? vars.rateDidimdolSingle : vars.rateBank;
-                        benefitText = `생애최초 혜택(LTV 80%)이 적용됨.`;
+                        benefitText = `생애최초 혜택(LTV 80%)이 적용되었습니다.`;
                         appliedRateText = `${(loanRate * 100).toFixed(1)}%`;
                         loanDetailsText = `주담대 ${toEok(mortgageLoanAmount)}`;
                     }
@@ -368,7 +368,7 @@
                 const totalAdvantage = interestSavings + netAssetDifference;
                 
                 if (totalAdvantage > 0) {
-                    const savingsTooltip = `단독 매수 대비 10년간 절약한 총 이자(${toEok(interestSavings)})와 늘어난 순자산(${toEok(netAssetDifference)})을 합산한 총 재무적 이득임.`;
+                    const savingsTooltip = `단독 매수 대비 10년간 절약한 총 이자(${toEok(interestSavings)})와 늘어난 순자산(${toEok(netAssetDifference)})을 합산한 총 재무적 이득입니다.`;
                     footerAddon = `<p><strong class="text-blue-600">단독 매수 대비 10년 총 이득:</strong> ${toEok(totalAdvantage)} <span class="info-icon">i<span class="tooltip">${savingsTooltip}</span></span></p>`;
                 }
             }
@@ -413,7 +413,23 @@
 
     // --- Event Listeners ---
     Object.values(inputs).forEach(el => el.addEventListener('input', calculateAndRender));
-    window.addEventListener('load', calculateAndRender);
+    window.addEventListener('load', () => {
+        calculateAndRender();
+        // Add touch event for mobile tooltips
+        document.body.addEventListener('click', function(e) {
+            const target = e.target;
+            if (target.classList.contains('info-icon')) {
+                const tooltip = target.querySelector('.tooltip');
+                if (tooltip) {
+                    tooltip.classList.toggle('visible');
+                }
+            } else {
+                document.querySelectorAll('.tooltip.visible').forEach(tooltip => {
+                    tooltip.classList.remove('visible');
+                });
+            }
+        });
+    });
     </script>
 </body>
 </html>
