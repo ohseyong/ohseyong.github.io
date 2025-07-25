@@ -68,6 +68,7 @@
                 <summary class="font-semibold text-lg text-slate-700 hover:text-indigo-600">시뮬레이션 변수 설정 (고급)</summary>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-4">
                     <!-- Spouse Income -->
+                    <div><label for="spouseInvestment" class="text-sm font-medium">배우자 초기 자본 (신혼부부용)</label><div class="relative"><input type="number" id="spouseInvestment" class="w-full p-2 border border-slate-200 rounded-md" value="5000"><span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-slate-500">만원</span></div></div>
                     <div><label for="spouseIncome" class="text-sm font-medium">배우자 연봉 (신혼부부용)</label><div class="relative"><input type="number" id="spouseIncome" class="w-full p-2 border border-slate-200 rounded-md" value="4000"><span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-slate-500">만원</span></div></div>
                     <!-- House Prices -->
                     <div><label for="jeonseDeposit" class="text-sm font-medium">전세 보증금</label><div class="relative"><input type="number" id="jeonseDeposit" class="w-full p-2 border border-slate-200 rounded-md" value="21000"><span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-slate-500">만원</span></div></div>
@@ -80,6 +81,7 @@
                     <div><label for="rateDidimdolSingle" class="text-sm font-medium">디딤돌(단독) 금리</label><div class="relative"><input type="number" id="rateDidimdolSingle" class="w-full p-2 border border-slate-200 rounded-md" value="3.8" step="0.1"><span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-slate-500">%</span></div></div>
                     <div><label for="rateDidimdolMarried" class="text-sm font-medium">디딤돌(신혼) 금리</label><div class="relative"><input type="number" id="rateDidimdolMarried" class="w-full p-2 border border-slate-200 rounded-md" value="3.1" step="0.1"><span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-slate-500">%</span></div></div>
                     <div><label for="rateRent" class="text-sm font-medium">전세자금대출 금리</label><div class="relative"><input type="number" id="rateRent" class="w-full p-2 border border-slate-200 rounded-md" value="2.8" step="0.1"><span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-slate-500">%</span></div></div>
+                    <div><label for="rateMinus" class="text-sm font-medium">마이너스통장 금리</label><div class="relative"><input type="number" id="rateMinus" class="w-full p-2 border border-slate-200 rounded-md" value="5.2" step="0.1"><span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-slate-500">%</span></div></div>
                     <!-- Appreciation & Investment Rates -->
                     <div><label for="appreciationVilla" class="text-sm font-medium">빌라/오피스텔 연 상승률</label><div class="relative"><input type="number" id="appreciationVilla" class="w-full p-2 border border-slate-200 rounded-md" value="1.5" step="0.1"><span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-slate-500">%</span></div></div>
                     <div><label for="appreciationApt" class="text-sm font-medium">아파트 연 상승률</label><div class="relative"><input type="number" id="appreciationApt" class="w-full p-2 border border-slate-200 rounded-md" value="5.0" step="0.1"><span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-slate-500">%</span></div></div>
@@ -101,7 +103,7 @@
     <script>
     // --- Scenario Data ---
     const scenarios = [
-        { id: 'rent', title: '시나리오 1: 전세 유지', color: 'green', type: 'rent' },
+        { id: 'rent', title: '시나리오 1: 새 전세집 구하기', color: 'green', type: 'rent' },
         { id: 'buyNow', title: '시나리오 2: 빌라/오피스텔 즉시 매수', color: 'red', type: 'buy', loan: 'bank', appreciation: 'villa' },
         { id: 'villa', title: '시나리오 3: 빌라 매수 (30세, 디딤돌)', color: 'sky', type: 'buy', loan: 'didimdol_single', appreciation: 'villa' },
         { id: 'officetel', title: '시나리오 4: 오피스텔 매수 (30세, 디딤돌)', color: 'orange', type: 'buy', loan: 'didimdol_single', appreciation: 'officetel' },
@@ -121,6 +123,7 @@
     const inputs = {
         initialInvestment: document.getElementById('initialInvestment'),
         annualIncome: document.getElementById('annualIncome'),
+        spouseInvestment: document.getElementById('spouseInvestment'),
         spouseIncome: document.getElementById('spouseIncome'),
         jeonseDeposit: document.getElementById('jeonseDeposit'),
         housePriceVilla: document.getElementById('housePriceVilla'),
@@ -131,13 +134,20 @@
         rateDidimdolSingle: document.getElementById('rateDidimdolSingle'),
         rateDidimdolMarried: document.getElementById('rateDidimdolMarried'),
         rateRent: document.getElementById('rateRent'),
+        rateMinus: document.getElementById('rateMinus'),
         appreciationVilla: document.getElementById('appreciationVilla'),
         appreciationApt: document.getElementById('appreciationApt')
     };
     const outputContainer = document.getElementById('outputContainer');
 
     // --- Helper Functions ---
-    const toWon = (num) => isNaN(num) || !isFinite(num) ? '계산 불가' : `${Math.round(num / 10000).toLocaleString()} 만원`;
+    const toEok = (num) => {
+        if (isNaN(num) || !isFinite(num)) return '계산 불가';
+        if (num >= 100000000) {
+            return `${(num / 100000000).toFixed(2).replace(/\.00$/, '').replace(/(\.\d)0$/, '$1')}억`;
+        }
+        return `${Math.round(num / 10000).toLocaleString()}만원`;
+    };
     const toWonMonthly = (num) => isNaN(num) || !isFinite(num) ? '계산 불가' : `${Math.round(num).toLocaleString()} 원`;
     const parseVal = (el) => parseFloat(el.value) || 0;
     const parseRate = (el) => (parseFloat(el.value) || 0) / 100;
@@ -155,15 +165,17 @@
     }
     
     function getTakeHomePay(annualIncome) {
-        if (annualIncome <= 50000000) return (annualIncome * 0.88) / 12;
-        if (annualIncome <= 80000000) return (annualIncome * 0.85) / 12;
+        // More accurate estimation
+        if (annualIncome <= 50000000) return (annualIncome * 0.86) / 12;
+        if (annualIncome <= 80000000) return (annualIncome * 0.84) / 12;
         return (annualIncome * 0.82) / 12;
     }
 
     // --- Main Calculation Logic ---
     function calculateAndRender() {
-        const LTV = 0.8;
+        const MINUS_LOAN_LIMIT = 50000000;
         const initialInvestment = parseVal(inputs.initialInvestment) * 10000;
+        const spouseInvestment = parseVal(inputs.spouseInvestment) * 10000;
         const annualIncome = parseVal(inputs.annualIncome) * 10000;
         const spouseIncome = parseVal(inputs.spouseIncome) * 10000;
         const takeHomePay = getTakeHomePay(annualIncome);
@@ -178,132 +190,186 @@
             rateDidimdolSingle: parseRate(inputs.rateDidimdolSingle),
             rateDidimdolMarried: parseRate(inputs.rateDidimdolMarried),
             rateRent: parseRate(inputs.rateRent),
+            rateMinus: parseRate(inputs.rateMinus),
             appreciationVilla: parseRate(inputs.appreciationVilla),
-            // 오피스텔은 감가상각, 낮은 대지지분 등으로 빌라보다 상승률이 낮다고 가정
             appreciationOfficetel: parseRate(inputs.appreciationVilla) * 0.5,
             appreciationApt: parseRate(inputs.appreciationApt),
             investmentReturn: parseRate(inputs.investmentReturn)
         };
 
-        outputContainer.innerHTML = ''; // Clear previous results
+        outputContainer.innerHTML = '';
+        const scenarioData = {};
 
         scenarios.forEach(s => {
-            let results = {};
             let monthlyPayment = 0;
             let monthlySavings = 0;
-            let appliedRateText = '';
             let subtitleText = '';
-            let monthlySavingsTooltip = '월 실수령액에서 주거비용을 뺀 금액 (생활비 제외 전)';
             let netAsset5Tooltip = '';
             let netAsset10Tooltip = '';
+            let results = {};
+            let footerAddon = '';
+            let paymentBlockHTML = '';
 
             if (s.type === 'rent') {
                 const rentDeposit = vars.jeonseDeposit;
-                subtitleText = `전세금 ${toWon(rentDeposit)} 기준`;
+                subtitleText = `전세금 ${toEok(rentDeposit)} 기준`;
+                
+                if (initialInvestment < rentDeposit * 0.2) {
+                    const errorCardHTML = `<div class="card border-t-4 border-gray-400 opacity-70"><div class="card-header"><h3 class="text-xl font-bold text-slate-800">${s.title}</h3><p class="text-sm text-slate-500 mt-1">${subtitleText}</p></div><div class="card-body flex flex-col items-center justify-center text-center"><p class="text-lg font-semibold text-gray-600">초기 투자금 부족</p><p class="text-sm text-gray-500 mt-2">전세보증금의 20%인<br>${toEok(rentDeposit * 0.2)}이 필요합니다.</p></div><div class="card-footer text-xs space-y-2"><p><strong class="text-green-600">이점:</strong> ${prosCons[s.id].pros}</p><p><strong class="text-red-600">주의사항:</strong> ${prosCons[s.id].cons}</p></div></div>`;
+                    outputContainer.innerHTML += errorCardHTML;
+                    return;
+                }
+
                 const rentLoan = Math.max(0, rentDeposit - initialInvestment);
+                const loanDetailsText = `전세대출 ${toEok(rentLoan)}`;
                 monthlyPayment = rentLoan * vars.rateRent / 12;
                 monthlySavings = takeHomePay - monthlyPayment;
-                appliedRateText = `${(vars.rateRent * 100).toFixed(1)}%`;
+                const appliedRateText = `${(vars.rateRent * 100).toFixed(1)}%`;
+                
+                const savingsPerMonth = monthlySavings > 0 ? monthlySavings - 1500000 : 0;
                 
                 const calcNetAsset = (years) => {
-                    const savingsPerMonth = monthlySavings > 0 ? monthlySavings - 1500000 : 0;
                     if (savingsPerMonth <= 0) return initialInvestment;
                     let fv = initialInvestment * Math.pow(1 + vars.investmentReturn, years);
                     fv += savingsPerMonth * 12 * ((Math.pow(1 + vars.investmentReturn, years) - 1) / vars.investmentReturn);
                     return fv;
                 };
                 results = { netAsset5: calcNetAsset(5), netAsset10: calcNetAsset(10) };
-                const tooltipBaseText = `초기 투자금과 월 저축액(생활비 150만원 차감 후)을 연 ${vars.investmentReturn * 100}% 수익률로 복리 계산한 결과입니다.`;
-                netAsset5Tooltip = tooltipBaseText;
-                netAsset10Tooltip = tooltipBaseText;
-
+                netAsset5Tooltip = `초기 투자금과 월 ${toWonMonthly(savingsPerMonth)}씩 저축액을 연 ${(vars.investmentReturn * 100).toFixed(1)}% 수익률로 복리 계산한 결과입니다.`;
+                netAsset10Tooltip = netAsset5Tooltip;
+                paymentBlockHTML = `<p class="text-2xl md:text-3xl font-bold text-${s.color}-600">${toWonMonthly(monthlyPayment)}</p>
+                                    <p class="text-xs text-slate-500 mt-1">대출구성: ${loanDetailsText}</p>
+                                    <p class="text-xs text-slate-500 mt-1">적용금리: ${appliedRateText}</p>`;
 
             } else if (s.type.startsWith('buy')) {
-                let price, loanRate, appreciationRate, loanAmount;
-
-                const generateTooltip = (years, p, apr, lr, pmt, la) => {
+                const generateTooltip = (years, p, apr, lr, pmt, mla, mla_principal, benefitText) => {
                     const fv = p * Math.pow(1 + apr, years);
-                    const rem = calculateRemainingBalance(lr, years * 12, pmt, la);
-                    return `${years}년 후 예상가 (${toWon(fv)}) - 대출잔액 (${toWon(rem)}) 입니다.`;
+                    const rem = calculateRemainingBalance(lr, years * 12, pmt, mla);
+                    return `${years}년 후 예상 집값 (${toEok(fv)}) - 대출잔액 (${toEok(rem + mla_principal)}) 입니다. ${benefitText}`;
                 };
                 
-                const generateMixedTooltip = (years, p, apr, lr1, pmt1, la1, lr2, pmt2, la2) => {
+                const generateMixedTooltip = (years, p, apr, lr1, pmt1, la1, lr2, pmt2, la2, mla_principal, benefitText) => {
                     const fv = p * Math.pow(1 + apr, years);
                     const rem1 = calculateRemainingBalance(lr1, years * 12, pmt1, la1);
                     const rem2 = calculateRemainingBalance(lr2, years * 12, pmt2, la2);
-                    return `${years}년 후 예상가 (${toWon(fv)}) - 총 대출잔액 (${toWon(rem1 + rem2)}) 입니다.`;
+                    return `${years}년 후 예상 집값 (${toEok(fv)}) - 총 대출잔액 (${toEok(rem1 + rem2 + mla_principal)}) 입니다. ${benefitText}`;
                 };
+                
+                let price, appreciationRate, loanRate, mortgageLoanAmount, minusLoanAmount = 0, loanDetailsText = '', appliedRateText = '';
+                let benefitText = '';
+                let currentInvestment = (s.id === 'apt_married') ? initialInvestment + spouseInvestment : initialInvestment;
 
-                if (s.type === 'buy_apt_single') {
+                if (s.type === 'buy_apt_single' || s.type === 'buy_apt_married') {
                     price = vars.housePriceApt;
-                    subtitleText = `아파트 ${toWon(price)} 매매 기준`;
+                    subtitleText = `아파트 ${toEok(price)} 매매 기준`;
                     appreciationRate = vars.appreciationApt;
-                    const didimdolLoanMax = Math.min(price * 0.7, 200000000);
-                    const bankLoan = Math.max(0, price * LTV - didimdolLoanMax);
-                    const didimdolPayment = calculatePMT(vars.rateDidimdolSingle, termMonths, didimdolLoanMax);
-                    const bankPayment = calculatePMT(vars.rateBank, termMonths, bankLoan);
-                    monthlyPayment = didimdolPayment + bankPayment;
-                    appliedRateText = `디딤돌 ${(vars.rateDidimdolSingle * 100).toFixed(1)}% + 은행 ${(vars.rateBank * 100).toFixed(1)}%`;
-                    monthlySavings = takeHomePay - monthlyPayment;
-                    
-                    const calcNetAsset = (years) => {
-                        const fv = price * Math.pow(1 + appreciationRate, years);
-                        const remDidimdol = calculateRemainingBalance(vars.rateDidimdolSingle, years * 12, didimdolPayment, didimdolLoanMax);
-                        const remBank = calculateRemainingBalance(vars.rateBank, years * 12, bankPayment, bankLoan);
-                        return fv - remDidimdol - remBank;
-                    };
-                    results = { netAsset5: calcNetAsset(5), netAsset10: calcNetAsset(10) };
-                    netAsset5Tooltip = generateMixedTooltip(5, price, appreciationRate, vars.rateDidimdolSingle, didimdolPayment, didimdolLoanMax, vars.rateBank, bankPayment, bankLoan);
-                    netAsset10Tooltip = generateMixedTooltip(10, price, appreciationRate, vars.rateDidimdolSingle, didimdolPayment, didimdolLoanMax, vars.rateBank, bankPayment, bankLoan);
-
-                } else if (s.type === 'buy_apt_married') {
-                    price = vars.housePriceApt;
-                    subtitleText = `아파트 ${toWon(price)} 매매 기준`;
-                    appreciationRate = vars.appreciationApt;
-                    loanRate = vars.rateDidimdolMarried;
-                    loanAmount = Math.min(price * LTV, 400000000);
-                    monthlyPayment = calculatePMT(loanRate, termMonths, loanAmount);
-                    appliedRateText = `${(loanRate * 100).toFixed(1)}%`;
-                    
-                    const combinedTakeHomePay = getTakeHomePay(annualIncome + spouseIncome);
-                    monthlySavings = combinedTakeHomePay - monthlyPayment;
-                    monthlySavingsTooltip = '부부 합산 실수령액에서 주거비용을 뺀 금액 (생활비 제외 전)';
-
-                } else { // Villa or Officetel
+                } else {
                     price = vars.housePriceVilla;
-                    subtitleText = `빌라/오피스텔 ${toWon(price)} 매매 기준`;
-                    switch (s.loan) {
-                        case 'didimdol_single': loanRate = vars.rateDidimdolSingle; break;
-                        case 'bank': loanRate = vars.rateBank; break;
-                        default: loanRate = 0;
-                    }
-                    appliedRateText = `${(loanRate * 100).toFixed(1)}%`;
-                    
-                    if (s.id === 'officetel') {
-                        appreciationRate = vars.appreciationOfficetel;
-                    } else {
-                        appreciationRate = vars.appreciationVilla;
-                    }
-                    
-                    loanAmount = price * LTV;
-                    monthlyPayment = calculatePMT(loanRate, termMonths, loanAmount);
-                    monthlySavings = takeHomePay - monthlyPayment;
+                    subtitleText = `빌라/오피스텔 ${toEok(price)} 매매 기준`;
+                    appreciationRate = (s.id === 'officetel') ? vars.appreciationOfficetel : vars.appreciationVilla;
                 }
 
-                if (!results.netAsset5) {
-                     const calcNetAsset = (years) => {
-                        const fv = price * Math.pow(1 + appreciationRate, years);
-                        const remLoan = calculateRemainingBalance(loanRate, years * 12, monthlyPayment, loanAmount);
-                        return fv - remLoan;
-                    };
+                const ltv = (s.loan === 'bank') ? 0.7 : 0.8;
+                let didimdolLimit = Infinity;
+                if (s.type === 'buy_apt_married') didimdolLimit = 400000000;
+                else if (s.type === 'buy_apt_single') didimdolLimit = 300000000;
+                else if (s.loan === 'didimdol_single') didimdolLimit = 300000000;
+                
+                const maxLoanByLTV = price * ltv;
+                const maxPossibleLoan = Math.min(maxLoanByLTV, (s.type === 'buy_apt_single') ? maxLoanByLTV : didimdolLimit);
+                const minRequiredCapital = price - maxPossibleLoan;
+
+                if (currentInvestment < minRequiredCapital) {
+                    const shortfall = minRequiredCapital - currentInvestment;
+                    if (shortfall > MINUS_LOAN_LIMIT) {
+                        const errorCardHTML = `<div class="card border-t-4 border-gray-400 opacity-70"><div class="card-header"><h3 class="text-xl font-bold text-slate-800">${s.title}</h3><p class="text-sm text-slate-500 mt-1">${subtitleText}</p></div><div class="card-body flex flex-col items-center justify-center text-center"><p class="text-lg font-semibold text-gray-600">초기 투자금 부족</p><p class="text-sm text-gray-500 mt-2">이 시나리오를 위해서는<br>최소 ${toEok(minRequiredCapital - MINUS_LOAN_LIMIT)}의<br>추가 자본이 필요합니다.</p></div><div class="card-footer text-xs space-y-2"><p><strong class="text-green-600">이점:</strong> ${prosCons[s.id].pros}</p><p><strong class="text-red-600">주의사항:</strong> ${prosCons[s.id].cons}</p></div></div>`;
+                        outputContainer.innerHTML += errorCardHTML;
+                        return;
+                    }
+                    minusLoanAmount = shortfall;
+                    mortgageLoanAmount = maxPossibleLoan;
+                } else {
+                    mortgageLoanAmount = price - currentInvestment;
+                }
+
+                const minusLoanInterestPayment = minusLoanAmount * vars.rateMinus / 12;
+
+                if (s.type === 'buy_apt_single') {
+                    const didimdolLoan = Math.min(mortgageLoanAmount, didimdolLimit);
+                    const bankLoan = mortgageLoanAmount - didimdolLoan;
+                    loanDetailsText = `디딤돌 ${toEok(didimdolLoan)} + 은행 ${toEok(bankLoan)}`;
+                    if (minusLoanAmount > 0) loanDetailsText += ` + 신용 ${toEok(minusLoanAmount)}`;
+                    
+                    const didimdolPayment = calculatePMT(vars.rateDidimdolSingle, termMonths, didimdolLoan);
+                    const bankPayment = calculatePMT(vars.rateBank, termMonths, bankLoan);
+                    monthlyPayment = didimdolPayment + bankPayment + minusLoanInterestPayment;
+                    
+                    appliedRateText = `디딤돌(단독) ${(vars.rateDidimdolSingle * 100).toFixed(1)}% + 은행 ${(vars.rateBank * 100).toFixed(1)}%`;
+                    if(minusLoanAmount > 0) appliedRateText += ` + 신용 ${(vars.rateMinus * 100).toFixed(1)}%`;
+                    
+                    monthlySavings = takeHomePay - monthlyPayment;
+                    
+                    const calcNetAsset = (years) => price * Math.pow(1 + appreciationRate, years) - calculateRemainingBalance(vars.rateDidimdolSingle, years*12, didimdolPayment, didimdolLoan) - calculateRemainingBalance(vars.rateBank, years*12, bankPayment, bankLoan) - minusLoanAmount;
                     results = { netAsset5: calcNetAsset(5), netAsset10: calcNetAsset(10) };
-                    netAsset5Tooltip = generateTooltip(5, price, appreciationRate, loanRate, monthlyPayment, loanAmount);
-                    netAsset10Tooltip = generateTooltip(10, price, appreciationRate, loanRate, monthlyPayment, loanAmount);
+                    benefitText = `생애최초 혜택(LTV 80%, 한도 3억)이 적용되었습니다.`;
+                    netAsset5Tooltip = generateMixedTooltip(5, price, appreciationRate, vars.rateDidimdolSingle, didimdolPayment, didimdolLoan, vars.rateBank, bankPayment, bankLoan, minusLoanAmount, benefitText);
+                    netAsset10Tooltip = generateMixedTooltip(10, price, appreciationRate, vars.rateDidimdolSingle, didimdolPayment, didimdolLoan, vars.rateBank, bankPayment, bankLoan, minusLoanAmount, benefitText);
+
+                } else {
+                    if (s.type === 'buy_apt_married') {
+                        loanRate = vars.rateDidimdolMarried;
+                        benefitText = `생애최초 신혼부부 혜택(LTV 80%, 한도 4억)이 적용되었습니다.`;
+                        appliedRateText = `디딤돌(신혼) ${(loanRate * 100).toFixed(1)}%`;
+                        loanDetailsText = `부부자본 ${toEok(currentInvestment)} + 디딤돌(신혼) ${toEok(mortgageLoanAmount)}`;
+                    } else {
+                        loanRate = (s.loan === 'didimdol_single') ? vars.rateDidimdolSingle : vars.rateBank;
+                        benefitText = (s.loan === 'bank') ? `시중은행 대출은 생애최초여도 LTV 70%가 적용됩니다.` : `생애최초 혜택(LTV 80%)이 적용되었습니다.`;
+                        appliedRateText = `${(loanRate * 100).toFixed(1)}%`;
+                        loanDetailsText = `주담대 ${toEok(mortgageLoanAmount)}`;
+                    }
+                    
+                    if (minusLoanAmount > 0) loanDetailsText += ` + 신용 ${toEok(minusLoanAmount)}`;
+                    if (minusLoanAmount > 0) appliedRateText += ` + 신용 ${(vars.rateMinus * 100).toFixed(1)}%`;
+
+                    const mortgagePayment = calculatePMT(loanRate, termMonths, mortgageLoanAmount);
+                    monthlyPayment = mortgagePayment + minusLoanInterestPayment;
+                    
+                    if (s.type === 'buy_apt_married') {
+                        const combinedTakeHomePay = getTakeHomePay(annualIncome + spouseIncome);
+                        monthlySavings = combinedTakeHomePay - monthlyPayment;
+                    } else {
+                        monthlySavings = takeHomePay - monthlyPayment;
+                    }
+
+                    const calcNetAsset = (years) => price * Math.pow(1 + appreciationRate, years) - calculateRemainingBalance(loanRate, years * 12, mortgagePayment, mortgageLoanAmount) - minusLoanAmount;
+                    results = { netAsset5: calcNetAsset(5), netAsset10: calcNetAsset(10) };
+                    netAsset5Tooltip = generateTooltip(5, price, appreciationRate, loanRate, mortgagePayment, mortgageLoanAmount, minusLoanAmount, benefitText);
+                    netAsset10Tooltip = generateTooltip(10, price, appreciationRate, loanRate, mortgagePayment, mortgageLoanAmount, minusLoanAmount, benefitText);
                     if (s.id === 'officetel') {
                         const officetelNote = ' (※ 오피스텔 상승률은 빌라의 50%로 가정)';
                         netAsset5Tooltip += officetelNote;
                         netAsset10Tooltip += officetelNote;
                     }
+                }
+                
+                paymentBlockHTML = `<p class="text-2xl md:text-3xl font-bold text-${s.color}-600">${toWonMonthly(monthlyPayment)}</p>
+                                    <p class="text-xs text-slate-500 mt-1">대출구성: ${loanDetailsText}</p>
+                                    <p class="text-xs text-slate-500 mt-1">적용금리: ${appliedRateText}</p>`;
+            }
+            
+            const currentTakeHomePay = (s.id === 'apt_married') ? getTakeHomePay(annualIncome + spouseIncome) : takeHomePay;
+            const monthlySavingsTooltip = `실수령액(${toWonMonthly(currentTakeHomePay)}) - 주거비용(${toWonMonthly(monthlyPayment)})`;
+
+            scenarioData[s.id] = { monthlyPayment, ...results, totalPayment10yr: monthlyPayment * 120 };
+            
+            if (s.id === 'apt_married' && scenarioData['apt_single']) {
+                const interestSavings = scenarioData['apt_single'].totalPayment10yr - scenarioData['apt_married'].totalPayment10yr;
+                const netAssetDifference = scenarioData['apt_married'].netAsset10 - scenarioData['apt_single'].netAsset10;
+                const totalAdvantage = interestSavings + netAssetDifference;
+                
+                if (totalAdvantage > 0) {
+                    const savingsTooltip = `단독 매수 대비 10년간 절약한 총 이자(${toEok(interestSavings)})와 늘어난 순자산(${toEok(netAssetDifference)})을 합산한 총 재무적 이득입니다.`;
+                    footerAddon = `<p><strong class="text-blue-600">단독 매수 대비 10년 총 이득:</strong> ${toEok(totalAdvantage)} <span class="info-icon">i<span class="tooltip">${savingsTooltip}</span></span></p>`;
                 }
             }
 
@@ -317,8 +383,7 @@
                     <div class="card-body space-y-5">
                         <div>
                             <p class="text-sm font-medium text-slate-500 flex items-center">${s.type === 'rent' ? '월 주거 비용 (이자)' : '월 상환액 (원리금)'}</p>
-                            <p class="text-2xl md:text-3xl font-bold text-${s.color}-600">${toWonMonthly(monthlyPayment)}</p>
-                            <p class="text-xs text-slate-500 mt-1">적용금리: ${appliedRateText}</p>
+                            ${paymentBlockHTML}
                         </div>
                         <div>
                             <p class="text-sm font-medium text-slate-500 flex items-center">주거비용 차감 후 월급<span class="info-icon">i<span class="tooltip">${monthlySavingsTooltip}</span></span></p>
@@ -327,17 +392,18 @@
                         <div class="grid grid-cols-2 gap-4 pt-2">
                             <div>
                                 <p class="text-sm font-medium text-slate-500 flex items-center">5년 후 순자산<span class="info-icon">i<span class="tooltip">${netAsset5Tooltip}</span></span></p>
-                                <p class="text-xl font-semibold text-slate-700">${toWon(results.netAsset5)}</p>
+                                <p class="text-xl font-semibold text-slate-700">${toEok(results.netAsset5)}</p>
                             </div>
                             <div>
                                 <p class="text-sm font-medium text-slate-500 flex items-center">10년 후 순자산<span class="info-icon">i<span class="tooltip">${netAsset10Tooltip}</span></span></p>
-                                <p class="text-xl font-semibold text-slate-700">${toWon(results.netAsset10)}</p>
+                                <p class="text-xl font-semibold text-slate-700">${toEok(results.netAsset10)}</p>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer text-xs space-y-2">
                         <p><strong class="text-green-600">이점:</strong> ${prosCons[s.id].pros}</p>
                         <p><strong class="text-red-600">주의사항:</strong> ${prosCons[s.id].cons}</p>
+                        ${footerAddon}
                     </div>
                 </div>
             `;
