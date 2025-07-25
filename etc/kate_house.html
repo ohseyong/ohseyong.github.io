@@ -108,7 +108,7 @@
         { id: 'buyNow', title: '시나리오 2: 빌라/오피스텔 즉시 매수', color: 'red', type: 'buy', loan: 'bank', appreciation: 'villa' },
         { id: 'villa', title: '시나리오 3: 빌라 매수 (30세, 디딤돌)', color: 'sky', type: 'buy', loan: 'didimdol_single', appreciation: 'villa' },
         { id: 'officetel', title: '시나리오 4: 오피스텔 매수 (30세, 디딤돌)', color: 'orange', type: 'buy', loan: 'didimdol_single', appreciation: 'officetel' },
-        { id: 'apt_single', title: '시나리오 5: 아파트 매수 (단독)', color: 'indigo', type: 'buy_apt_single' },
+        { id: 'apt_single', title: '시나리오 5: 아파트 매수 (혼자)', color: 'indigo', type: 'buy_apt_single' },
         { id: 'apt_married', title: '시나리오 6: 아파트 매수 (신혼)', color: 'purple', type: 'buy_apt_married' }
     ];
     const prosCons = {
@@ -235,7 +235,7 @@
                     return fv_of_savings + initialInvestment;
                 };
                 results = { netAsset5: calcNetAsset(5), netAsset10: calcNetAsset(10) };
-                netAsset5Tooltip = `초기 투자금(${toEok(initialInvestment)}) + 월 ${toWonMonthly(savingsPerMonth)}씩 저축액을 연 ${(vars.investmentReturn * 100).toFixed(1)}% 수익률로 복리 계산한 결과입니다.`;
+                netAsset5Tooltip = `초기 투자금(${toEok(initialInvestment)}) + 월 ${toWonMonthly(savingsPerMonth)}씩 저축액을 연 ${(vars.investmentReturn * 100).toFixed(1)}% 수익률로 복리 계산한 결과임.`;
                 netAsset10Tooltip = netAsset5Tooltip;
                 paymentBlockHTML = `<p class="text-2xl md:text-3xl font-bold text-${s.color}-600">${toWonMonthly(monthlyPayment)}</p>
                                     <p class="text-xs text-slate-500 mt-1">대출구성: ${loanDetailsText}</p>
@@ -245,14 +245,14 @@
                 const generateTooltip = (years, p, apr, lr, pmt, mla, mla_principal, benefitText) => {
                     const fv = p * Math.pow(1 + apr, years);
                     const rem = calculateRemainingBalance(lr, years * 12, pmt, mla);
-                    return `${years}년 후 예상 집값 (${toEok(fv)}) - 대출잔액 (${toEok(rem + mla_principal)}) 입니다. ${benefitText}`;
+                    return `${years}년 후 예상 집값 (${toEok(fv)}) - 대출잔액 (${toEok(rem + mla_principal)}) 임. ${benefitText}`;
                 };
                 
                 const generateMixedTooltip = (years, p, apr, lr1, pmt1, la1, lr2, pmt2, la2, mla_principal, benefitText) => {
                     const fv = p * Math.pow(1 + apr, years);
                     const rem1 = calculateRemainingBalance(lr1, years * 12, pmt1, la1);
                     const rem2 = calculateRemainingBalance(lr2, years * 12, pmt2, la2);
-                    return `${years}년 후 예상 집값 (${toEok(fv)}) - 총 대출잔액 (${toEok(rem1 + rem2 + mla_principal)}) 입니다. ${benefitText}`;
+                    return `${years}년 후 예상 집값 (${toEok(fv)}) - 총 대출잔액 (${toEok(rem1 + rem2 + mla_principal)}) 임. ${benefitText}`;
                 };
                 
                 let price, appreciationRate, loanRate, mortgageLoanAmount, minusLoanAmount = 0, loanDetailsText = '', appliedRateText = '';
@@ -311,19 +311,19 @@
                     
                     const calcNetAsset = (years) => price * Math.pow(1 + appreciationRate, years) - calculateRemainingBalance(vars.rateDidimdolSingle, years*12, didimdolPayment, didimdolLoan) - calculateRemainingBalance(vars.rateBank, years*12, bankPayment, bankLoan) - minusLoanAmount;
                     results = { netAsset5: calcNetAsset(5), netAsset10: calcNetAsset(10) };
-                    benefitText = `생애최초 혜택(LTV 80%, 한도 3억)이 적용되었습니다.`;
+                    benefitText = `생애최초 혜택(LTV 80%, 한도 3억)이 적용됨.`;
                     netAsset5Tooltip = generateMixedTooltip(5, price, appreciationRate, vars.rateDidimdolSingle, didimdolPayment, didimdolLoan, vars.rateBank, bankPayment, bankLoan, minusLoanAmount, benefitText);
                     netAsset10Tooltip = generateMixedTooltip(10, price, appreciationRate, vars.rateDidimdolSingle, didimdolPayment, didimdolLoan, vars.rateBank, bankPayment, bankLoan, minusLoanAmount, benefitText);
 
                 } else {
                     if (s.type === 'buy_apt_married') {
                         loanRate = vars.rateDidimdolMarried;
-                        benefitText = `생애최초 신혼부부 혜택(LTV 80%, 한도 4억)이 적용되었습니다.`;
+                        benefitText = `생애최초 신혼부부 혜택(LTV 80%, 한도 4억)이 적용됨.`;
                         appliedRateText = `디딤돌(신혼) ${(loanRate * 100).toFixed(1)}%`;
                         loanDetailsText = `부부자본 ${toEok(currentInvestment)} + 디딤돌(신혼) ${toEok(mortgageLoanAmount)}`;
                     } else {
                         loanRate = (s.loan === 'didimdol_single') ? vars.rateDidimdolSingle : vars.rateBank;
-                        benefitText = `생애최초 혜택(LTV 80%)이 적용되었습니다.`;
+                        benefitText = `생애최초 혜택(LTV 80%)이 적용됨.`;
                         appliedRateText = `${(loanRate * 100).toFixed(1)}%`;
                         loanDetailsText = `주담대 ${toEok(mortgageLoanAmount)}`;
                     }
@@ -368,7 +368,7 @@
                 const totalAdvantage = interestSavings + netAssetDifference;
                 
                 if (totalAdvantage > 0) {
-                    const savingsTooltip = `단독 매수 대비 10년간 절약한 총 이자(${toEok(interestSavings)})와 늘어난 순자산(${toEok(netAssetDifference)})을 합산한 총 재무적 이득입니다.`;
+                    const savingsTooltip = `단독 매수 대비 10년간 절약한 총 이자(${toEok(interestSavings)})와 늘어난 순자산(${toEok(netAssetDifference)})을 합산한 총 재무적 이득임.`;
                     footerAddon = `<p><strong class="text-blue-600">단독 매수 대비 10년 총 이득:</strong> ${toEok(totalAdvantage)} <span class="info-icon">i<span class="tooltip">${savingsTooltip}</span></span></p>`;
                 }
             }
