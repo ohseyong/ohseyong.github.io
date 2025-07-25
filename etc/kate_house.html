@@ -112,12 +112,12 @@
         { id: 'apt_married', title: '시나리오 6: 아파트 매수 (신혼)', color: 'purple', type: 'buy_apt_married' }
     ];
     const prosCons = {
-        rent: { pros: '거주지 이전 유연성, 주택 소유에 따른 세금/유지보수 부담 없음.', cons: '자산 가치 상승 기회 상실, 전세금 상승 및 보증금 반환 리스크 존재.' },
-        buyNow: { pros: '즉시 내 집 마련으로 주거 안정성 확보.', cons: '만 30세 미만으로 디딤돌 불가, 높은 시중은행 금리로 이자 부담 극대화.' },
-        villa: { pros: '저금리 디딤돌 대출 활용 가능, 안정적인 내 집 마련, 월세 대신 자산 축적.', cons: '아파트 대비 낮은 환금성 및 가치 상승률, 생애최초 혜택 소진.' },
-        officetel: { pros: '편리한 관리, 우수한 보안 및 편의시설, 역세권 입지 시 상대적 환금성.', cons: '높은 관리비, 낮은 대지 지분으로 자산가치 상승 제한적, 1가구 2주택 리스크.' },
-        apt_single: { pros: '가장 높은 자산 가치 상승 기대, 안정적인 우량 자산 확보.', cons: '높은 자기자본 필요, 시중은행 대출 혼합으로 월 상환 부담 매우 큼.' },
-        apt_married: { pros: '강력한 신혼부부 혜택(높은 한도, 낮은 금리)으로 우량자산 매수 가능.', cons: '결혼이라는 통제 불가능한 변수에 의존, 시장 타이밍 리스크.' }
+        rent: { pros: '주택 소유에 따른 세금/유지보수 부담 없음.', cons: '내집 없는 설움, 자산 가치 상승 기회 상실. 저축으로만 돈 모음' },
+        buyNow: { pros: '내 집이 주는 안정감. 주거 안정성 확보.', cons: '높은 시중은행 금리, 나중에 팔기 어려울 수 있음. 생애최초 상실' },
+        villa: { pros: '저금리 디딤돌 대출 활용한 내 집 마련, 월세 대신 자산 축적.', cons: '아파트 대비 낮은 환금성 및 가치 상승률, 생애최초 소진.' },
+        officetel: { pros: '편리한 관리, 우수한 보안 및 편의시설, 빌라대비 팔기 쉬움.', cons: '높은 관리비, 낮은 대지 지분으로 자산가치 상승 제한적' },
+        apt_single: { pros: '가장 높은 자산 가치 상승 기대, 안정적인 우량 자산', cons: '돈 더 모아야 함, 월 상환 부담 매우 큼.' },
+        apt_married: { pros: '강력한 신혼부부 혜택(높은 한도, 낮은 금리)으로 우량자산 매수', cons: '결혼 언제 할지 모름' }
     };
 
     // --- DOM Elements ---
@@ -227,7 +227,8 @@
                 monthlySavings = takeHomePay - monthlyPayment;
                 const appliedRateText = `${(vars.rateRent * 100).toFixed(1)}%`;
                 
-                const savingsPerMonth = monthlySavings > 0 ? monthlySavings - 1500000 : 0;
+                const targetSavings = takeHomePay * 0.40;
+                const savingsPerMonth = targetSavings - monthlyPayment;
                 
                 const calcNetAsset = (years) => {
                     if (savingsPerMonth <= 0) return initialInvestment;
@@ -235,7 +236,7 @@
                     return fv_of_savings + initialInvestment;
                 };
                 results = { netAsset5: calcNetAsset(5), netAsset10: calcNetAsset(10) };
-                netAsset5Tooltip = `초기 투자금(${toEok(initialInvestment)}) + 월 ${toWonMonthly(savingsPerMonth)}씩 저축액을 연 ${(vars.investmentReturn * 100).toFixed(1)}% 수익률로 복리 계산한 결과임.`;
+                netAsset5Tooltip = `초기 투자금(${toEok(initialInvestment)})과 월 저축액(${toWonMonthly(savingsPerMonth)} * 기간. 저축액은 실수령액의 40% - 전세대출 이자를 기준으로 계산함. 저축액을 연 ${(vars.investmentReturn * 100).toFixed(1)}% 수익률로 복리 계산함.`;
                 netAsset10Tooltip = netAsset5Tooltip;
                 paymentBlockHTML = `<p class="text-2xl md:text-3xl font-bold text-${s.color}-600">${toWonMonthly(monthlyPayment)}</p>
                                     <p class="text-xs text-slate-500 mt-1">대출구성: ${loanDetailsText}</p>
@@ -269,7 +270,7 @@
                     appreciationRate = (s.id === 'officetel') ? vars.appreciationOfficetel : vars.appreciationVilla;
                 }
 
-                const ltv = 0.8; // All scenarios are now first-time buyer
+                const ltv = (s.loan === 'bank') ? 0.7 : 0.8;
                 let didimdolLimit = Infinity;
                 if (s.type === 'buy_apt_married') didimdolLimit = 400000000;
                 else if (s.type === 'buy_apt_single') didimdolLimit = 300000000;
@@ -282,7 +283,7 @@
                 if (currentInvestment < minRequiredCapital) {
                     const shortfall = minRequiredCapital - currentInvestment;
                     if (shortfall > MINUS_LOAN_LIMIT) {
-                        const errorCardHTML = `<div class="card border-t-4 border-gray-400 opacity-70"><div class="card-header"><h3 class="text-xl font-bold text-slate-800">${s.title}</h3><p class="text-sm text-slate-500 mt-1">${subtitleText}</p></div><div class="card-body flex flex-col items-center justify-center text-center"><p class="text-lg font-semibold text-gray-600">초기 투자금 부족</p><p class="text-sm text-gray-500 mt-2">이 시나리오를 위해서는<br>최소 ${toEok(minRequiredCapital - MINUS_LOAN_LIMIT)}의<br>추가 자본이 필요합니다.</p></div><div class="card-footer text-xs space-y-2"><p><strong class="text-green-600">이점:</strong> ${prosCons[s.id].pros}</p><p><strong class="text-red-600">주의사항:</strong> ${prosCons[s.id].cons}</p></div></div>`;
+                        const errorCardHTML = `<div class="card border-t-4 border-gray-400 opacity-70"><div class="card-header"><h3 class="text-xl font-bold text-slate-800">${s.title}</h3><p class="text-sm text-slate-500 mt-1">${subtitleText}</p></div><div class="card-body flex flex-col items-center justify-center text-center"><p class="text-lg font-semibold text-gray-600">초기 투자금 부족</p><p class="text-sm text-gray-500 mt-2">이 시나리오를 위해서는<br>최소 ${toEok(minRequiredCapital - MINUS_LOAN_LIMIT)}의<br>추가 자본이 필요합니다.</p></div><div class="card-footer text-xs space-y-2"><p><strong class="text-green-600">장점 :</strong> ${prosCons[s.id].pros}</p><p><strong class="text-red-600">단점 :</strong> ${prosCons[s.id].cons}</p></div></div>`;
                         outputContainer.innerHTML += errorCardHTML;
                         return;
                     }
@@ -323,7 +324,7 @@
                         loanDetailsText = `부부자본 ${toEok(currentInvestment)} + 디딤돌(신혼) ${toEok(mortgageLoanAmount)}`;
                     } else {
                         loanRate = (s.loan === 'didimdol_single') ? vars.rateDidimdolSingle : vars.rateBank;
-                        benefitText = `생애최초 혜택(LTV 80%)이 적용되었습니다.`;
+                        benefitText = (s.loan === 'bank') ? `시중은행 대출은 생애최초여도 LTV 70%가 적용됩니다.` : `생애최초 혜택(LTV 80%)이 적용되었습니다.`;
                         appliedRateText = `${(loanRate * 100).toFixed(1)}%`;
                         loanDetailsText = `주담대 ${toEok(mortgageLoanAmount)}`;
                     }
@@ -401,8 +402,8 @@
                         </div>
                     </div>
                     <div class="card-footer text-xs space-y-2">
-                        <p><strong class="text-green-600">이점:</strong> ${prosCons[s.id].pros}</p>
-                        <p><strong class="text-red-600">주의사항:</strong> ${prosCons[s.id].cons}</p>
+                        <p><strong class="text-green-600">장점 :</strong> ${prosCons[s.id].pros}</p>
+                        <p><strong class="text-red-600">단점 :</strong> ${prosCons[s.id].cons}</p>
                         ${footerAddon}
                     </div>
                 </div>
