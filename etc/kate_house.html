@@ -10,6 +10,7 @@
         body {
             font-family: 'Noto Sans KR', 'Inter', sans-serif;
             background-color: #f1f5f9; /* bg-slate-100 */
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
         .card {
             background-color: white;
@@ -27,8 +28,8 @@
         .card-body { padding: 1.5rem; flex-grow: 1; }
         .card-footer { background-color: #f8fafc; padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem; }
         .info-icon { cursor: pointer; position: relative; display: inline-flex; align-items: center; justify-content: center; width: 1rem; height: 1rem; background-color: #94a3b8; color: white; border-radius: 50%; font-size: 0.75rem; font-weight: bold; margin-left: 0.25rem; }
-        .tooltip { visibility: hidden; width: 260px; background-color: #1e293b; color: #fff; text-align: left; border-radius: 6px; padding: 10px; position: absolute; z-index: 10; bottom: 125%; left: 50%; margin-left: -130px; opacity: 0; transition: opacity 0.3s; font-size: 0.8rem; font-weight: 400; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .info-icon:hover .tooltip { visibility: visible; opacity: 1; }
+        .tooltip { visibility: hidden; width: 260px; background-color: #1e293b; color: #fff; text-align: left; border-radius: 6px; padding: 10px; position: absolute; z-index: 10; bottom: 125%; left: 50%; margin-left: -130px; opacity: 0; transition: opacity 0.3s, visibility 0.3s; }
+        .info-icon:hover .tooltip, .tooltip.visible { visibility: visible; opacity: 1; }
         details > summary { cursor: pointer; }
         
         /* --- FIX for Safari/Chrome number input --- */
@@ -268,7 +269,7 @@
                     appreciationRate = (s.id === 'officetel') ? vars.appreciationOfficetel : vars.appreciationVilla;
                 }
 
-                const ltv = (s.loan === 'bank') ? 0.7 : 0.8;
+                const ltv = 0.8; // All scenarios are now first-time buyer
                 let didimdolLimit = Infinity;
                 if (s.type === 'buy_apt_married') didimdolLimit = 400000000;
                 else if (s.type === 'buy_apt_single') didimdolLimit = 300000000;
@@ -322,7 +323,7 @@
                         loanDetailsText = `부부자본 ${toEok(currentInvestment)} + 디딤돌(신혼) ${toEok(mortgageLoanAmount)}`;
                     } else {
                         loanRate = (s.loan === 'didimdol_single') ? vars.rateDidimdolSingle : vars.rateBank;
-                        benefitText = (s.loan === 'bank') ? `시중은행 대출은 생애최초여도 LTV 70%가 적용됩니다.` : `생애최초 혜택(LTV 80%)이 적용되었습니다.`;
+                        benefitText = `생애최초 혜택(LTV 80%)이 적용되었습니다.`;
                         appliedRateText = `${(loanRate * 100).toFixed(1)}%`;
                         loanDetailsText = `주담대 ${toEok(mortgageLoanAmount)}`;
                     }
