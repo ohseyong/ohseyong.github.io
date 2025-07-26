@@ -69,8 +69,8 @@
                 <summary class="font-semibold text-lg text-slate-700 hover:text-indigo-600">시뮬레이션 변수 설정 (고급)</summary>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mt-4">
                     <!-- House Prices -->
-                    <div><label for="jeonseDeposit" class="text-sm font-medium">전세 보증금</label><div class="relative"><input type="number" id="jeonseDeposit" class="w-full p-2 border border-slate-200 rounded-md" value="21000"><span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-slate-500">만원</span></div></div>
-                    <div><label for="housePriceVilla" class="text-sm font-medium">빌라/오피스텔 가격</label><div class="relative"><input type="number" id="housePriceVilla" class="w-full p-2 border border-slate-200 rounded-md" value="26000"><span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-slate-500">만원</span></div></div>
+                    <div><label for="jeonseDeposit" class="text-sm font-medium">전세 보증금</label><div class="relative"><input type="number" id="jeonseDeposit" class="w-full p-2 border border-slate-200 rounded-md" value="20000"><span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-slate-500">만원</span></div></div>
+                    <div><label for="housePriceVilla" class="text-sm font-medium">빌라/오피스텔 가격</label><div class="relative"><input type="number" id="housePriceVilla" class="w-full p-2 border border-slate-200 rounded-md" value="22000"><span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-slate-500">만원</span></div></div>
                     <div><label for="housePriceApt" class="text-sm font-medium">아파트 가격</label><div class="relative"><input type="number" id="housePriceApt" class="w-full p-2 border border-slate-200 rounded-md" value="50000"><span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-slate-500">만원</span></div></div>
                     <!-- Loan Term -->
                     <div><label for="loanTerm" class="text-sm font-medium">대출 만기</label><div class="relative"><input type="number" id="loanTerm" class="w-full p-2 border border-slate-200 rounded-md" value="30"><span class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-slate-500">년</span></div></div>
@@ -215,28 +215,40 @@
                 const rentDeposit = vars.jeonseDeposit;
                 subtitleText = `전세금 ${toEok(rentDeposit)} 기준`;
                 
-                if (initialInvestment < rentDeposit * 0.2) {
-                    const errorCardHTML = `<div class="card border-t-4 border-gray-400 opacity-70"><div class="card-header"><h3 class="text-xl font-bold text-slate-800">${s.title}</h3><p class="text-sm text-slate-500 mt-1">${subtitleText}</p></div><div class="card-body flex flex-col items-center justify-center text-center"><p class="text-lg font-semibold text-gray-600">초기 투자금 부족</p><p class="text-sm text-gray-500 mt-2">전세보증금의 20%인<br>${toEok(rentDeposit * 0.2)}이 필요합니다.</p></div><div class="card-footer text-xs space-y-2"><p><strong class="text-green-600">이점:</strong> ${prosCons[s.id].pros}</p><p><strong class="text-red-600">주의사항:</strong> ${prosCons[s.id].cons}</p></div></div>`;
-                    outputContainer.innerHTML += errorCardHTML;
-                    return;
+                const maxRentLoan = 150000000;
+                const minRequiredCapital = rentDeposit - maxRentLoan;
+                let minusLoanAmount = 0;
+                let rentLoan = 0;
+
+                if (initialInvestment < minRequiredCapital) {
+                    const shortfall = minRequiredCapital - initialInvestment;
+                    if (shortfall > MINUS_LOAN_LIMIT) {
+                        const errorCardHTML = `<div class="card border-t-4 border-gray-400 opacity-70"><div class="card-header"><h3 class="text-xl font-bold text-slate-800">${s.title}</h3><p class="text-sm text-slate-500 mt-1">${subtitleText}</p></div><div class="card-body flex flex-col items-center justify-center text-center"><p class="text-lg font-semibold text-gray-600">초기 투자금 부족</p><p class="text-sm text-gray-500 mt-2">전세대출 최대 한도(${toEok(maxRentLoan)})를 받아도<br>최소 ${toEok(minRequiredCapital - MINUS_LOAN_LIMIT)}의<br>추가 자본이 필요합니다.</p></div><div class="card-footer text-xs space-y-2"><p><strong class="text-green-600">이점:</strong> ${prosCons[s.id].pros}</p><p><strong class="text-red-600">주의사항:</strong> ${prosCons[s.id].cons}</p></div></div>`;
+                        outputContainer.innerHTML += errorCardHTML;
+                        return;
+                    }
+                    minusLoanAmount = shortfall;
+                    rentLoan = maxRentLoan;
+                } else {
+                    rentLoan = rentDeposit - initialInvestment;
                 }
 
-                const rentLoan = Math.max(0, rentDeposit - initialInvestment);
-                const loanDetailsText = `전세대출 ${toEok(rentLoan)}`;
-                monthlyPayment = rentLoan * vars.rateRent / 12;
+                const loanDetailsText = `전세대출 ${toEok(rentLoan)}` + (minusLoanAmount > 0 ? ` + 신용 ${toEok(minusLoanAmount)}` : '');
+                monthlyPayment = (rentLoan * vars.rateRent / 12) + (minusLoanAmount * vars.rateMinus / 12);
                 monthlySavings = takeHomePay - monthlyPayment;
-                const appliedRateText = `${(vars.rateRent * 100).toFixed(1)}%`;
+                let appliedRateText = `${(vars.rateRent * 100).toFixed(1)}%`;
+                if (minusLoanAmount > 0) appliedRateText += ` + 신용 ${(vars.rateMinus * 100).toFixed(1)}%`;
                 
                 const targetSavings = takeHomePay * 0.40;
                 const savingsPerMonth = targetSavings - monthlyPayment;
                 
                 const calcNetAsset = (years) => {
-                    if (savingsPerMonth <= 0) return initialInvestment;
+                    if (savingsPerMonth <= 0) return initialInvestment - minusLoanAmount;
                     let fv_of_savings = savingsPerMonth * 12 * ((Math.pow(1 + vars.investmentReturn, years) - 1) / vars.investmentReturn);
-                    return fv_of_savings + initialInvestment;
+                    return fv_of_savings + initialInvestment - minusLoanAmount;
                 };
                 results = { netAsset5: calcNetAsset(5), netAsset10: calcNetAsset(10) };
-                netAsset5Tooltip = `초기 투자금(${toEok(initialInvestment)})과 월 저축액(${toWonMonthly(savingsPerMonth)} * 기간. 저축액은 실수령액의 40% - 전세대출 이자를 기준으로 계산함. 저축액을 연 ${(vars.investmentReturn * 100).toFixed(1)}% 수익률로 복리 계산함.`;
+                netAsset5Tooltip = `초기 투자금(${toEok(initialInvestment)})과 월 저축액(${toWonMonthly(savingsPerMonth)} = 실수령액 40% - 이자)을 연 ${(vars.investmentReturn * 100).toFixed(1)}% 수익률로 복리 계산한 결과임. (25년 6월 정책으로 전세대출 한도 1.5억 축소)`;
                 netAsset10Tooltip = netAsset5Tooltip;
                 paymentBlockHTML = `<p class="text-2xl md:text-3xl font-bold text-${s.color}-600">${toWonMonthly(monthlyPayment)}</p>
                                     <p class="text-xs text-slate-500 mt-1">대출구성: ${loanDetailsText}</p>
@@ -272,9 +284,9 @@
 
                 const ltv = (s.loan === 'bank') ? 0.7 : 0.8;
                 let didimdolLimit = Infinity;
-                if (s.type === 'buy_apt_married') didimdolLimit = 400000000;
-                else if (s.type === 'buy_apt_single') didimdolLimit = 300000000;
-                else if (s.loan === 'didimdol_single') didimdolLimit = 300000000;
+                if (s.type === 'buy_apt_married') didimdolLimit = 320000000;
+                else if (s.type === 'buy_apt_single') didimdolLimit = 240000000;
+                else if (s.loan === 'didimdol_single') didimdolLimit = 240000000;
                 
                 const maxLoanByLTV = price * ltv;
                 const maxPossibleLoan = Math.min(maxLoanByLTV, (s.type === 'buy_apt_single') ? maxLoanByLTV : didimdolLimit);
@@ -283,7 +295,7 @@
                 if (currentInvestment < minRequiredCapital) {
                     const shortfall = minRequiredCapital - currentInvestment;
                     if (shortfall > MINUS_LOAN_LIMIT) {
-                        const errorCardHTML = `<div class="card border-t-4 border-gray-400 opacity-70"><div class="card-header"><h3 class="text-xl font-bold text-slate-800">${s.title}</h3><p class="text-sm text-slate-500 mt-1">${subtitleText}</p></div><div class="card-body flex flex-col items-center justify-center text-center"><p class="text-lg font-semibold text-gray-600">초기 투자금 부족</p><p class="text-sm text-gray-500 mt-2">이 시나리오를 위해서는<br>최소 ${toEok(minRequiredCapital - MINUS_LOAN_LIMIT)}의<br>추가 자본이 필요합니다.</p></div><div class="card-footer text-xs space-y-2"><p><strong class="text-green-600">장점 :</strong> ${prosCons[s.id].pros}</p><p><strong class="text-red-600">단점 :</strong> ${prosCons[s.id].cons}</p></div></div>`;
+                        const errorCardHTML = `<div class="card border-t-4 border-gray-400 opacity-70"><div class="card-header"><h3 class="text-xl font-bold text-slate-800">${s.title}</h3><p class="text-sm text-slate-500 mt-1">${subtitleText}</p></div><div class="card-body flex flex-col items-center justify-center text-center"><p class="text-lg font-semibold text-gray-600">초기 투자금 부족</p><p class="text-sm text-gray-500 mt-2">이 시나리오를 위해서는<br>최소 ${toEok(minRequiredCapital - MINUS_LOAN_LIMIT)}의<br>초기 자본이 필요합니다.</p></div><div class="card-footer text-xs space-y-2"><p><strong class="text-green-600">이점:</strong> ${prosCons[s.id].pros}</p><p><strong class="text-red-600">주의사항:</strong> ${prosCons[s.id].cons}</p></div></div>`;
                         outputContainer.innerHTML += errorCardHTML;
                         return;
                     }
@@ -312,19 +324,19 @@
                     
                     const calcNetAsset = (years) => price * Math.pow(1 + appreciationRate, years) - calculateRemainingBalance(vars.rateDidimdolSingle, years*12, didimdolPayment, didimdolLoan) - calculateRemainingBalance(vars.rateBank, years*12, bankPayment, bankLoan) - minusLoanAmount;
                     results = { netAsset5: calcNetAsset(5), netAsset10: calcNetAsset(10) };
-                    benefitText = `생애최초 혜택(LTV 80%, 한도 3억)이 적용되었습니다.`;
+                    benefitText = `생애최초 혜택(LTV 70%, 한도 2.4억)이 적용됨. (25년 6월 정책 개편으로 LTV/한도 축소)`;
                     netAsset5Tooltip = generateMixedTooltip(5, price, appreciationRate, vars.rateDidimdolSingle, didimdolPayment, didimdolLoan, vars.rateBank, bankPayment, bankLoan, minusLoanAmount, benefitText);
                     netAsset10Tooltip = generateMixedTooltip(10, price, appreciationRate, vars.rateDidimdolSingle, didimdolPayment, didimdolLoan, vars.rateBank, bankPayment, bankLoan, minusLoanAmount, benefitText);
 
                 } else {
                     if (s.type === 'buy_apt_married') {
                         loanRate = vars.rateDidimdolMarried;
-                        benefitText = `생애최초 신혼부부 혜택(LTV 80%, 한도 4억)이 적용되었습니다.`;
+                        benefitText = `생애최초 신혼부부 혜택(LTV 70%, 한도 3.2억)이 적용됨. (25년 6월 정책 개편으로 LTV/한도 축소)`;
                         appliedRateText = `디딤돌(신혼) ${(loanRate * 100).toFixed(1)}%`;
                         loanDetailsText = `부부자본 ${toEok(currentInvestment)} + 디딤돌(신혼) ${toEok(mortgageLoanAmount)}`;
                     } else {
                         loanRate = (s.loan === 'didimdol_single') ? vars.rateDidimdolSingle : vars.rateBank;
-                        benefitText = (s.loan === 'bank') ? `시중은행 대출은 생애최초여도 LTV 70%가 적용됩니다.` : `생애최초 혜택(LTV 80%)이 적용되었습니다.`;
+                        benefitText = (s.loan === 'bank') ? `시중은행 대출은 스트레스 DSR 3단계 적용으로 한도가 축소(LTV 70% 적용)되었습니다.` : `생애최초 혜택(LTV 70%, 한도 2.4억)이 적용됨. (25년 6월 정책 개편으로 LTV/한도 축소)`;
                         appliedRateText = `${(loanRate * 100).toFixed(1)}%`;
                         loanDetailsText = `주담대 ${toEok(mortgageLoanAmount)}`;
                     }
