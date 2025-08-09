@@ -83,7 +83,7 @@
 <body>
   <header style="margin-bottom: 16px;">
     <h1>박지은을 위한 아파트 구매 계산기</h1>
-    <p class="lead">현재 상황에 맞춰서 시중은행 주택담보대출 기준 LTV/DSR 한도, 월 상환액, 취득세, 연간 보유세(간이), 보유기간 손익까지 계산해줄게</p>
+    <p class="lead">현재 상황에 맞춰서 주택담보대출 LTV/DSR 한도, 월 상환액, 세금, 보유기간 손익을 계산해줄게. 하 만들기 힘들다</p>
 <!--    <div class="small">이 도구는 간이 시뮬레이터일 뿐. 정확하지 않음.</div> -->
   </header>
 
@@ -143,7 +143,7 @@
           <input type="number" id="annualAppreciationPct" min="-50" max="50" step="0.1" placeholder="2.5" />
         </div>
         <div>
-          <label>또는 목표 매도가 (만원, 선택)</label>
+          <label>혹은 목표 매도가 (만원, 입력안하면 평균 시세상승 적용)</label>
           <input type="text" id="targetSellPrice" inputmode="numeric" placeholder="예: 70,000" />
         </div>
 
@@ -157,7 +157,7 @@
     </section>
 
     <section class="card">
-      <h2>결과 요약</h2>
+      <h2>계산 결과</h2>
       <div class="subhead">대출</div>
       <div class="grid">
         <div>
@@ -264,7 +264,7 @@
 
     <hr class="sep" />
     <div class="small">
-      가정 : (1) 원리금균등, 고정금리, 중도상환수수료 무시. (2) 취득세: 1주택 1.1/2.2/3.3% 단순. 다주택/규제지역 가산세는 옵션 반영 간소화. (3) 보유세: 공시가≈시세×입력비율, 간이 누진(0.1~0.4%). (4) DSR: (연소득×한도/12 − 기존월부채)로 산정한 월상환 상한을 역산해 대출가능액 추정. Created by Seyong Oh
+      가정 : (1) 원리금균등, 고정금리 (2) 취득세 좀 정확하지 않음. (3) 보유세: 공시가≈시세×입력비율 (4) DSR: (연소득×한도/12 − 기존 월 대출상환금)로 산정한 월상환 상한 기준. 오세용이 만듬.
     </div>
   </section>
 
@@ -272,10 +272,46 @@
     // ---------- 유틸 ----------
     const nf = new Intl.NumberFormat('ko-KR');
     const MANWON = 10000;
+    const EOK = 100000000; // 1억
     const cfmt = (n) => n==null||isNaN(n) ? '-' : nf.format(Math.round(n));
     const wfmt = (n) => n==null||isNaN(n) ? '-' : nf.format(Math.round(n)) + '원';
+    const mfmt = (n) => n==null||isNaN(n) ? '-' : nf.format(Math.round(n / MANWON)) + '만원';
+    const signedMfmt = (n) => {
+      if (n==null||isNaN(n)) return '-';
+      const sign = n >= 0 ? '+' : '';
+      return sign + mfmt(Math.abs(n));
+    };
+    const eokManWonFmt = (n) => {
+      if (n==null||isNaN(n)) return '-';
+      const abs = Math.abs(Math.round(n));
+      const eok = Math.floor(abs / EOK);
+      const man = Math.floor((abs % EOK) / MANWON);
+      const won = abs % MANWON;
+      const parts = [];
+      if (eok > 0) parts.push(`${eok}억`);
+      if (man > 0) {
+        // won이 있으면 '만', 없으면 '만원'
+        parts.push(`${nf.format(man)}만${won > 0 ? '' : '원'}`);
+      }
+      if (won > 0) parts.push(`${nf.format(won)}원`);
+      if (parts.length === 0) parts.push('0원');
+      // 3억원 같이 딱 떨어지면 '3억원'
+      if (eok > 0 && man === 0 && won === 0) return (n < 0 ? '-' : '') + `${eok}억원`;
+      return (n < 0 ? '-' : '') + parts.join(' ');
+    };
+    const signedEokManWon = (n, showPlus) => {
+      if (n==null || isNaN(n)) return '-';
+      const sp = !!showPlus;
+      const absStr = eokManWonFmt(Math.abs(Number(n)));
+      if (n < 0) return '-' + absStr.replace(/^[-]/,'');
+      return (sp ? '+' : '') + absStr;
+    };
     const pfmt = (n) => n==null||isNaN(n) ? '-' : (Math.round(n*10)/10).toFixed(1) + '%';
     const valNum = (id) => parseFloat(String(document.getElementById(id).value).replace(/[^0-9.-]/g,'')) || 0;
+    const toNum = (n, d=0) => {
+      const x = Number(n);
+      return Number.isFinite(x) ? x : d;
+    };
     const setText = (id, text) => { document.getElementById(id).textContent = text; };
     const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
     const manToWon = (nMan) => nMan * MANWON;
@@ -370,62 +406,64 @@
       const sellCostPct = 0; // 매도 부대비용율 제외
 
       // 필요 대출액
-      const neededLoan = Math.max(0, price - cash);
+      const neededLoan = Math.max(0, toNum(price) - toNum(cash));
 
       // LTV 한도 (수동 입력 우선)
       const ltvManualField = document.getElementById('ltvManualPct');
       const ltvManualRaw = ltvManualField ? ltvManualField.value : '';
       const ltvManual = ltvManualRaw === '' ? NaN : parseFloat(ltvManualRaw);
       const ltvPct = isNaN(ltvManual) ? ltvDefaultPct(region, homeCount) : ltvManual;
-      const ltvMax = price * (ltvPct/100);
+      const ltvMax = toNum(price) * (toNum(ltvPct)/100);
 
       // DSR 한도: 허용 월상환 상한
-      const monthlyIncome = annualIncome/12;
-      const dsrCapMonthly = Math.max(0, (annualIncome * (dsrLimitPct/100) / 12) - existingMonthlyDebt);
-      const dsrMax = principalFromMonthly(dsrCapMonthly, rate, years);
+      const monthlyIncome = toNum(annualIncome)/12;
+      const dsrCapMonthly = Math.max(0, (toNum(annualIncome) * (toNum(dsrLimitPct)/100) / 12) - toNum(existingMonthlyDebt));
+      const dsrMax = principalFromMonthly(toNum(dsrCapMonthly), toNum(rate), toNum(years));
 
       // 최종 대출 가능액 (필요액, LTV, DSR 중 최소)
-      const maxLoanAllowed = Math.max(0, Math.min(neededLoan, ltvMax, dsrMax));
+      const maxLoanAllowed = Math.max(0, Math.min(toNum(neededLoan), toNum(ltvMax), toNum(dsrMax)));
 
       // 월납부액(실제 대출 실행액 기준)
-      const monthlyPayment = annuityMonthlyPayment(maxLoanAllowed, rate, years);
+      const monthlyPayment = annuityMonthlyPayment(toNum(maxLoanAllowed), toNum(rate), toNum(years));
 
       // 취득세
-      const acqTax = acquisitionTax(price, homeCount, region);
+      const acqTax = acquisitionTax(toNum(price), homeCount, region);
 
       // 보유세(간이, 연간)
-      const annualPropTax = annualPropertyTaxSimple(price, assessedRatioPct);
+      const annualPropTax = annualPropertyTaxSimple(toNum(price), toNum(assessedRatioPct));
 
       // 보유기간 이자합계(원리금균등 기준)
-      const monthsHeld = holdingYears * 12;
-      const monthsConsidered = Math.min(monthsHeld, years*12);
-      const totalPaidDuringHold = monthlyPayment * monthsConsidered;
-      const remainingAfterHold = remainingBalance(maxLoanAllowed, rate, years, monthsConsidered);
-      const principalRepaid = Math.max(0, maxLoanAllowed - remainingAfterHold);
-      const interestPaid = Math.max(0, totalPaidDuringHold - principalRepaid);
+      const monthsHeld = toNum(holdingYears) * 12;
+      const monthsConsidered = Math.min(monthsHeld, toNum(years)*12);
+      const totalPaidDuringHold = toNum(monthlyPayment) * monthsConsidered;
+      const remainingAfterHold = remainingBalance(toNum(maxLoanAllowed), toNum(rate), toNum(years), monthsConsidered);
+      const principalRepaid = Math.max(0, toNum(maxLoanAllowed) - toNum(remainingAfterHold));
+      const interestPaid = Math.max(0, toNum(totalPaidDuringHold) - toNum(principalRepaid));
       const avgPrincipal = monthsConsidered > 0 ? principalRepaid / monthsConsidered : 0;
       const avgInterest = monthsConsidered > 0 ? interestPaid / monthsConsidered : 0;
 
       // 미래 매도가
-      let projectedSellPrice = targetSellPrice > 0 ? targetSellPrice : price * Math.pow(1 + (annualAppreciationPct/100), holdingYears);
-      const simpleGain = Math.max(0, projectedSellPrice - price);
+      let projectedSellPrice = toNum(targetSellPrice) > 0 ? toNum(targetSellPrice) : toNum(price) * Math.pow(1 + (toNum(annualAppreciationPct)/100), toNum(holdingYears));
+      const simpleGain = Math.max(0, toNum(projectedSellPrice) - toNum(price));
 
       // 매수 부대비용(간이): 중개수수료 + 인지세
       const brokerFee = (() => {
         // 간이 요율: 가격 구간별 추정치
-        if (price <= 200_000_000) return price * 0.006;      // ≤2억: 0.6%
-        if (price <= 600_000_000) return price * 0.005;      // ≤6억: 0.5%
-        if (price <= 900_000_000) return price * 0.004;      // ≤9억: 0.4%
-        return Math.min(price * 0.009, 20_000_000);          // >9억: 0.9%, 상한 간이 2천만원
+        const p = toNum(price);
+        if (p <= 200000000) return p * 0.006;      // ≤2억: 0.6%
+        if (p <= 600000000) return p * 0.005;      // ≤6억: 0.5%
+        if (p <= 900000000) return p * 0.004;      // ≤9억: 0.4%
+        return Math.min(p * 0.009, 20000000);      // >9억: 0.9%, 상한 간이 2천만원
       })();
       const stampTax = (() => {
-        if (price <= 100_000_000) return 20_000;             // ≤1억
-        if (price <= 1_000_000_000) return 50_000;           // ≤10억
-        return 150_000;                                      // >10억
+        const p = toNum(price);
+        if (p <= 100000000) return 20000;                 // ≤1억
+        if (p <= 1000000000) return 50000;               // ≤10억
+        return 150000;                                    // >10억
       })();
-      const buyCost = brokerFee + stampTax;
-      const buyCostGrandTotal = acqTax + buyCost;
-      const sellCost = projectedSellPrice * (sellCostPct/100);
+      const buyCost = toNum(brokerFee) + toNum(stampTax);
+      const buyCostGrandTotal = toNum(acqTax) + toNum(buyCost);
+      const sellCost = toNum(projectedSellPrice) * (toNum(sellCostPct)/100);
 
       // 손익(세전, 양도세 제외): 
       // 현금유출 = 보유자본(현금) + 대출이자(보유기간) + 취득세 + 매수부대비용 + (원금상환은 자산으로 전환되므로 유출에서 제외)
@@ -434,36 +472,38 @@
       // 동치 정리: 매도금액 − 매도비용 − (매수금액 + 취득세 + 매수부대비용) − 대출잔액 + (상환원금) − (지급이자)
       // 여기서는 상환원금을 더하고, 지급이자를 뺀 형태로 계산
       // 요청: 보유기간 손익 = 단순 시세 차익 − (취득세 + 부대비용 + 이자)
-      const pnl = simpleGain - (acqTax + buyCost + interestPaid);
+      const pnl = toNum(simpleGain) - (toNum(acqTax) + toNum(buyCost) + toNum(interestPaid));
       const pnlPerMonth = monthsHeld > 0 ? (pnl / monthsHeld) : 0;
 
       // 표시
-      setText('neededLoan', wfmt(neededLoan));
+      setText('neededLoan', eokManWonFmt(neededLoan));
       setText('ltvCap', pfmt(ltvPct));
-      setText('dsrCapMonthly', wfmt(dsrCapMonthly));
-      setText('maxLoanAllowed', wfmt(maxLoanAllowed));
-      setText('monthlyPayment', wfmt(monthlyPayment));
-      setText('avgPrincipal', wfmt(avgPrincipal));
-      setText('avgInterest', wfmt(avgInterest));
-      setText('acqTax', wfmt(acqTax));
-      setText('brokerFee', wfmt(brokerFee));
-      setText('stampTax', wfmt(stampTax));
-      setText('buyCostGrandTotal', wfmt(buyCostGrandTotal));
-      setText('annualPropertyTax', wfmt(annualPropTax));
-      setText('interestPaid', wfmt(interestPaid));
-      setText('pnl', wfmt(pnl));
-      setText('dbgSimpleGain', wfmt(simpleGain));
-      setText('dbgAcq', wfmt(acqTax));
-      setText('dbgBuyCost', wfmt(buyCost));
-      setText('dbgInterest', wfmt(interestPaid));
+      setText('dsrCapMonthly', eokManWonFmt(dsrCapMonthly));
+      setText('maxLoanAllowed', eokManWonFmt(maxLoanAllowed));
+      setText('monthlyPayment', eokManWonFmt(monthlyPayment));
+      setText('avgPrincipal', eokManWonFmt(avgPrincipal));
+      setText('avgInterest', eokManWonFmt(avgInterest));
+      setText('acqTax', eokManWonFmt(acqTax));
+      setText('brokerFee', eokManWonFmt(brokerFee));
+      setText('stampTax', eokManWonFmt(stampTax));
+      setText('buyCostGrandTotal', eokManWonFmt(buyCostGrandTotal));
+      setText('annualPropertyTax', eokManWonFmt(annualPropTax));
+      setText('interestPaid', eokManWonFmt(interestPaid));
+      setText('pnl', eokManWonFmt(pnl));
+      setText('dbgSimpleGain', eokManWonFmt(simpleGain));
+      setText('dbgAcq', eokManWonFmt(acqTax));
+      setText('dbgBuyCost', eokManWonFmt(buyCost));
+      setText('dbgInterest', eokManWonFmt(interestPaid));
       setText('dbgMonths', cfmt(monthsConsidered));
-      setText('simpleGain', wfmt(simpleGain));
+      setText('simpleGain', eokManWonFmt(simpleGain));
 
-      setText('ltvMax', wfmt(ltvMax));
-      setText('dsrMax', wfmt(dsrMax));
-      setText('shortCapital', wfmt(Math.max(0, neededLoan - maxLoanAllowed)));
+      setText('ltvMax', eokManWonFmt(ltvMax));
+      setText('dsrMax', eokManWonFmt(dsrMax));
+      const shortDiff = neededLoan - maxLoanAllowed;
+      // 부족분은 음수로 보여주기 위해 부호 반전
+      setText('shortCapital', signedEokManWon(-shortDiff, false));
       const gapLoan = maxLoanAllowed - neededLoan;
-      setText('gap', (gapLoan >= 0 ? '+' : '') + wfmt(gapLoan));
+      setText('gap', signedEokManWon(gapLoan, true));
     }
 
     function setDefaults() {
