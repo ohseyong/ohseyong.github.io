@@ -66,6 +66,26 @@
                 </button>
             </nav>
 
+            <!-- 역할별 필터 -->
+            <div class="role-filter">
+                <button class="role-filter-btn active" data-role="all">
+                    <span class="filter-icon">👥</span>
+                    전체
+                </button>
+                <button class="role-filter-btn" data-role="TS">
+                    <span class="filter-icon">🛠️</span>
+                    TS
+                </button>
+                <button class="role-filter-btn" data-role="TE">
+                    <span class="filter-icon">💻</span>
+                    TE
+                </button>
+                <button class="role-filter-btn" data-role="Genius">
+                    <span class="filter-icon">🧠</span>
+                    Genius
+                </button>
+            </div>
+
             <!-- 시프트 리스트 -->
             <div class="shift-list" id="shiftList">
                 <!-- 동적으로 생성됨 -->
@@ -92,6 +112,16 @@
                 <div class="form-group">
                     <label for="name">내 이름 *</label>
                     <input type="text" id="name" name="name" required placeholder="홍길동">
+                </div>
+                
+                <div class="form-group">
+                    <label>나의 역할 *</label>
+                    <div class="role-buttons">
+                        <button type="button" class="role-btn" data-role="TS">TS</button>
+                        <button type="button" class="role-btn" data-role="TE">TE</button>
+                        <button type="button" class="role-btn" data-role="Genius">Genius</button>
+                    </div>
+                    <input type="hidden" id="role" name="role" required>
                 </div>
                 
                 <!-- 거래 유형 탭 -->
