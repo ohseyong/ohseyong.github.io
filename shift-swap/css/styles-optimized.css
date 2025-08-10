@@ -829,12 +829,16 @@ body {
     }
 
     .tab-btn {
-        padding: 10px 12px;
-        font-size: 13px;
+        padding: 8px 10px;
+        font-size: 12px;
     }
 
     .shift-card {
-        padding: 16px;
+        padding: 14px;
+    }
+
+    .shift-list {
+        gap: 10px;
     }
 
     .modal-content {
@@ -884,21 +888,31 @@ body {
 
     .tab-nav { 
         flex-direction: row; 
-        gap: 6px; 
+        gap: 4px; 
     }
 
     .tab-btn { 
         justify-content: center; 
+        padding: 6px 8px;
+        font-size: 11px;
     }
 
     .tab-icon { 
         display: none; 
     }
 
+    .shift-card {
+        padding: 12px;
+    }
+
+    .shift-list {
+        gap: 8px;
+    }
+
     .filter-section {
         flex-direction: column;
         align-items: flex-start;
-        gap: 12px;
+        gap: 10px;
     }
 
     .notification {
