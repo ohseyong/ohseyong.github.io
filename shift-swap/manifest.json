@@ -7,6 +7,9 @@
   "background_color": "#ffffff",
   "theme_color": "#007bff",
   "orientation": "portrait-primary",
+  "scope": "/shift-swap/",
+  "lang": "ko",
+  "dir": "ltr",
   "icons": [
     {
       "src": "apple-touch-icon.png",

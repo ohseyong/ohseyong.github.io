@@ -357,8 +357,14 @@ class ShiftSwapApp {
             const permission = Notification.permission;
             console.log('알림 권한 상태:', permission);
             
+            // iOS Safari 감지
+            const isIOSSafari = this.firebaseService.detectIOSSafari();
+            const isStandalone = window.navigator.standalone === true;
+            
             if (permission !== 'granted') {
                 this.ui.showNotification('알림 설정 시 새 매물 등록 시 알림을 받을 수 있습니다', 'info');
+            } else if (isIOSSafari && !isStandalone) {
+                this.ui.showNotification('iOS Safari에서는 홈 화면에 추가하면 알림을 받을 수 있습니다', 'info');
             } else {
                 this.ui.showNotification('알림이 설정되어 있습니다', 'success');
             }

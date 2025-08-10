@@ -22,9 +22,18 @@ class FirebaseService {
                 return;
             }
 
+            // iOS Safari 감지
+            const isIOSSafari = this.detectIOSSafari();
+            console.log('iOS Safari 감지:', isIOSSafari);
+
             // 현재 알림 권한 상태 확인
             let permission = Notification.permission;
             console.log('현재 알림 권한 상태:', permission);
+            
+            // iOS Safari에서 PWA 설치 안내
+            if (isIOSSafari && permission === 'granted') {
+                this.checkPWAInstallation();
+            }
             
             // 권한이 없는 경우에만 요청
             if (permission === 'default') {
@@ -35,6 +44,11 @@ class FirebaseService {
             
             if (permission === 'granted') {
                 console.log('알림 권한이 허용되었습니다.');
+                
+                // iOS Safari에서는 PWA 설치 안내
+                if (isIOSSafari) {
+                    this.showPWAInstallGuide();
+                }
                 
                 // Firebase Messaging 설정 (사용 가능한 경우에만)
                 if (firebase.messaging) {
@@ -86,6 +100,86 @@ class FirebaseService {
         } catch (error) {
             console.error('Firebase Messaging 설정 실패:', error);
             // Firebase Messaging 실패해도 브라우저 알림은 계속 사용 가능
+        }
+    }
+
+    // iOS Safari 감지
+    detectIOSSafari() {
+        const userAgent = navigator.userAgent;
+        const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+        const isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
+        const isStandalone = window.navigator.standalone === true;
+        
+        console.log('User Agent:', userAgent);
+        console.log('iOS:', isIOS);
+        console.log('Safari:', isSafari);
+        console.log('Standalone:', isStandalone);
+        
+        return isIOS && isSafari && !isStandalone;
+    }
+
+    // PWA 설치 상태 확인
+    checkPWAInstallation() {
+        const isStandalone = window.navigator.standalone === true;
+        const hasShownPWAInstall = localStorage.getItem('pwaInstallShown');
+        
+        if (!isStandalone && !hasShownPWAInstall) {
+            // PWA가 설치되지 않았고 아직 안내를 보여주지 않았다면
+            setTimeout(() => {
+                this.showPWAInstallGuide();
+            }, 3000); // 3초 후 안내 표시
+        }
+    }
+
+    // PWA 설치 안내 표시
+    showPWAInstallGuide() {
+        const modal = document.getElementById('pwaInstallModal');
+        if (modal) {
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            
+            // 이벤트 리스너 설정
+            this.setupPWAInstallModal();
+            
+            // 안내를 보여줬다고 표시
+            localStorage.setItem('pwaInstallShown', 'true');
+        }
+    }
+
+    // PWA 설치 모달 이벤트 설정
+    setupPWAInstallModal() {
+        const closeBtn = document.getElementById('closePwaInstall');
+        const closeFooterBtn = document.getElementById('closePwaInstallFooter');
+        const testBtn = document.getElementById('testNotification');
+        const modal = document.getElementById('pwaInstallModal');
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => this.hidePWAInstallModal());
+        }
+        if (closeFooterBtn) {
+            closeFooterBtn.addEventListener('click', () => this.hidePWAInstallModal());
+        }
+        if (testBtn) {
+            testBtn.addEventListener('click', () => {
+                this.sendTestNotification();
+                this.hidePWAInstallModal();
+            });
+        }
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    this.hidePWAInstallModal();
+                }
+            });
+        }
+    }
+
+    // PWA 설치 모달 숨기기
+    hidePWAInstallModal() {
+        const modal = document.getElementById('pwaInstallModal');
+        if (modal) {
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
         }
     }
 
@@ -246,9 +340,20 @@ class FirebaseService {
     async sendNotification(title, body) {
         console.log('알림 발송 시도:', { title, body });
         
+        // iOS Safari 감지
+        const isIOSSafari = this.detectIOSSafari();
+        const isStandalone = window.navigator.standalone === true;
+        
         // 브라우저 알림 (iOS/Safari 호환성 개선)
         if ('Notification' in window && Notification.permission === 'granted') {
             try {
+                // iOS Safari에서는 PWA로 설치된 경우에만 알림 가능
+                if (isIOSSafari && !isStandalone) {
+                    console.log('iOS Safari에서 PWA로 설치되지 않아 알림을 보낼 수 없습니다.');
+                    this.showPWAInstallGuide();
+                    return;
+                }
+                
                 // iOS/Safari 호환성을 위한 옵션 조정
                 const notificationOptions = {
                     body: body,
@@ -285,9 +390,19 @@ class FirebaseService {
                 
             } catch (error) {
                 console.error('브라우저 알림 발송 실패:', error);
+                
+                // iOS Safari에서 알림 실패 시 PWA 설치 안내
+                if (isIOSSafari && !isStandalone) {
+                    this.showPWAInstallGuide();
+                }
             }
         } else {
             console.log('브라우저 알림 권한이 없습니다. 권한 상태:', Notification.permission);
+            
+            // iOS Safari에서 권한이 없으면 PWA 설치 안내
+            if (isIOSSafari && !isStandalone) {
+                this.showPWAInstallGuide();
+            }
         }
 
         // FCM 알림 (Firebase가 연결된 경우)
