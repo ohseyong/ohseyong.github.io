@@ -410,6 +410,20 @@ class FirebaseShiftSwapApp {
                 console.log('폼 제출 이벤트 발생');
                 this.addShift();
             });
+            // 이름/역할 자동완성 초기값 주입
+            const savedName = localStorage.getItem('userName');
+            const savedRole = localStorage.getItem('userRole');
+            if (savedName) {
+                const nameInput = document.getElementById('name');
+                if (nameInput) nameInput.value = savedName;
+            }
+            if (savedRole) {
+                const roleHidden = document.getElementById('role');
+                if (roleHidden) roleHidden.value = savedRole;
+                document.querySelectorAll('.role-btn').forEach(b => {
+                    b.classList.toggle('active', b.dataset.role === savedRole);
+                });
+            }
         } else {
             console.error('shiftForm을 찾을 수 없습니다');
         }
@@ -515,6 +529,11 @@ class FirebaseShiftSwapApp {
                 const newId = Date.now().toString();
                 shift.id = newId;
                 this.shifts.unshift(shift);
+                // 사용자 이름/역할 저장 (자동완성용)
+                try {
+                    localStorage.setItem('userName', name);
+                    localStorage.setItem('userRole', role);
+                } catch (e) {}
                 this.saveToLocalStorage();
                 this.renderShifts();
                 this.updateTabCounts();
@@ -524,6 +543,10 @@ class FirebaseShiftSwapApp {
             } else {
                 // Firebase 모드
                 await database.ref('shifts').push().set(shift);
+                try {
+                    localStorage.setItem('userName', name);
+                    localStorage.setItem('userRole', role);
+                } catch (e) {}
                 this.showNotification('거래가 성공적으로 등록되었습니다!', 'success');
                 this.sendNotification('새 거래 등록', `${shift.name}님이 새로운 거래를 등록했습니다.`);
                 console.log('Firebase 모드에서 거래 등록 성공');
