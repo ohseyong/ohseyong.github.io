@@ -16,56 +16,71 @@ class FirebaseService {
     // Firebase Messaging 설정
     async setupFirebaseMessaging() {
         try {
-            if (!firebase.messaging) {
-                console.log('Firebase Messaging not available');
+            // iOS/Safari 호환성을 위한 추가 설정
+            if (!('Notification' in window)) {
+                console.log('이 브라우저는 알림을 지원하지 않습니다.');
                 return;
             }
 
-            this.messaging = firebase.messaging();
-            
             // 현재 알림 권한 상태 확인
             let permission = Notification.permission;
+            console.log('현재 알림 권한 상태:', permission);
             
             // 권한이 없는 경우에만 요청
             if (permission === 'default') {
+                console.log('알림 권한을 요청합니다...');
                 permission = await Notification.requestPermission();
+                console.log('알림 권한 요청 결과:', permission);
             }
             
             if (permission === 'granted') {
                 console.log('알림 권한이 허용되었습니다.');
                 
-                try {
-                    // FCM 토큰 가져오기
-                    const token = await this.messaging.getToken();
-                    if (token) {
-                        console.log('FCM 토큰:', token);
-                        this.saveFCMToken(token);
-                    }
-                    
-                    // 토큰 갱신 리스너
-                    this.messaging.onTokenRefresh(() => {
-                        this.messaging.getToken().then((refreshedToken) => {
-                            console.log('FCM 토큰 갱신:', refreshedToken);
-                            this.saveFCMToken(refreshedToken);
-                        }).catch((error) => {
-                            console.error('토큰 갱신 실패:', error);
+                // Firebase Messaging 설정 (사용 가능한 경우에만)
+                if (firebase.messaging) {
+                    try {
+                        this.messaging = firebase.messaging();
+                        
+                        // FCM 토큰 가져오기
+                        const token = await this.messaging.getToken();
+                        if (token) {
+                            console.log('FCM 토큰:', token);
+                            this.saveFCMToken(token);
+                        }
+                        
+                        // 토큰 갱신 리스너
+                        this.messaging.onTokenRefresh(() => {
+                            this.messaging.getToken().then((refreshedToken) => {
+                                console.log('FCM 토큰 갱신:', refreshedToken);
+                                this.saveFCMToken(refreshedToken);
+                            }).catch((error) => {
+                                console.error('토큰 갱신 실패:', error);
+                            });
                         });
-                    });
-                    
-                    // 포그라운드 메시지 리스너
-                    this.messaging.onMessage((payload) => {
-                        console.log('포그라운드 메시지 수신:', payload);
-                        this.showNotification(payload.notification.title, payload.notification.body);
-                    });
-                } catch (tokenError) {
-                    console.error('FCM 토큰 가져오기 실패:', tokenError);
-                    // 토큰 가져오기 실패해도 브라우저 알림은 계속 사용 가능
+                        
+                        // 포그라운드 메시지 리스너
+                        this.messaging.onMessage((payload) => {
+                            console.log('포그라운드 메시지 수신:', payload);
+                            this.showNotification(payload.notification.title, payload.notification.body);
+                        });
+                    } catch (tokenError) {
+                        console.error('FCM 토큰 가져오기 실패:', tokenError);
+                        // FCM 실패해도 브라우저 알림은 계속 사용 가능
+                    }
+                } else {
+                    console.log('Firebase Messaging을 사용할 수 없습니다. 브라우저 알림만 사용합니다.');
                 }
+                
+                // 알림 권한 상태를 로컬 스토리지에 저장
+                localStorage.setItem('notificationPermission', 'granted');
+                
             } else if (permission === 'denied') {
                 console.log('알림 권한이 거부되었습니다. 사용자가 수동으로 권한을 허용해야 합니다.');
+                localStorage.setItem('notificationPermission', 'denied');
                 // 토스트는 app.js에서 통합 관리
             } else if (permission === 'default') {
                 console.log('알림 권한이 아직 요청되지 않았습니다.');
+                localStorage.setItem('notificationPermission', 'default');
                 // 토스트는 app.js에서 통합 관리
             }
         } catch (error) {
@@ -123,9 +138,11 @@ class FirebaseService {
                 this.app.ui.renderShifts();
                 this.app.ui.updateTabCounts();
                 
-                // 캘린더 매칭 업데이트 (한 번만 실행)
+                // 캘린더 매칭 업데이트 (캘린더 데이터가 로드된 후에만 실행)
                 if (this.app.calendarService && this.app.calendarService.calendarEvents.length > 0) {
-                    this.app.calendarService.compareShiftsWithCalendar();
+                    setTimeout(() => {
+                        this.app.calendarService.compareShiftsWithCalendar();
+                    }, 100);
                 }
             });
 
@@ -229,22 +246,48 @@ class FirebaseService {
     async sendNotification(title, body) {
         console.log('알림 발송 시도:', { title, body });
         
-        // 브라우저 알림
+        // 브라우저 알림 (iOS/Safari 호환성 개선)
         if ('Notification' in window && Notification.permission === 'granted') {
             try {
-                new Notification(title, {
+                // iOS/Safari 호환성을 위한 옵션 조정
+                const notificationOptions = {
                     body: body,
-                    icon: 'assets/jekyll.png',
-                    badge: 'assets/jekyll.png',
-                    vibrate: [100, 50, 100],
-                    tag: 'shift-swap-notification'
-                });
+                    tag: 'shift-swap-notification',
+                    requireInteraction: false,
+                    silent: false
+                };
+                
+                // 아이콘과 배지 (지원되는 경우에만)
+                if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
+                    // Safari에서는 아이콘 옵션 제한적
+                    console.log('Safari에서 알림 발송');
+                } else {
+                    // Chrome, Firefox 등에서는 전체 옵션 사용
+                    notificationOptions.icon = 'apple-touch-icon.png';
+                    notificationOptions.badge = 'apple-touch-icon.png';
+                    notificationOptions.vibrate = [100, 50, 100];
+                }
+                
+                const notification = new Notification(title, notificationOptions);
+                
+                // 알림 클릭 이벤트 (지원되는 경우)
+                notification.onclick = function() {
+                    window.focus();
+                    this.close();
+                };
+                
                 console.log('브라우저 알림 발송 성공');
+                
+                // 알림 자동 닫기 (5초 후)
+                setTimeout(() => {
+                    notification.close();
+                }, 5000);
+                
             } catch (error) {
                 console.error('브라우저 알림 발송 실패:', error);
             }
         } else {
-            console.log('브라우저 알림 권한이 없습니다.');
+            console.log('브라우저 알림 권한이 없습니다. 권한 상태:', Notification.permission);
         }
 
         // FCM 알림 (Firebase가 연결된 경우)

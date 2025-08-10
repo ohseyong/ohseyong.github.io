@@ -12,6 +12,8 @@ class CalendarService {
             '129': 0,
             '마감': 0
         };
+        this.dayOffDates = []; // 휴무 날짜 목록
+        this.dayOffStats = []; // 휴무 통계
         this.shiftTimeMap = {
             '945': '09:45',
             '118': '11:00',
@@ -106,6 +108,7 @@ class CalendarService {
                 this.lastUpdate = data.lastUpdate;
                 this.lastCheck = data.lastCheck;
                 this.eventStats = data.eventStats || this.eventStats;
+                this.dayOffStats = data.dayOffStats || [];
                 this.myRole = data.myRole || null;
                 
                 // URL 입력 필드에 설정된 값 표시
@@ -158,6 +161,7 @@ class CalendarService {
             lastUpdate: this.lastUpdate,
             lastCheck: this.lastCheck,
             eventStats: this.eventStats,
+            dayOffStats: this.dayOffStats,
             myRole: this.myRole
         };
 
@@ -226,6 +230,17 @@ class CalendarService {
             html += `129: ${this.eventStats['129']}개<br>`;
             html += `마감: ${this.eventStats['마감']}개`;
             html += `</div>`;
+            
+            // 휴무 통계 표시
+            if (this.dayOffStats && this.dayOffStats.length > 0) {
+                html += `<div style="margin-top: 8px; border-top: 1px solid #e2e8f0; padding-top: 8px;"><strong>가져온 휴무:</strong></div>`;
+                html += `<div style="font-size: 12px; color: #64748b; margin-bottom: 8px;">`;
+                html += this.dayOffStats.slice(0, 10).join(', '); // 최대 10개까지만 표시
+                if (this.dayOffStats.length > 10) {
+                    html += ` 외 ${this.dayOffStats.length - 10}일`;
+                }
+                html += `</div>`;
+            }
         }
         
         // 역할 매칭 상태 표시
@@ -292,6 +307,7 @@ class CalendarService {
                 lastUpdate: this.lastUpdate,
                 lastCheck: this.lastCheck,
                 eventStats: this.eventStats,
+                dayOffStats: this.dayOffStats,
                 myRole: this.myRole
             };
             localStorage.setItem('calendarSettings', JSON.stringify(settings));
@@ -318,6 +334,7 @@ class CalendarService {
         // 간단한 ICS 파싱 (실제로는 더 정교한 파서 사용 권장)
         const lines = icsData.split('\n');
         let currentEvent = {};
+        let eventDates = new Set(); // 이벤트가 있는 날짜들
         
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i].trim();
@@ -327,6 +344,10 @@ class CalendarService {
             } else if (line === 'END:VEVENT') {
                 if (currentEvent.start && currentEvent.summary) {
                     this.calendarEvents.push(currentEvent);
+                    
+                    // 이벤트가 있는 날짜 기록
+                    const dateKey = currentEvent.start.toISOString().split('T')[0];
+                    eventDates.add(dateKey);
                     
                     // 이벤트 시간에 따른 통계 업데이트
                     const hours = currentEvent.start.getHours();
@@ -354,8 +375,54 @@ class CalendarService {
             }
         }
         
+        // 휴무 날짜 계산 (이벤트가 없는 날짜들)
+        this.calculateDayOffDates(eventDates);
+        
         console.log('파싱된 캘린더 이벤트:', this.calendarEvents);
         console.log('이벤트 통계:', this.eventStats);
+        console.log('휴무 날짜:', this.dayOffDates);
+    }
+
+    calculateDayOffDates(eventDates) {
+        this.dayOffDates = [];
+        this.dayOffStats = [];
+        
+        if (eventDates.size === 0) {
+            console.log('일정이 없어서 휴무 계산을 건너뜁니다.');
+            return;
+        }
+        
+        // 일정이 있는 날짜들을 정렬하여 최초/마지막 날짜 찾기
+        const sortedDates = Array.from(eventDates).sort();
+        const firstEventDate = new Date(sortedDates[0]);
+        const lastEventDate = new Date(sortedDates[sortedDates.length - 1]);
+        
+        console.log('일정 기간:', firstEventDate.toISOString().split('T')[0], '~', lastEventDate.toISOString().split('T')[0]);
+        
+        // 최초 일정 날짜부터 마지막 일정 날짜까지 확인
+        const currentDate = new Date(firstEventDate);
+        
+        while (currentDate <= lastEventDate) {
+            const dateKey = currentDate.toISOString().split('T')[0];
+            
+            // 이벤트가 없는 날짜가 휴무
+            if (!eventDates.has(dateKey)) {
+                const month = currentDate.getMonth() + 1;
+                const day = currentDate.getDate();
+                const dateStr = `${month}/${day}`;
+                
+                this.dayOffDates.push({
+                    date: new Date(currentDate),
+                    dateStr: dateStr
+                });
+                
+                this.dayOffStats.push(dateStr);
+            }
+            
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+        
+        console.log('계산된 휴무 개수:', this.dayOffStats.length);
     }
 
     compareShiftsWithCalendar() {
@@ -401,7 +468,8 @@ class CalendarService {
             return {
                 selling: false,
                 buying: buyingMatch,
-                hasMatch: buyingMatch && roleMatch
+                hasMatch: buyingMatch && roleMatch,
+                isDayOff: false
             };
         } else {
             // 휴무 스왑
@@ -409,7 +477,7 @@ class CalendarService {
             const buyingDate = new Date(shift.buyingItem);
             
             // 구하는 휴무만 확인 (구매 휴무)
-            const buyingMatch = this.findMatchingEvent(buyingDate.toISOString().split('T')[0], '휴무');
+            const buyingMatch = this.findDayOffMatch(buyingDate);
             
             // 역할 매칭 확인
             const roleMatch = !this.myRole || shift.role === this.myRole;
@@ -417,7 +485,8 @@ class CalendarService {
             return {
                 selling: false,
                 buying: buyingMatch,
-                hasMatch: buyingMatch && roleMatch
+                hasMatch: buyingMatch && roleMatch,
+                isDayOff: true
             };
         }
     }
@@ -443,6 +512,16 @@ class CalendarService {
         });
     }
 
+    findDayOffMatch(date) {
+        // 해당 날짜가 휴무인지 확인
+        const dateKey = date.toISOString().split('T')[0];
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        const dateStr = `${month}/${day}`;
+        
+        return this.dayOffDates.find(dayOff => dayOff.dateStr === dateStr);
+    }
+
     updateShiftMatchDisplay(shift, matchResult) {
         // shift 객체에 매칭 결과 저장
         shift.calendarMatch = matchResult;
@@ -459,14 +538,35 @@ class CalendarService {
     async autoSync() {
         console.log('자동 캘린더 동기화 실행');
         
+        // 저장된 설정에서 캘린더 URL 로드
+        if (!this.calendarUrl) {
+            try {
+                const settings = localStorage.getItem('calendarSettings');
+                if (settings) {
+                    const data = JSON.parse(settings);
+                    this.calendarUrl = data.url;
+                    this.lastUpdate = data.lastUpdate;
+                    this.lastCheck = data.lastCheck;
+                    this.eventStats = data.eventStats || this.eventStats;
+                    this.dayOffStats = data.dayOffStats || [];
+                    this.myRole = data.myRole || null;
+                }
+            } catch (error) {
+                console.error('저장된 캘린더 설정 로드 실패:', error);
+            }
+        }
+        
         if (this.calendarUrl) {
             try {
+                console.log('저장된 캘린더 URL로 동기화 시작:', this.calendarUrl);
                 await this.syncCalendar();
                 // 토스트는 app.js에서 통합 관리
             } catch (error) {
                 console.error('자동 캘린더 동기화 실패:', error);
                 // 에러 토스트는 app.js에서 통합 관리
             }
+        } else {
+            console.log('저장된 캘린더 URL이 없습니다.');
         }
     }
 

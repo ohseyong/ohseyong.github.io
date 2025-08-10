@@ -13,8 +13,8 @@
     <meta name="mobile-web-app-capable" content="yes">
     
     <!-- 아이콘 -->
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/jekyll.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/jekyll.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="apple-touch-icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="css/styles-optimized.css">
@@ -29,10 +29,16 @@
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-functions-compat.js"></script>
 </head>
 <body>
+    <!-- Pull to Refresh Indicator -->
+    <div class="pull-to-refresh" id="pullToRefresh">
+        <span class="refresh-icon">🔄</span>
+        <span>새로고침 중...</span>
+    </div>
+
     <!-- 헤더 -->
     <header class="header">
         <div class="container">
-            <h1 class="header-title">가로수길 스케줄 스왑</h1>
+            <h1 class="header-title" id="headerTitle">가로수길 스케줄 스왑</h1>
             <div class="header-actions">
                 <button class="btn icon-btn" id="calendarSyncBtn" aria-label="캘린더 연동" title="캘린더 연동">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="icon-white">
@@ -267,6 +273,7 @@
     <script>
         if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
             window.addEventListener('load', () => {
+                // 기본 Service Worker 등록
                 navigator.serviceWorker.register('sw.js')
                     .then((registration) => {
                         console.log('SW registered: ', registration);
@@ -275,10 +282,18 @@
                         console.log('SW registration failed: ', registrationError);
                     });
 
-                // Firebase Messaging SW (scope: /shift-swap/)
-                navigator.serviceWorker.register('firebase-messaging-sw.js', { scope: './' })
+                // Firebase Messaging SW 등록 (iOS/Safari 호환성 개선)
+                navigator.serviceWorker.register('firebase-messaging-sw.js', { 
+                    scope: './',
+                    updateViaCache: 'none' // 캐시 업데이트 방지
+                })
                     .then((registration) => {
                         console.log('Messaging SW registered: ', registration);
+                        
+                        // iOS/Safari에서 알림 권한 확인
+                        if ('Notification' in window) {
+                            console.log('현재 알림 권한:', Notification.permission);
+                        }
                     })
                     .catch((err) => {
                         console.log('Messaging SW registration failed: ', err);

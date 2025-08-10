@@ -1,5 +1,5 @@
 {
-  "name": "가로수길 스케줄 스왑",
+  "name": "스케줄 스왑",
   "short_name": "스케줄 스왑",
   "description": "가로수길 매장 팀원들을 위한 시프트/휴무 스왑 관리 도구",
   "start_url": "/shift-swap/",

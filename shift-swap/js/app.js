@@ -26,15 +26,17 @@ class ShiftSwapApp {
             this.bindNotificationSettingsDirectly();
         }, 200);
         
-        // 캘린더 서비스 초기화
+        // 캘린더 서비스 초기화 및 자동 동기화
         setTimeout(() => {
             this.calendarService.init();
             // 페이지 로딩 시마다 캘린더 동기화 실행
             this.calendarService.autoSync();
-            
-            // 통합 토스트 메시지 표시
+        }, 100);
+        
+        // 통합 토스트 메시지 표시 (캘린더 동기화 후)
+        setTimeout(() => {
             this.showInitialToasts();
-        }, 500);
+        }, 1000);
     }
 
     // 이벤트 바인딩
@@ -345,20 +347,33 @@ class ShiftSwapApp {
 
     // 초기 토스트 메시지 표시
     showInitialToasts() {
+        console.log('초기 토스트 메시지 표시 시작');
+        
         // 1. 연결됨 - 즉시 표시
         this.ui.showNotification('연결됨', 'info');
 
         // 2. 알림 설정 - 1.5초 후 표시
         setTimeout(() => {
-            if (Notification.permission !== 'granted') {
+            const permission = Notification.permission;
+            console.log('알림 권한 상태:', permission);
+            
+            if (permission !== 'granted') {
                 this.ui.showNotification('알림 설정 시 새 매물 등록 시 알림을 받을 수 있습니다', 'info');
+            } else {
+                this.ui.showNotification('알림이 설정되어 있습니다', 'success');
             }
         }, 1500);
 
         // 3. 캘린더 설정 - 2.5초 후 표시
         setTimeout(() => {
-            if (this.calendarService.calendarUrl) {
-                this.ui.showNotification('캘린더가 동기화된 상태입니다', 'info');
+            const hasCalendarUrl = this.calendarService.calendarUrl;
+            const hasCalendarEvents = this.calendarService.calendarEvents.length > 0;
+            console.log('캘린더 상태:', { hasCalendarUrl, hasCalendarEvents });
+            
+            if (hasCalendarUrl && hasCalendarEvents) {
+                this.ui.showNotification('캘린더가 동기화된 상태입니다', 'success');
+            } else if (hasCalendarUrl) {
+                this.ui.showNotification('캘린더 설정은 되어 있지만 동기화가 필요합니다', 'info');
             } else {
                 this.ui.showNotification('캘린더 설정 시 내가 가진 스케줄과 일치하는 매물이 강조 표시됩니다', 'info');
             }

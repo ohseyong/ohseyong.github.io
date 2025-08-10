@@ -26,12 +26,19 @@ messaging.onBackgroundMessage((payload) => {
     const notificationTitle = payload.notification.title;
     const notificationOptions = {
         body: payload.notification.body,
-        icon: 'assets/jekyll.png',
-        badge: 'assets/jekyll.png',
-        vibrate: [100, 50, 100],
+        icon: 'apple-touch-icon.png',
+        badge: 'apple-touch-icon.png',
         tag: 'shift-swap-notification',
-        data: payload.data
+        data: payload.data,
+        requireInteraction: false,
+        silent: false
     };
+
+    // iOS/Safari 호환성을 위한 추가 옵션
+    if (payload.data && payload.data.platform === 'ios') {
+        // iOS에서는 일부 옵션 제한
+        delete notificationOptions.vibrate;
+    }
 
     return self.registration.showNotification(notificationTitle, notificationOptions);
 });

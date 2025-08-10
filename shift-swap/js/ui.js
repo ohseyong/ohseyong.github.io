@@ -12,6 +12,8 @@ class ShiftSwapUI {
         this.setupRoleFilters();
         this.setupTypeFilters();
         this.setMinDates();
+        this.setupPullToRefresh();
+        this.setupHeaderTitleClick();
         
         // 알림 설정은 DOM이 완전히 로드된 후 바인딩
         setTimeout(() => {
@@ -409,7 +411,7 @@ class ShiftSwapUI {
             
         // 캘린더 매칭 결과 표시 (매칭된 경우만)
         const calendarMatchBadge = (shift.calendarMatch?.hasMatch && shift.status === 'selling')
-            ? `<span class="calendar-match">내가 가지고 있는 스케줄이에요!</span>`
+            ? `<span class="calendar-match">${shift.calendarMatch.isDayOff ? '내가 가지고 있는 휴무에요!' : '내가 가지고 있는 스케줄이에요!'}</span>`
             : '';
 
         const actions = shift.status === 'selling' ? `
@@ -582,5 +584,134 @@ class ShiftSwapUI {
             }
         } catch (e) {}
         return new Date(shift.createdAt || Date.now());
+    }
+
+    // Pull to Refresh 기능 설정
+    setupPullToRefresh() {
+        let startY = 0;
+        let currentY = 0;
+        let isRefreshing = false;
+        const pullThreshold = 80;
+        const refreshIndicator = document.getElementById('pullToRefresh');
+        
+        if (!refreshIndicator) return;
+
+        // 터치 이벤트 (모바일)
+        document.addEventListener('touchstart', (e) => {
+            if (window.scrollY === 0) {
+                startY = e.touches[0].clientY;
+            }
+        }, { passive: true });
+
+        document.addEventListener('touchmove', (e) => {
+            if (window.scrollY === 0 && startY > 0) {
+                currentY = e.touches[0].clientY;
+                const pullDistance = currentY - startY;
+                
+                if (pullDistance > 0 && pullDistance < pullThreshold) {
+                    const progress = pullDistance / pullThreshold;
+                    refreshIndicator.style.transform = `translateY(${Math.min(pullDistance * 0.5, 60)}px)`;
+                }
+            }
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            if (window.scrollY === 0 && startY > 0) {
+                const pullDistance = currentY - startY;
+                
+                if (pullDistance >= pullThreshold && !isRefreshing) {
+                    this.triggerRefresh();
+                } else {
+                    refreshIndicator.style.transform = 'translateY(-100%)';
+                }
+                
+                startY = 0;
+                currentY = 0;
+            }
+        }, { passive: true });
+
+        // 마우스 이벤트 (데스크톱)
+        document.addEventListener('mousedown', (e) => {
+            if (window.scrollY === 0) {
+                startY = e.clientY;
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (window.scrollY === 0 && startY > 0) {
+                currentY = e.clientY;
+                const pullDistance = currentY - startY;
+                
+                if (pullDistance > 0 && pullDistance < pullThreshold) {
+                    const progress = pullDistance / pullThreshold;
+                    refreshIndicator.style.transform = `translateY(${Math.min(pullDistance * 0.5, 60)}px)`;
+                }
+            }
+        });
+
+        document.addEventListener('mouseup', (e) => {
+            if (window.scrollY === 0 && startY > 0) {
+                const pullDistance = currentY - startY;
+                
+                if (pullDistance >= pullThreshold && !isRefreshing) {
+                    this.triggerRefresh();
+                } else {
+                    refreshIndicator.style.transform = 'translateY(-100%)';
+                }
+                
+                startY = 0;
+                currentY = 0;
+            }
+        });
+    }
+
+    // 새로고침 실행
+    async triggerRefresh() {
+        const refreshIndicator = document.getElementById('pullToRefresh');
+        if (!refreshIndicator) return;
+
+        // 새로고침 상태 시작
+        refreshIndicator.classList.add('show');
+        refreshIndicator.style.transform = 'translateY(0)';
+        
+        try {
+            // Firebase 데이터 새로고침
+            if (this.app.firebaseService && !this.app.firebaseService.isLocalMode) {
+                // Firebase 리스너가 자동으로 데이터를 새로고침함
+                console.log('Firebase 데이터 새로고침 중...');
+            }
+            
+            // 캘린더 동기화
+            if (this.app.calendarService) {
+                await this.app.calendarService.autoSync();
+            }
+            
+            // UI 새로고침
+            this.app.renderShifts();
+            this.app.updateTabCounts();
+            
+            // 성공 메시지
+            this.app.showNotification('새로고침이 완료되었습니다!', 'success');
+            
+        } catch (error) {
+            console.error('새로고침 실패:', error);
+            this.app.showNotification('새로고침 중 오류가 발생했습니다.', 'error');
+        } finally {
+            // 새로고침 상태 종료
+            setTimeout(() => {
+                refreshIndicator.classList.remove('show');
+                refreshIndicator.style.transform = 'translateY(-100%)';
+            }, 1000);
+        }
+    }
+
+    // 헤더 제목 클릭 설정
+    setupHeaderTitleClick() {
+        const headerTitle = document.getElementById('headerTitle');
+        if (!headerTitle) return;
+
+        headerTitle.addEventListener('click', () => {
+            this.triggerRefresh();
+        });
     }
 }
