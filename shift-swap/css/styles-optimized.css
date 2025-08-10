@@ -356,24 +356,24 @@ body {
 .shift-headline {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
+    gap: 6px;
+    margin-bottom: 10px;
     flex-wrap: wrap;
 }
 
 .shift-headline .date-plain { 
-    font-size: 14px; 
+    font-size: 13px; 
     font-weight: 800; 
     color: #0f172a; 
 }
 
 .shift-headline .pill {
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 12px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 11px;
     font-weight: 700;
     text-align: center;
-    min-width: 40px;
+    min-width: 35px;
 }
 
 .shift-headline .pill-selling { 
@@ -398,10 +398,10 @@ body {
 /* ===== 시프트 내용 ===== */
 .shift-reason {
     background: #f8fafc;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    font-size: 14px;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    font-size: 13px;
     color: #475569;
     border-left: 3px solid #e2e8f0;
 }
