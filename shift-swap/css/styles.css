@@ -307,21 +307,18 @@ body {
 
 .shift-main-info {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: center;
     gap: 8px;
-    margin-bottom: 12px;
-    padding: 12px;
+    margin-bottom: 8px;
+    padding: 8px 12px;
     background: #f8f9fa;
     border-radius: 8px;
 }
 
-.info-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 4px;
-}
+.info-section { display: flex; align-items: center; gap: 6px; }
+.date-section .info-icon { display: none; }
+.info-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .info-icon {
     font-size: 18px;
@@ -344,23 +341,10 @@ body {
     grid-template-columns: 1fr 1fr;
 }
 
-/* 반응형 디자인 */
+/* 반응형에서도 3열 유지 */
 @media (max-width: 480px) {
-    .shift-main-info {
-        grid-template-columns: 1fr;
-        gap: 6px;
-        padding: 10px;
-    }
-    
-    .info-section {
-        flex-direction: row;
-        justify-content: center;
-        gap: 6px;
-    }
-    
-    .info-text {
-        font-size: 14px;
-    }
+    .shift-main-info { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 8px; gap: 6px; }
+    .info-text { font-size: 13px; }
 }
 
 
@@ -1137,14 +1121,9 @@ body {
         text-align: center;
     }
     
-    .tab-nav {
-        flex-direction: column;
-        gap: 4px;
-    }
-    
-    .tab-btn {
-        justify-content: flex-start;
-    }
+    .tab-nav { flex-direction: row; gap: 6px; }
+    .tab-btn { justify-content: center; }
+    .tab-icon { display: none; }
     
     .notification {
         right: 10px;

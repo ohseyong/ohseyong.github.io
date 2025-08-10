@@ -27,6 +27,8 @@ class FirebaseShiftSwapApp {
         
         // 초기 required 속성 설정 (시프트 스왑이 기본값)
         this.switchSwapType('shift');
+        // 만료 자동 취소 1회 보장 (초기 로드 시)
+        this.autoCancelExpiredShifts();
     }
 
     // 알림 설정
@@ -37,6 +39,54 @@ class FirebaseShiftSwapApp {
                 console.log('알림 권한이 허용되었습니다.');
             } else {
                 console.log('알림 권한이 거부되었습니다.');
+            }
+        }
+    }
+
+    // 오늘 이전의 모든 시프트를 자동 취소 처리 (시프트 스왑 대상)
+    async autoCancelExpiredShifts() {
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        let changed = false;
+
+        for (const s of this.shifts) {
+            if (s.status !== 'selling') continue;
+            if (s.type !== 'shift') continue; // 시프트 스왑만 만료 처리
+
+            // s.sellingItem: 'YYYY-MM-DD HH' 형태
+            const dateStr = (s.sellingItem || '').split(' ')[0];
+            if (!dateStr) continue;
+            const d = new Date(dateStr);
+            d.setHours(0,0,0,0);
+            // 오늘 이전이면 만료 처리 (d < today)
+            if (d < today) {
+                s.status = 'cancelled';
+                s.cancelledAt = new Date().toISOString();
+                s.cancelReason = 'expired';
+                changed = true;
+            }
+        }
+
+        if (changed) {
+            try {
+                if (this.isLocalMode) {
+                    this.saveToLocalStorage();
+                } else {
+                    // Firebase 모드: 변경분을 반영
+                    const updates = {};
+                    this.shifts.forEach(s => {
+                        if (s.id && s.cancelReason === 'expired' && s.status === 'cancelled') {
+                            updates[`shifts/${s.id}/status`] = 'cancelled';
+                            updates[`shifts/${s.id}/cancelledAt`] = new Date().toISOString();
+                            updates[`shifts/${s.id}/cancelReason`] = 'expired';
+                        }
+                    });
+                    if (Object.keys(updates).length > 0) {
+                        await database.ref().update(updates);
+                    }
+                }
+            } catch (e) {
+                console.error('만료 자동 취소 반영 실패:', e);
             }
         }
     }
@@ -67,7 +117,8 @@ class FirebaseShiftSwapApp {
                 
                 // 시간순으로 정렬 (최신순)
                 this.shifts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                
+                // 만료된 시프트 자동 취소 처리
+                this.autoCancelExpiredShifts();
                 this.renderShifts();
                 this.updateTabCounts();
             });
@@ -628,6 +679,10 @@ class FirebaseShiftSwapApp {
             `;
         }
         
+        const expiredBadge = (shift.status === 'cancelled' && shift.cancelReason === 'expired')
+            ? '<div class="expired-badge">날짜가 지나서 취소되었습니다</div>'
+            : '';
+
         const actions = shift.status === 'selling' ? `
             <div class="shift-actions">
                 <button class="btn btn-success btn-complete">거래완료</button>
@@ -640,6 +695,7 @@ class FirebaseShiftSwapApp {
 
         return `
             <div class="shift-card ${statusClass} ${cardTypeClass}" data-shift-id="${shift.id}">
+                ${expiredBadge}
                 <div class="shift-header">
                     <div class="user-info">
                         <span class="user-icon">👤</span>
@@ -884,58 +940,72 @@ class FirebaseShiftSwapApp {
 
     // 샘플 데이터 추가
     async addSampleData() {
+        const toISODate = (d) => d.toISOString().split('T')[0];
+        const addDays = (base, n) => {
+            const d = new Date(base);
+            d.setDate(d.getDate() + n);
+            d.setHours(0,0,0,0);
+            return d;
+        };
+        const now = new Date();
+        const d1 = toISODate(addDays(now, 1));
+        const d3 = toISODate(addDays(now, 3));
+        const d5 = toISODate(addDays(now, 5));
+        const d7 = toISODate(addDays(now, 7));
+        const d10 = toISODate(addDays(now, 10));
+
         const sampleShifts = [
             {
                 name: '김영희',
                 role: 'TS',
                 type: 'shift',
-                sellingItem: '2024-12-15 945',
-                buyingItem: '2024-12-16 118',
+                sellingItem: `${d1} 945`,
+                buyingItem: `${d1} 118`,
                 reason: '개인 일정으로 인해 시프트 변경이 필요합니다.',
                 status: 'selling',
-                createdAt: '2024-12-13T10:00:00.000Z'
+                createdAt: new Date().toISOString()
             },
             {
                 name: '박철수',
                 role: 'TE',
                 type: 'shift',
-                sellingItem: '2024-12-17 129',
-                buyingItem: '2024-12-18 마감',
+                sellingItem: `${d3} 129`,
+                buyingItem: `${d3} 마감`,
                 reason: '병원 예약이 있어서 시프트를 바꿔주세요.',
                 status: 'selling',
-                createdAt: '2024-12-13T14:30:00.000Z'
+                createdAt: new Date().toISOString()
             },
             {
                 name: '이미영',
                 role: 'Genius',
                 type: 'dayoff',
-                sellingItem: '2024-12-20',
-                buyingItem: '2024-12-21',
+                sellingItem: d5,
+                buyingItem: d7,
                 reason: '가족 행사가 있어서 휴무를 바꿔주세요.',
                 status: 'selling',
-                createdAt: '2024-12-12T09:15:00.000Z'
+                createdAt: new Date().toISOString()
             },
             {
                 name: '최민수',
                 role: 'TS',
                 type: 'shift',
-                sellingItem: '2024-12-22 945',
-                buyingItem: '2024-12-23 129',
+                sellingItem: `${d10} 945`,
+                buyingItem: `${d10} 129`,
                 reason: '',
                 status: 'completed',
-                createdAt: '2024-12-11T11:20:00.000Z',
-                completedAt: '2024-12-12T13:30:00.000Z'
+                createdAt: new Date().toISOString(),
+                completedAt: new Date(addDays(now, 1)).toISOString()
             },
             {
                 name: '정다은',
                 role: 'TE',
                 type: 'dayoff',
-                sellingItem: '2024-12-25',
-                buyingItem: '2024-12-26',
-                reason: '크리스마스 파티가 있어서 휴무 변경 부탁드립니다.',
+                sellingItem: d7,
+                buyingItem: d10,
+                reason: '행사 일정으로 휴무 변경 부탁드립니다.',
                 status: 'cancelled',
-                createdAt: '2024-12-10T15:45:00.000Z',
-                cancelledAt: '2024-12-11T10:20:00.000Z'
+                createdAt: new Date().toISOString(),
+                cancelledAt: new Date(addDays(now, 1)).toISOString()
             }
         ];
 
