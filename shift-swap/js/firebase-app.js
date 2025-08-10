@@ -5,6 +5,7 @@ class FirebaseShiftSwapApp {
         this.currentTab = 'selling';
         this.selectedShiftId = null;
         this.currentSwapType = 'shift'; // 'shift' 또는 'dayoff'
+        this.currentRoleFilter = 'all'; // 'all', 'TS', 'TE', 'Genius'
         
         this.init();
     }
@@ -15,6 +16,8 @@ class FirebaseShiftSwapApp {
         this.setupFirebaseListeners();
         this.setupTypeTabs();
         this.setupShiftButtons();
+        this.setupRoleButtons();
+        this.setupRoleFilters();
         this.setMinDates();
         this.setupNotifications();
         
@@ -156,6 +159,45 @@ class FirebaseShiftSwapApp {
                 hiddenInput.value = e.target.dataset.shift;
                 
                 console.log('시프트 선택:', e.target.dataset.shift, 'hidden input:', hiddenInput.value);
+            });
+        });
+    }
+
+    // 역할 버튼 설정
+    setupRoleButtons() {
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const roleButtons = e.target.closest('.role-buttons');
+                const hiddenInput = roleButtons.nextElementSibling;
+                
+                // 같은 그룹의 다른 버튼들 비활성화
+                roleButtons.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+                
+                // 클릭된 버튼 활성화
+                e.target.classList.add('active');
+                
+                // hidden input에 값 설정
+                hiddenInput.value = e.target.dataset.role;
+                
+                console.log('역할 선택:', e.target.dataset.role);
+            });
+        });
+    }
+
+    // 역할별 필터 설정
+    setupRoleFilters() {
+        document.querySelectorAll('.role-filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const role = e.target.closest('.role-filter-btn').dataset.role;
+                
+                // 필터 버튼 활성화
+                document.querySelectorAll('.role-filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.closest('.role-filter-btn').classList.add('active');
+                
+                this.currentRoleFilter = role;
+                this.renderShifts();
+                
+                console.log('역할 필터 변경:', role);
             });
         });
     }
@@ -323,7 +365,15 @@ class FirebaseShiftSwapApp {
         
         const formData = new FormData(shiftForm);
         const name = formData.get('name');
+        const role = formData.get('role');
         const reason = formData.get('reason') || '';
+        
+        console.log('폼 데이터:', { name, role, reason, currentSwapType: this.currentSwapType });
+        
+        if (!role) {
+            this.showNotification('역할을 선택해주세요.', 'error');
+            return;
+        }
         
         console.log('폼 데이터:', { name, reason, currentSwapType: this.currentSwapType });
         
@@ -364,6 +414,7 @@ class FirebaseShiftSwapApp {
 
         const shift = {
             name: name,
+            role: role,
             type: this.currentSwapType,
             sellingItem: sellingItem,
             buyingItem: buyingItem,
@@ -426,6 +477,11 @@ class FirebaseShiftSwapApp {
             btn.classList.remove('active');
         });
         
+        // 역할 버튼 초기화
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
         // required 속성 재설정
         this.switchSwapType('shift');
     }
@@ -435,7 +491,12 @@ class FirebaseShiftSwapApp {
         const shiftList = document.getElementById('shiftList');
         const emptyState = document.getElementById('emptyState');
         
-        const filteredShifts = this.shifts.filter(shift => shift.status === this.currentTab);
+        let filteredShifts = this.shifts.filter(shift => shift.status === this.currentTab);
+        
+        // 역할별 필터링
+        if (this.currentRoleFilter !== 'all') {
+            filteredShifts = filteredShifts.filter(shift => shift.role === this.currentRoleFilter);
+        }
         
         if (filteredShifts.length === 0) {
             shiftList.innerHTML = '';
@@ -543,6 +604,7 @@ class FirebaseShiftSwapApp {
                     <div class="user-info">
                         <span class="user-icon">👤</span>
                         <span class="user-name">${shift.name}</span>
+                        <span class="user-role">${shift.role}</span>
                     </div>
                     <div class="shift-type">${typeIcon} ${typeText}</div>
                 </div>
@@ -776,6 +838,7 @@ class FirebaseShiftSwapApp {
         const sampleShifts = [
             {
                 name: '김영희',
+                role: 'TS',
                 type: 'shift',
                 sellingItem: '2024-12-15 945',
                 buyingItem: '2024-12-16 118',
@@ -785,6 +848,7 @@ class FirebaseShiftSwapApp {
             },
             {
                 name: '박철수',
+                role: 'TE',
                 type: 'shift',
                 sellingItem: '2024-12-17 129',
                 buyingItem: '2024-12-18 마감',
@@ -794,6 +858,7 @@ class FirebaseShiftSwapApp {
             },
             {
                 name: '이미영',
+                role: 'Genius',
                 type: 'dayoff',
                 sellingItem: '2024-12-20',
                 buyingItem: '2024-12-21',
@@ -803,6 +868,7 @@ class FirebaseShiftSwapApp {
             },
             {
                 name: '최민수',
+                role: 'TS',
                 type: 'shift',
                 sellingItem: '2024-12-22 945',
                 buyingItem: '2024-12-23 129',
@@ -813,6 +879,7 @@ class FirebaseShiftSwapApp {
             },
             {
                 name: '정다은',
+                role: 'TE',
                 type: 'dayoff',
                 sellingItem: '2024-12-25',
                 buyingItem: '2024-12-26',
