@@ -6,17 +6,19 @@
 
 ```
 kate_apt/
-├── index.html          # 원본 단일 파일 (548줄)
-├── index-new.html      # 리팩토링된 메인 HTML
+├── index.html              # 원본 단일 파일 (548줄)
+├── index-new.html          # 리팩토링된 메인 HTML
+├── index-scenario.html     # 시나리오 비교 기능 추가 버전
 ├── css/
-│   └── styles.css      # 스타일시트 (분리됨)
+│   └── styles.css          # 스타일시트 (분리됨)
 ├── js/
-│   ├── formatters.js   # 포맷팅 유틸리티
-│   ├── loan-calculator.js # 대출 계산 함수들
-│   └── calculator.js   # 메인 계산기 로직
+│   ├── formatters.js       # 포맷팅 유틸리티
+│   ├── loan-calculator.js  # 대출 계산 함수들
+│   ├── calculator.js       # 메인 계산기 로직
+│   └── scenario-comparison.js # 시나리오 비교 기능
 ├── data/
-│   └── tax-rates.js    # 세율 및 정책 데이터
-└── README.md           # 이 파일
+│   └── tax-rates.js        # 세율 및 정책 데이터
+└── README.md               # 이 파일
 ```
 
 ## 🔄 리팩토링 내용
@@ -69,6 +71,7 @@ kate_apt/
 
 1. **원본 버전**: `index.html` 파일을 브라우저에서 열기
 2. **리팩토링 버전**: `index-new.html` 파일을 브라우저에서 열기
+3. **시나리오 비교 버전**: `index-scenario.html` 파일을 브라우저에서 열기
 
 ## 🛠️ 개발 가이드
 
@@ -77,6 +80,7 @@ kate_apt/
 2. **스타일 변경**: `css/styles.css` 수정
 3. **계산 로직 변경**: `js/calculator.js` 수정
 4. **세율 변경**: `data/tax-rates.js` 수정
+5. **시나리오 기능 변경**: `js/scenario-comparison.js` 수정
 
 ### 디버깅
 - 브라우저 개발자 도구에서 각 모듈별로 확인 가능
@@ -89,6 +93,10 @@ kate_apt/
 - **취득세/재산세 계산**
 - **보유기간 손익 분석**
 - **실시간 계산 업데이트**
+- **시나리오 비교 분석** (새로운 기능!)
+  - 현재 상황 vs 낙관적 vs 보수적 시나리오
+  - 실시간 비교 테이블
+  - 최적/최악 시나리오 하이라이트
 
 ## 🎨 디자인 특징
 
@@ -100,4 +108,4 @@ kate_apt/
 ---
 
 **개발자**: 오세용  
-**버전**: 2.0 (리팩토링 완료)
+**버전**: 2.1 (시나리오 비교 기능 추가)

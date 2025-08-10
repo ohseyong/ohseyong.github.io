@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>가로수길 스케줄 스왑</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="container">
+            <h1 class="header-title">🔄 가로수길 스케줄 스왑</h1>
+            <button class="btn btn-primary" id="addShiftBtn">
+                <span class="btn-icon">+</span>
+                새 거래 등록
+            </button>
+        </div>
+    </header>
+
+    <!-- 메인 컨테이너 -->
+    <main class="main">
+        <div class="container">
+            <!-- 연결 상태 표시 -->
+            <div class="connection-status" id="connectionStatus">
+                <span class="status-indicator offline"></span>
+                <span class="status-text">연결 중...</span>
+            </div>
+
+            <!-- 탭 네비게이션 -->
+            <nav class="tab-nav">
+                <button class="tab-btn active" data-tab="selling">
+                    <span class="tab-icon">📋</span>
+                    거래중
+                    <span class="tab-count" id="sellingCount">0</span>
+                </button>
+                <button class="tab-btn" data-tab="completed">
+                    <span class="tab-icon">✅</span>
+                    거래완료
+                    <span class="tab-count" id="completedCount">0</span>
+                </button>
+                <button class="tab-btn" data-tab="cancelled">
+                    <span class="tab-icon">❌</span>
+                    거래취소
+                    <span class="tab-count" id="cancelledCount">0</span>
+                </button>
+            </nav>
+
+            <!-- 시프트 리스트 -->
+            <div class="shift-list" id="shiftList">
+                <!-- 동적으로 생성됨 -->
+            </div>
+
+            <!-- 빈 상태 메시지 -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-icon">📝</div>
+                <h3>등록된 거래가 없습니다</h3>
+                <p>새로운 거래를 등록해보세요!</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- 거래 등록 모달 -->
+    <div class="modal" id="addShiftModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>새 거래 등록</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <form class="shift-form" id="shiftForm">
+                <div class="form-group">
+                    <label for="name">내 이름 *</label>
+                    <input type="text" id="name" name="name" required placeholder="홍길동">
+                </div>
+                
+                <!-- 거래 유형 탭 -->
+                <div class="form-group">
+                    <label>거래 유형 *</label>
+                    <div class="type-tabs">
+                        <button type="button" class="type-tab active" data-type="shift">
+                            <span class="type-icon">🔄</span>
+                            시프트 스왑
+                        </button>
+                        <button type="button" class="type-tab" data-type="dayoff">
+                            <span class="type-icon">📅</span>
+                            휴무 스왑
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 시프트 스왑 필드 -->
+                <div class="swap-fields" id="shiftFields">
+                    <div class="form-group">
+                        <label for="sellingShift">파는 시프트 *</label>
+                        <div class="datetime-input">
+                            <input type="date" id="sellingShiftDate" name="sellingShiftDate" required>
+                            <div class="shift-buttons">
+                                <button type="button" class="shift-btn" data-shift="945">945</button>
+                                <button type="button" class="shift-btn" data-shift="118">118</button>
+                                <button type="button" class="shift-btn" data-shift="129">129</button>
+                                <button type="button" class="shift-btn" data-shift="마감">마감</button>
+                            </div>
+                            <input type="hidden" id="sellingShiftTime" name="sellingShiftTime" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="buyingShift">사는 시프트 *</label>
+                        <div class="datetime-input">
+                            <input type="date" id="buyingShiftDate" name="buyingShiftDate" required>
+                            <div class="shift-buttons">
+                                <button type="button" class="shift-btn" data-shift="945">945</button>
+                                <button type="button" class="shift-btn" data-shift="118">118</button>
+                                <button type="button" class="shift-btn" data-shift="129">129</button>
+                                <button type="button" class="shift-btn" data-shift="마감">마감</button>
+                            </div>
+                            <input type="hidden" id="buyingShiftTime" name="buyingShiftTime" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 휴무 스왑 필드 -->
+                <div class="swap-fields" id="dayoffFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="sellingDayoff">파는 휴무 *</label>
+                        <input type="date" id="sellingDayoff" name="sellingDayoff" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="buyingDayoff">사는 휴무 *</label>
+                        <input type="date" id="buyingDayoff" name="buyingDayoff" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reason">사유 (선택사항)</label>
+                    <textarea id="reason" name="reason" rows="3" 
+                              placeholder="거래를 원하는 이유를 적어주세요"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">취소</button>
+                    <button type="submit" class="btn btn-primary">등록하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 거래 상세 모달 -->
+    <div class="modal" id="shiftDetailModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>거래 상세정보</h2>
+                <button class="modal-close" id="closeDetailModal">&times;</button>
+            </div>
+            <div class="shift-detail" id="shiftDetail">
+                <!-- 동적으로 생성됨 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 거래 완료 확인 모달 -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>거래 완료 확인</h2>
+                <button class="modal-close" id="closeConfirmModal">&times;</button>
+            </div>
+            <div class="confirm-content">
+                <div class="confirm-icon">🤝</div>
+                <h3>거래 당사자가 맞습니까?</h3>
+                <p>거래 완료 처리하면 되돌릴 수 없습니다.</p>
+                <div class="confirm-actions">
+                    <button class="btn btn-secondary" id="cancelConfirm">취소</button>
+                    <button class="btn btn-success" id="confirmComplete">거래 완료</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 알림 메시지 -->
+    <div class="notification" id="notification"></div>
+
+    <!-- JavaScript 로드 -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/firebase-app.js"></script>
+</body>
+</html>
