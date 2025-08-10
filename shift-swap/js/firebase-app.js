@@ -22,6 +22,8 @@ class FirebaseShiftSwapApp {
         this.setupRoleFilters();
         // 거래 유형별 모아보기 필터 활성화
         this.setupTypeFilters();
+        // 알림 설정 모달 바인딩
+        this.bindNotificationSettings();
         this.setMinDates();
         this.setupNotifications();
         
@@ -31,15 +33,62 @@ class FirebaseShiftSwapApp {
         this.autoCancelExpiredShifts();
     }
 
+    // 알림 설정 모달 열기/닫기 바인딩(모바일 포함)
+    bindNotificationSettings() {
+        const openBtn = document.getElementById('openNotificationSettings');
+        const modal = document.getElementById('notificationSettingsModal');
+        if (!openBtn || !modal) return;
+
+        const closeBtn = document.getElementById('closeNotificationSettings');
+        const closeFooterBtn = document.getElementById('closeNotificationSettingsFooter');
+        const overlay = modal.querySelector('.modal-overlay');
+        const statusSpan = document.getElementById('notificationPermissionStatus');
+        const requestBtn = document.getElementById('requestNotificationPermission');
+        const roleBtns = modal.querySelectorAll('#notificationRoleButtons .role-btn');
+        const saveBtn = document.getElementById('saveNotificationPrefs');
+
+        const updateStatus = () => {
+            if (!('Notification' in window)) {
+                if (statusSpan) statusSpan.textContent = '권한 상태: 지원되지 않음';
+                return;
+            }
+            if (statusSpan) statusSpan.textContent = `권한 상태: ${Notification.permission}`;
+        };
+
+        const show = () => { this.showModal('notificationSettingsModal'); updateStatus(); };
+        const hide = () => { this.hideModal('notificationSettingsModal'); };
+
+        openBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); show(); });
+        closeBtn && closeBtn.addEventListener('click', hide);
+        closeFooterBtn && closeFooterBtn.addEventListener('click', hide);
+        overlay && overlay.addEventListener('click', (e) => { if (e.target === overlay) hide(); });
+
+        requestBtn && requestBtn.addEventListener('click', async () => {
+            try {
+                if (!('Notification' in window)) return;
+                await Notification.requestPermission();
+                updateStatus();
+            } catch (_) {}
+        });
+
+        roleBtns.forEach(btn => {
+            btn.addEventListener('click', () => btn.classList.toggle('active'));
+        });
+
+        saveBtn && saveBtn.addEventListener('click', () => {
+            const selected = Array.from(roleBtns).filter(b => b.classList.contains('active')).map(b => b.dataset.role);
+            try { localStorage.setItem('notificationRoles', JSON.stringify(selected)); } catch (_) {}
+            this.showNotification('알림 설정이 저장되었습니다.', 'success');
+            hide();
+        });
+    }
+
     // 알림 설정
     async setupNotifications() {
-        if ('Notification' in window) {
-            const permission = await Notification.requestPermission();
-            if (permission === 'granted') {
-                console.log('알림 권한이 허용되었습니다.');
-            } else {
-                console.log('알림 권한이 거부되었습니다.');
-            }
+        if (!('Notification' in window)) return;
+        const permission = Notification.permission;
+        if (permission !== 'granted') {
+            this.showNotification('현재 알림 설정이 꺼져 있습니다. 알림 설정을 확인하세요.', 'info');
         }
     }
 
