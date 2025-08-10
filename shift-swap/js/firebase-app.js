@@ -5,7 +5,6 @@ class FirebaseShiftSwapApp {
         this.currentTab = 'selling';
         this.selectedShiftId = null;
         this.currentSwapType = 'shift'; // 'shift' 또는 'dayoff'
-        // 기본은 전체 노출 (아무 필터도 선택 안됨)
         this.currentRoleFilter = 'all'; // 'all'이면 역할 필터 미적용
         this.currentTypeFilter = 'all'; // 'all'이면 유형 필터 미적용
         
@@ -155,7 +154,7 @@ class FirebaseShiftSwapApp {
     // Firebase 리스너 설정
     setupFirebaseListeners() {
         try {
-            // 시프트 데이터 변경 감지
+            // Firebase 데이터 변경 감지
             database.ref('shifts').on('value', (snapshot) => {
                 this.shifts = [];
                 snapshot.forEach((childSnapshot) => {
@@ -168,6 +167,8 @@ class FirebaseShiftSwapApp {
                 this.shifts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 // 만료된 시프트 자동 취소 처리
                 this.autoCancelExpiredShifts();
+                
+                // 데이터 로드 후 UI 업데이트
                 this.renderShifts();
                 this.updateTabCounts();
             });
@@ -288,50 +289,41 @@ class FirebaseShiftSwapApp {
         });
     }
 
-        // 역할별 필터 설정 (단일 선택 토글, 재클릭시 해제)
     setupRoleFilters() {
-        document.querySelectorAll('.role-filter-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const self = e.currentTarget;
-                const role = self.dataset.role;
-                const isActive = self.classList.contains('active');
-                // 모두 비활성화
-                document.querySelectorAll('.role-filter-btn').forEach(b => b.classList.remove('active'));
-                // 재클릭이면 해제 상태 유지 (전체 표시), 아니면 활성화
-                if (!isActive) {
-                    self.classList.add('active');
-                    this.currentRoleFilter = role;
-                } else {
-                    this.currentRoleFilter = 'all';
-                }
-                this.renderShifts();
-            });
-        });
-    }
-
-        // 거래 유형별 필터 설정 (단일 선택 토글, 재클릭시 해제)
-    setupTypeFilters() {
-        const container = document.querySelector('.type-filter');
+        const container = document.querySelector('.role-filter');
         if (!container) return;
-        container.addEventListener('click', (e) => {
-            const btn = e.target.closest('.type-filter-btn');
-            if (!btn) return;
-            const type = btn.dataset.type; // all | shift | dayoff
 
-            const isActive = btn.classList.contains('active');
-            // 모두 비활성화
-            container.querySelectorAll('.type-filter-btn').forEach(b => b.classList.remove('active'));
-            if (!isActive) {
-                btn.classList.add('active');
-                this.currentTypeFilter = type;
-            } else {
-                this.currentTypeFilter = 'all';
-            }
+        container.addEventListener('click', (e) => {
+            const btn = e.target.closest('.role-filter-btn');
+            if (!btn) return;
+
+            const role = btn.dataset.role;
+            this.currentRoleFilter = role;
+
+            container.querySelectorAll('.role-filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
             this.renderShifts();
         });
     }
 
-    // (초기엔 아무 버튼도 활성화하지 않음)
+    setupTypeFilters() {
+        const container = document.querySelector('.type-filter');
+        if (!container) return;
+        
+        container.addEventListener('click', (e) => {
+            const btn = e.target.closest('.type-filter-btn');
+            if (!btn) return;
+
+            const type = btn.dataset.type;
+            this.currentTypeFilter = type;
+
+            container.querySelectorAll('.type-filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            this.renderShifts();
+        });
+    }
 
     // 거래 유형 전환
     switchSwapType(type) {
@@ -384,7 +376,8 @@ class FirebaseShiftSwapApp {
 
     // 이벤트 바인딩
     bindEvents() {
-        console.log('이벤트 바인딩 시작');
+        
+        // 필터 초기화 확인
         
         // 탭 클릭 이벤트
         document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -397,7 +390,6 @@ class FirebaseShiftSwapApp {
         const addShiftBtn = document.getElementById('addShiftBtn');
         if (addShiftBtn) {
             addShiftBtn.addEventListener('click', () => {
-                console.log('새 거래 등록 버튼 클릭');
                 this.showModal('addShiftModal');
             });
         } else {
@@ -456,7 +448,6 @@ class FirebaseShiftSwapApp {
         if (shiftForm) {
             shiftForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                console.log('폼 제출 이벤트 발생');
                 this.addShift();
             });
             // 이름/역할 자동완성 초기값 주입
@@ -496,12 +487,10 @@ class FirebaseShiftSwapApp {
             console.error('confirmComplete을 찾을 수 없습니다');
         }
         
-        console.log('이벤트 바인딩 완료');
     }
 
     // 새 거래 추가
     async addShift() {
-        console.log('addShift 함수 시작');
         
         const shiftForm = document.getElementById('shiftForm');
         if (!shiftForm) {
@@ -514,14 +503,10 @@ class FirebaseShiftSwapApp {
         const role = formData.get('role');
         const reason = formData.get('reason') || '';
         
-        console.log('폼 데이터:', { name, role, reason, currentSwapType: this.currentSwapType });
-        
         if (!role) {
             this.showNotification('역할을 선택해주세요.', 'error');
             return;
         }
-        
-        console.log('폼 데이터:', { name, reason, currentSwapType: this.currentSwapType });
         
         let sellingItem, buyingItem;
         
@@ -529,10 +514,6 @@ class FirebaseShiftSwapApp {
             const shiftDate = formData.get('shiftDate');
             const sellingTime = formData.get('sellingShiftTime');
             const buyingTime = formData.get('buyingShiftTime');
-            
-            console.log('시프트 등록 데이터:', {
-                shiftDate, sellingTime, buyingTime
-            });
             
             if (!shiftDate || !sellingTime || !buyingTime) {
                 console.error('필수 필드 누락:', { shiftDate, sellingTime, buyingTime });
@@ -545,8 +526,6 @@ class FirebaseShiftSwapApp {
         } else {
             const sellingDayoff = formData.get('sellingDayoff');
             const buyingDayoff = formData.get('buyingDayoff');
-            
-            console.log('휴무 등록 데이터:', { sellingDayoff, buyingDayoff });
             
             if (!sellingDayoff || !buyingDayoff) {
                 console.error('필수 필드 누락:', { sellingDayoff, buyingDayoff });
@@ -569,9 +548,6 @@ class FirebaseShiftSwapApp {
             createdAt: new Date().toISOString()
         };
 
-        console.log('등록할 거래:', shift);
-        console.log('현재 모드:', this.isLocalMode ? '로컬 모드' : 'Firebase 모드');
-
         try {
             if (this.isLocalMode) {
                 // 로컬 모드: 로컬 스토리지에 저장
@@ -588,9 +564,15 @@ class FirebaseShiftSwapApp {
                 this.updateTabCounts();
                 this.showNotification('거래가 성공적으로 등록되었습니다! (로컬 모드)', 'success');
                 this.sendNotification('새 거래 등록', `${shift.name}님이 새로운 거래를 등록했습니다.`);
-                console.log('로컬 모드에서 거래 등록 성공');
             } else {
-                // Firebase 모드
+                // Firebase 모드 - 중복 방지를 위해 로컬에도 임시 저장
+                const newId = Date.now().toString();
+                shift.id = newId;
+                this.shifts.unshift(shift);
+                this.renderShifts();
+                this.updateTabCounts();
+                
+                // Firebase에 저장
                 await database.ref('shifts').push().set(shift);
                 try {
                     localStorage.setItem('userName', name);
@@ -598,7 +580,6 @@ class FirebaseShiftSwapApp {
                 } catch (e) {}
                 this.showNotification('거래가 성공적으로 등록되었습니다!', 'success');
                 this.sendNotification('새 거래 등록', `${shift.name}님이 새로운 거래를 등록했습니다.`);
-                console.log('Firebase 모드에서 거래 등록 성공');
             }
             this.hideModal('addShiftModal');
             this.resetForm();
