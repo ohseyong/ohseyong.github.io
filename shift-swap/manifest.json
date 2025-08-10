@@ -2,12 +2,24 @@
   "name": "가로수길 스케줄 스왑",
   "short_name": "스케줄 스왑",
   "description": "가로수길 매장 팀원들을 위한 시프트/휴무 스왑 관리 도구",
-  "start_url": "/",
+  "start_url": "/shift-swap/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#007bff",
   "orientation": "portrait-primary",
   "icons": [
+    {
+      "src": "/assets/jekyll.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/jekyll.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
     {
       "src": "assets/icon-72x72.png",
       "sizes": "72x72",
