@@ -604,6 +604,7 @@ body {
     gap: 8px;
     z-index: 1000;
     backdrop-filter: blur(10px);
+    transition: opacity 0.3s ease;
 }
 
 .status-indicator {

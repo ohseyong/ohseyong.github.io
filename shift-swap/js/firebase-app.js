@@ -84,9 +84,19 @@ class FirebaseShiftSwapApp {
         if (connected) {
             indicator.className = 'status-indicator online';
             text.textContent = '실시간 연결됨';
+            
+            // 3초 후에 연결 상태 표시 숨기기
+            setTimeout(() => {
+                statusElement.style.opacity = '0';
+                setTimeout(() => {
+                    statusElement.style.display = 'none';
+                }, 300);
+            }, 3000);
         } else {
             indicator.className = 'status-indicator offline';
             text.textContent = '연결 끊김';
+            statusElement.style.display = 'flex';
+            statusElement.style.opacity = '1';
         }
     }
 
