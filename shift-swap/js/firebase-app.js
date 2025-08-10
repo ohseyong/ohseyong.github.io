@@ -1005,9 +1005,12 @@ class FirebaseShiftSwapApp {
         notification.textContent = message;
         notification.className = `notification ${type} show`;
         
+        // 알림 설정 관련 토스트는 더 짧게 표시
+        const duration = message.includes('알림 설정') ? 1500 : 3000;
+        
         setTimeout(() => {
             notification.classList.remove('show');
-        }, 3000);
+        }, duration);
     }
 
     // 개발용: 데이터 초기화

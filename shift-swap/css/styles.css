@@ -1072,14 +1072,16 @@ input[type="date"] {
     position: fixed;
     top: 20px;
     right: 20px;
-    padding: 12px 20px;
+    padding: 8px 16px;
     border-radius: 6px;
     color: white;
     font-weight: 500;
+    font-size: 13px;
     z-index: 1000;
     transform: translateX(100%);
     transition: transform 0.3s ease;
     display: none;
+    max-width: 280px;
 }
 
 .notification.show {
@@ -1112,5 +1114,7 @@ input[type="date"] {
         right: 10px;
         left: 10px;
         max-width: none;
+        font-size: 12px;
+        padding: 6px 12px;
     }
 }
