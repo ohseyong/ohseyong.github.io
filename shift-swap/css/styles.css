@@ -76,21 +76,31 @@ body {
 }
 
 .btn-success {
-    background-color: #10b981;
-    color: white;
+    background: rgba(16, 185, 129, 0.12);
+    color: #065f46;
+    border: 1px solid rgba(16, 185, 129, 0.28);
+    backdrop-filter: saturate(180%) blur(10px);
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12), inset 0 1px 0 rgba(255,255,255,0.25);
 }
 
 .btn-success:hover {
-    background-color: #059669;
+    background: rgba(16, 185, 129, 0.18);
+    border-color: rgba(16, 185, 129, 0.35);
 }
 
 .btn-danger {
-    background-color: #ef4444;
-    color: white;
+    background: rgba(239, 68, 68, 0.12);
+    color: #7f1d1d;
+    border: 1px solid rgba(239, 68, 68, 0.28);
+    backdrop-filter: saturate(180%) blur(10px);
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.12), inset 0 1px 0 rgba(255,255,255,0.25);
 }
 
 .btn-danger:hover {
-    background-color: #dc2626;
+    background: rgba(239, 68, 68, 0.18);
+    border-color: rgba(239, 68, 68, 0.35);
 }
 
 .btn-icon {
@@ -173,12 +183,34 @@ body {
 .shift-card {
     background: white;
     border-radius: 12px;
-    padding: 16px;
+    padding: 14px 16px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     transition: all 0.2s ease;
     cursor: pointer;
     border-left: 4px solid #3b82f6;
 }
+
+/* 카드 헤드라인 (가장 중요한 정보: 날짜 + 시프트 요약) */
+.shift-headline {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-weight: 700;
+    color: #0f172a; /* slate-900 */
+}
+.shift-headline .date-plain { font-size: 14px; font-weight: 800; color: #0f172a; }
+.shift-headline .pill {
+    border-radius: 10px;
+    padding: 4px 10px;
+    font-size: 14px;
+    font-weight: 800;
+}
+.shift-headline .pill-selling { background: #fee2e2; color: #991b1b; }
+.shift-headline .pill-buying { background: #dcfce7; color: #166534; }
+.shift-headline .arrow { opacity: 0.6; }
+.shift-headline .headline-tail { font-weight: 700; opacity: 0.9; }
 
 /* 시프트 스왑 카드 - 연한 파란색 계열 */
 .shift-card.type-shift {
@@ -305,16 +337,8 @@ body {
     white-space: nowrap;
 }
 
-.shift-main-info {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-    padding: 8px 12px;
-    background: #f8f9fa;
-    border-radius: 8px;
-}
+/* 헤드라인을 도입했으므로 보조 정보 박스는 제거 */
+.shift-main-info { display: none; }
 
 .info-section { display: flex; align-items: center; gap: 6px; }
 .date-section .info-icon { display: none; }
@@ -398,8 +422,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 12px;
-    padding-top: 12px;
+    margin-top: 8px;
+    padding-top: 8px;
     border-top: 1px solid #e2e8f0;
 }
 
@@ -410,7 +434,14 @@ body {
 
 .shift-actions {
     display: flex;
-    gap: 8px;
+    gap: 6px;
+}
+
+/* 카드 푸터 버튼 사이즈/시각 강도 축소 */
+.shift-actions .btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 6px;
 }
 
 /* 빈 상태 */

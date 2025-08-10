@@ -22,8 +22,6 @@ class FirebaseShiftSwapApp {
         this.setupRoleFilters();
         // 거래 유형별 모아보기 필터 활성화
         this.setupTypeFilters();
-        // 알림 설정 UI 바인딩
-        this.bindNotificationSettings();
         this.setMinDates();
         this.setupNotifications();
         
@@ -35,23 +33,13 @@ class FirebaseShiftSwapApp {
 
     // 알림 설정
     async setupNotifications() {
-        if (!('Notification' in window)) return;
-        const permission = Notification.permission;
-        if (permission !== 'granted') {
-            this.showNotification('현재 알림 설정이 꺼져 있습니다. 알림 설정을 확인하세요.', 'info');
-        }
-        // FCM 초기화 (토큰 요청)
-        try {
-            if (firebase.messaging) {
-                const messaging = firebase.messaging();
-                const token = await messaging.getToken({ vapidKey: undefined });
-                if (token) {
-                    localStorage.setItem('fcmToken', token);
-                    console.log('FCM Token:', token);
-                }
+        if ('Notification' in window) {
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                console.log('알림 권한이 허용되었습니다.');
+            } else {
+                console.log('알림 권한이 거부되었습니다.');
             }
-        } catch (e) {
-            console.warn('FCM 초기화 실패:', e);
         }
     }
 
@@ -448,91 +436,6 @@ class FirebaseShiftSwapApp {
         console.log('이벤트 바인딩 완료');
     }
 
-    // 알림 설정 바인딩
-    bindNotificationSettings() {
-        const openBtn = document.getElementById('openNotificationSettings');
-        if (openBtn) {
-            openBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                // 동적으로 요소를 조회 (초기 렌더 순서 이슈 대응)
-                const modal = document.getElementById('notificationSettingsModal');
-                if (!modal) return;
-
-                const statusSpan = document.getElementById('notificationPermissionStatus');
-                const requestBtn = document.getElementById('requestNotificationPermission');
-                const saveBtn = document.getElementById('saveNotificationPrefs');
-                const closeBtn = document.getElementById('closeNotificationSettings');
-                const closeFooterBtn = document.getElementById('closeNotificationSettingsFooter');
-                const overlay = modal.querySelector('.modal-overlay');
-                const roleBtns = modal.querySelectorAll('#notificationRoleButtons .role-btn');
-
-                const updateStatus = () => {
-                    if (!statusSpan) return;
-                    const perm = (window.Notification && Notification.permission) ? Notification.permission : 'unsupported';
-                    statusSpan.textContent = `권한 상태: ${perm}`;
-                };
-
-                const hide = () => { modal.classList.remove('show'); document.body.style.overflow = ''; };
-
-                // 1회 바인딩 (중복 방지 위해 기존 리스너 제거는 단순화)
-                requestBtn && requestBtn.addEventListener('click', async () => {
-                    try {
-                        if (!('Notification' in window)) return;
-                        await Notification.requestPermission();
-                        updateStatus();
-                    } catch (e) { console.error(e); }
-                }, { once: true });
-
-                saveBtn && saveBtn.addEventListener('click', () => {
-                    const selected = Array.from(roleBtns).filter(b => b.classList.contains('active')).map(b => b.dataset.role);
-                    localStorage.setItem('notificationRoles', JSON.stringify(selected));
-                    this.showNotification('알림 설정이 저장되었습니다.', 'success');
-                    hide();
-                }, { once: true });
-
-                closeBtn && closeBtn.addEventListener('click', hide, { once: true });
-                closeFooterBtn && closeFooterBtn.addEventListener('click', hide, { once: true });
-                overlay && overlay.addEventListener('click', (ev) => { if (ev.target === overlay) hide(); }, { once: true });
-
-                // role 버튼 토글
-                roleBtns.forEach(btn => {
-                    btn.addEventListener('click', () => { btn.classList.toggle('active'); });
-                });
-
-                modal.classList.add('show');
-                document.body.style.overflow = 'hidden';
-                updateStatus();
-            });
-        }
-        closeBtn && closeBtn.addEventListener('click', hide);
-        closeFooterBtn && closeFooterBtn.addEventListener('click', hide);
-        overlay && overlay.addEventListener('click', (e) => { if (e.target === overlay) hide(); });
-
-        requestBtn && requestBtn.addEventListener('click', async () => {
-            try {
-                if (!('Notification' in window)) return;
-                await Notification.requestPermission();
-                updateStatus();
-            } catch (e) { console.error(e); }
-        });
-
-        // role 토글 (다중 선택 가능)
-        roleBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                btn.classList.toggle('active');
-            });
-        });
-
-        // 저장: localStorage에 저장
-        saveBtn && saveBtn.addEventListener('click', () => {
-            const selected = Array.from(roleBtns).filter(b => b.classList.contains('active')).map(b => b.dataset.role);
-            localStorage.setItem('notificationRoles', JSON.stringify(selected));
-            this.showNotification('알림 설정이 저장되었습니다.', 'success');
-            hide();
-        });
-    }
-
     // 새 거래 추가
     async addShift() {
         console.log('addShift 함수 시작');
@@ -736,22 +639,16 @@ class FirebaseShiftSwapApp {
                 month: 'long',
                 day: 'numeric'
             });
-            cardContent = `
-                <div class="shift-main-info">
-                    <div class="info-section date-section">
-                        <span class="info-icon">📅</span>
-                        <span class="info-text">${formattedDate}</span>
-                    </div>
-                    <div class="info-section selling-section">
-                        <span class="info-icon">📤</span>
-                        <span class="info-text"><strong>${sellingShift}</strong>로</span>
-                    </div>
-                    <div class="info-section buying-section">
-                        <span class="info-icon">📥</span>
-                        <span class="info-text"><strong>${buyingShift}</strong>을 삽니다</span>
-                    </div>
-                </div>
-            `;
+            const headlineHtml = `
+                <div class="shift-headline">
+                    <span class="date-plain">${formattedDate}</span>
+                    <span class="pill pill-selling">${sellingShift}</span>
+                    <span class="postposition">로</span>
+                    <span class="arrow">→</span>
+                    <span class="pill pill-buying">${buyingShift}</span>
+                    <span class="headline-tail">구합니다</span>
+                </div>`;
+            cardContent = `${headlineHtml}`;
         } else {
             const sellingDate = new Date(shift.sellingItem).toLocaleDateString('ko-KR', {
                 month: 'long',
@@ -761,18 +658,15 @@ class FirebaseShiftSwapApp {
                 month: 'long',
                 day: 'numeric'
             });
-            cardContent = `
-                <div class="shift-main-info dayoff-layout">
-                    <div class="info-section date-section">
-                        <span class="info-icon">📅</span>
-                        <span class="info-text">${sellingDate} 휴무로</span>
-                    </div>
-                    <div class="info-section buying-section">
-                        <span class="info-icon">📥</span>
-                        <span class="info-text"><strong>${buyingDate}</strong> 휴무를 삽니다</span>
-                    </div>
-                </div>
-            `;
+            const headlineHtml = `
+                <div class="shift-headline">
+                    <span class="pill pill-selling">${sellingDate} 휴무</span>
+                    <span class="postposition">로</span>
+                    <span class="arrow">→</span>
+                    <span class="pill pill-buying">${buyingDate} 휴무</span>
+                    <span class="headline-tail">구합니다</span>
+                </div>`;
+            cardContent = `${headlineHtml}`;
         }
         
         const expiredBadge = (shift.status === 'cancelled' && shift.cancelReason === 'expired')
