@@ -16,6 +16,34 @@ class FirebaseShiftSwapApp {
         this.setupTypeTabs();
         this.setupShiftButtons();
         this.setMinDates();
+        this.setupNotifications();
+        
+        // 초기 required 속성 설정 (시프트 스왑이 기본값)
+        this.switchSwapType('shift');
+    }
+
+    // 알림 설정
+    async setupNotifications() {
+        if ('Notification' in window) {
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                console.log('알림 권한이 허용되었습니다.');
+            } else {
+                console.log('알림 권한이 거부되었습니다.');
+            }
+        }
+    }
+
+    // 알림 발송
+    sendNotification(title, body) {
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(title, {
+                body: body,
+                icon: '/assets/icon-192x192.png',
+                badge: '/assets/icon-72x72.png',
+                vibrate: [100, 50, 100]
+            });
+        }
     }
 
     // Firebase 리스너 설정
@@ -142,16 +170,32 @@ class FirebaseShiftSwapApp {
         });
         document.querySelector(`[data-type="${type}"]`).classList.add('active');
         
-        // 필드 표시/숨김
+        // 필드 표시/숨김 및 required 속성 관리
         const shiftFields = document.getElementById('shiftFields');
         const dayoffFields = document.getElementById('dayoffFields');
         
         if (type === 'shift') {
             shiftFields.style.display = 'block';
             dayoffFields.style.display = 'none';
+            
+            // 시프트 필드 required 활성화, 휴무 필드 required 비활성화
+            document.querySelectorAll('#shiftFields input[required]').forEach(input => {
+                input.required = true;
+            });
+            document.querySelectorAll('#dayoffFields input[required]').forEach(input => {
+                input.required = false;
+            });
         } else {
             shiftFields.style.display = 'none';
             dayoffFields.style.display = 'block';
+            
+            // 휴무 필드 required 활성화, 시프트 필드 required 비활성화
+            document.querySelectorAll('#dayoffFields input[required]').forEach(input => {
+                input.required = true;
+            });
+            document.querySelectorAll('#shiftFields input[required]').forEach(input => {
+                input.required = false;
+            });
         }
     }
 
@@ -166,6 +210,8 @@ class FirebaseShiftSwapApp {
 
     // 이벤트 바인딩
     bindEvents() {
+        console.log('이벤트 바인딩 시작');
+        
         // 탭 클릭 이벤트
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -174,37 +220,74 @@ class FirebaseShiftSwapApp {
         });
 
         // 새 거래 등록 버튼
-        document.getElementById('addShiftBtn').addEventListener('click', () => {
-            this.showModal('addShiftModal');
-        });
+        const addShiftBtn = document.getElementById('addShiftBtn');
+        if (addShiftBtn) {
+            addShiftBtn.addEventListener('click', () => {
+                console.log('새 거래 등록 버튼 클릭');
+                this.showModal('addShiftModal');
+            });
+        } else {
+            console.error('addShiftBtn을 찾을 수 없습니다');
+        }
 
         // 모달 닫기 버튼들
-        document.getElementById('closeModal').addEventListener('click', () => {
-            this.hideModal('addShiftModal');
-        });
+        const closeModal = document.getElementById('closeModal');
+        if (closeModal) {
+            closeModal.addEventListener('click', () => {
+                this.hideModal('addShiftModal');
+            });
+        } else {
+            console.error('closeModal을 찾을 수 없습니다');
+        }
 
-        document.getElementById('closeDetailModal').addEventListener('click', () => {
-            this.hideModal('shiftDetailModal');
-        });
+        const closeDetailModal = document.getElementById('closeDetailModal');
+        if (closeDetailModal) {
+            closeDetailModal.addEventListener('click', () => {
+                this.hideModal('shiftDetailModal');
+            });
+        } else {
+            console.error('closeDetailModal을 찾을 수 없습니다');
+        }
 
-        document.getElementById('closeConfirmModal').addEventListener('click', () => {
-            this.hideModal('confirmModal');
-        });
+        const closeConfirmModal = document.getElementById('closeConfirmModal');
+        if (closeConfirmModal) {
+            closeConfirmModal.addEventListener('click', () => {
+                this.hideModal('confirmModal');
+            });
+        } else {
+            console.error('closeConfirmModal을 찾을 수 없습니다');
+        }
 
         // 취소 버튼들
-        document.getElementById('cancelBtn').addEventListener('click', () => {
-            this.hideModal('addShiftModal');
-        });
+        const cancelBtn = document.getElementById('cancelBtn');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                this.hideModal('addShiftModal');
+            });
+        } else {
+            console.error('cancelBtn을 찾을 수 없습니다');
+        }
 
-        document.getElementById('cancelConfirm').addEventListener('click', () => {
-            this.hideModal('confirmModal');
-        });
+        const cancelConfirm = document.getElementById('cancelConfirm');
+        if (cancelConfirm) {
+            cancelConfirm.addEventListener('click', () => {
+                this.hideModal('confirmModal');
+            });
+        } else {
+            console.error('cancelConfirm을 찾을 수 없습니다');
+        }
 
         // 폼 제출
-        document.getElementById('shiftForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.addShift();
-        });
+        const shiftForm = document.getElementById('shiftForm');
+        if (shiftForm) {
+            shiftForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                console.log('폼 제출 이벤트 발생');
+                this.addShift();
+            });
+        } else {
+            console.error('shiftForm을 찾을 수 없습니다');
+        }
 
         // 모달 오버레이 클릭 시 닫기
         document.querySelectorAll('.modal-overlay').forEach(overlay => {
@@ -216,41 +299,61 @@ class FirebaseShiftSwapApp {
         });
 
         // 거래 완료 확인
-        document.getElementById('confirmComplete').addEventListener('click', () => {
-            this.completeShift();
-        });
+        const confirmComplete = document.getElementById('confirmComplete');
+        if (confirmComplete) {
+            confirmComplete.addEventListener('click', () => {
+                this.completeShift();
+            });
+        } else {
+            console.error('confirmComplete을 찾을 수 없습니다');
+        }
+        
+        console.log('이벤트 바인딩 완료');
     }
 
     // 새 거래 추가
     async addShift() {
-        const formData = new FormData(document.getElementById('shiftForm'));
+        console.log('addShift 함수 시작');
+        
+        const shiftForm = document.getElementById('shiftForm');
+        if (!shiftForm) {
+            console.error('shiftForm을 찾을 수 없습니다');
+            return;
+        }
+        
+        const formData = new FormData(shiftForm);
         const name = formData.get('name');
         const reason = formData.get('reason') || '';
+        
+        console.log('폼 데이터:', { name, reason, currentSwapType: this.currentSwapType });
         
         let sellingItem, buyingItem;
         
         if (this.currentSwapType === 'shift') {
-            const sellingDate = formData.get('sellingShiftDate');
+            const shiftDate = formData.get('shiftDate');
             const sellingTime = formData.get('sellingShiftTime');
-            const buyingDate = formData.get('buyingShiftDate');
             const buyingTime = formData.get('buyingShiftTime');
             
             console.log('시프트 등록 데이터:', {
-                sellingDate, sellingTime, buyingDate, buyingTime
+                shiftDate, sellingTime, buyingTime
             });
             
-            if (!sellingDate || !sellingTime || !buyingDate || !buyingTime) {
+            if (!shiftDate || !sellingTime || !buyingTime) {
+                console.error('필수 필드 누락:', { shiftDate, sellingTime, buyingTime });
                 this.showNotification('모든 필드를 입력해주세요. (날짜와 시프트를 모두 선택해주세요)', 'error');
                 return;
             }
             
-            sellingItem = `${sellingDate} ${sellingTime}`;
-            buyingItem = `${buyingDate} ${buyingTime}`;
+            sellingItem = `${shiftDate} ${sellingTime}`;
+            buyingItem = `${shiftDate} ${buyingTime}`;
         } else {
             const sellingDayoff = formData.get('sellingDayoff');
             const buyingDayoff = formData.get('buyingDayoff');
             
+            console.log('휴무 등록 데이터:', { sellingDayoff, buyingDayoff });
+            
             if (!sellingDayoff || !buyingDayoff) {
+                console.error('필수 필드 누락:', { sellingDayoff, buyingDayoff });
                 this.showNotification('모든 필드를 입력해주세요.', 'error');
                 return;
             }
@@ -270,6 +373,7 @@ class FirebaseShiftSwapApp {
         };
 
         console.log('등록할 거래:', shift);
+        console.log('현재 모드:', this.isLocalMode ? '로컬 모드' : 'Firebase 모드');
 
         try {
             if (this.isLocalMode) {
@@ -281,10 +385,14 @@ class FirebaseShiftSwapApp {
                 this.renderShifts();
                 this.updateTabCounts();
                 this.showNotification('거래가 성공적으로 등록되었습니다! (로컬 모드)', 'success');
+                this.sendNotification('새 거래 등록', `${shift.name}님이 새로운 거래를 등록했습니다.`);
+                console.log('로컬 모드에서 거래 등록 성공');
             } else {
                 // Firebase 모드
                 await database.ref('shifts').push().set(shift);
                 this.showNotification('거래가 성공적으로 등록되었습니다!', 'success');
+                this.sendNotification('새 거래 등록', `${shift.name}님이 새로운 거래를 등록했습니다.`);
+                console.log('Firebase 모드에서 거래 등록 성공');
             }
             this.hideModal('addShiftModal');
             this.resetForm();
@@ -317,6 +425,9 @@ class FirebaseShiftSwapApp {
         document.querySelectorAll('.shift-btn').forEach(btn => {
             btn.classList.remove('active');
         });
+        
+        // required 속성 재설정
+        this.switchSwapType('shift');
     }
 
     // 시프트 렌더링
@@ -371,6 +482,54 @@ class FirebaseShiftSwapApp {
         const typeText = shift.type === 'shift' ? '시프트 스왑' : '휴무 스왑';
         const typeIcon = shift.type === 'shift' ? '🔄' : '📅';
         
+        // 시프트 스왑인 경우 카드 내용 생성
+        let cardContent = '';
+        if (shift.type === 'shift') {
+            const [date, sellingShift] = shift.sellingItem.split(' ');
+            const [_, buyingShift] = shift.buyingItem.split(' ');
+            const formattedDate = new Date(date).toLocaleDateString('ko-KR', {
+                month: 'long',
+                day: 'numeric'
+            });
+            cardContent = `
+                <div class="shift-main-info">
+                    <div class="info-section date-section">
+                        <span class="info-icon">📅</span>
+                        <span class="info-text">${formattedDate}</span>
+                    </div>
+                    <div class="info-section selling-section">
+                        <span class="info-icon">📤</span>
+                        <span class="info-text"><strong>${sellingShift}</strong>로</span>
+                    </div>
+                    <div class="info-section buying-section">
+                        <span class="info-icon">📥</span>
+                        <span class="info-text"><strong>${buyingShift}</strong>을 삽니다</span>
+                    </div>
+                </div>
+            `;
+        } else {
+            const sellingDate = new Date(shift.sellingItem).toLocaleDateString('ko-KR', {
+                month: 'long',
+                day: 'numeric'
+            });
+            const buyingDate = new Date(shift.buyingItem).toLocaleDateString('ko-KR', {
+                month: 'long',
+                day: 'numeric'
+            });
+            cardContent = `
+                <div class="shift-main-info">
+                    <div class="info-section date-section">
+                        <span class="info-icon">📅</span>
+                        <span class="info-text">${sellingDate} 휴무로</span>
+                    </div>
+                    <div class="info-section buying-section">
+                        <span class="info-icon">📥</span>
+                        <span class="info-text"><strong>${buyingDate}</strong> 휴무를 삽니다</span>
+                    </div>
+                </div>
+            `;
+        }
+        
         const actions = shift.status === 'selling' ? `
             <div class="shift-actions">
                 <button class="btn btn-success btn-complete">거래완료</button>
@@ -381,20 +540,14 @@ class FirebaseShiftSwapApp {
         return `
             <div class="shift-card ${statusClass}" data-shift-id="${shift.id}">
                 <div class="shift-header">
-                    <div class="shift-name">${shift.name}</div>
+                    <div class="user-info">
+                        <span class="user-icon">👤</span>
+                        <span class="user-name">${shift.name}</span>
+                    </div>
                     <div class="shift-type">${typeIcon} ${typeText}</div>
                 </div>
-                <div class="shift-content">
-                    <div class="shift-item">
-                        <div class="shift-item-icon selling">📤</div>
-                        <div class="shift-item-text">${this.formatItem(shift.sellingItem, shift.type)}</div>
-                    </div>
-                    <div class="shift-item">
-                        <div class="shift-item-icon buying">📥</div>
-                        <div class="shift-item-text">${this.formatItem(shift.buyingItem, shift.type)}</div>
-                    </div>
-                    ${shift.reason ? `<div class="shift-reason">💬 ${shift.reason}</div>` : ''}
-                </div>
+                ${cardContent}
+                ${shift.reason ? `<div class="shift-reason">💬 ${shift.reason}</div>` : ''}
                 <div class="shift-footer">
                     <div class="shift-date">${this.formatDate(shift.createdAt)}</div>
                     ${actions}

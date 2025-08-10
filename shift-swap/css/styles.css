@@ -198,14 +198,24 @@ body {
 .shift-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     margin-bottom: 12px;
 }
 
-.shift-name {
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.user-icon {
+    font-size: 16px;
+}
+
+.user-name {
     font-weight: 600;
     color: #1e293b;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .shift-type {
@@ -214,17 +224,70 @@ body {
     font-size: 12px;
     font-weight: 500;
     text-transform: uppercase;
+    white-space: nowrap;
+    background: #f8f9fa;
+    color: #6c757d;
 }
 
-.shift-type.sell {
-    background-color: #fef3c7;
-    color: #92400e;
+.shift-main-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
 }
 
-.shift-type.buy {
-    background-color: #dbeafe;
-    color: #1e40af;
+.info-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
 }
+
+.info-icon {
+    font-size: 18px;
+}
+
+.info-text {
+    font-size: 13px;
+    color: #495057;
+    line-height: 1.3;
+    font-weight: 500;
+}
+
+.info-text strong {
+    color: #1e293b;
+    font-weight: 700;
+}
+
+/* 휴무 스왑의 경우 2개 섹션만 사용 */
+.shift-main-info:has(.buying-section:only-child) {
+    grid-template-columns: 1fr 1fr;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+    .shift-main-info {
+        grid-template-columns: 1fr;
+        gap: 6px;
+        padding: 10px;
+    }
+    
+    .info-section {
+        flex-direction: row;
+        justify-content: center;
+        gap: 6px;
+    }
+    
+    .info-text {
+        font-size: 14px;
+    }
+}
+
+
 
 .shift-content {
     display: grid;

@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>가로수길 스케줄 스왑</title>
+    
+    <!-- PWA 설정 -->
+    <meta name="theme-color" content="#007bff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="가로수길 스케줄 스왑">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- 아이콘 -->
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icon-16x16.png">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +30,7 @@
     <!-- 헤더 -->
     <header class="header">
         <div class="container">
-            <h1 class="header-title">🔄 가로수길 스케줄 스왑</h1>
+            <h1 class="header-title">가로수길 스케줄 스왑</h1>
             <button class="btn btn-primary" id="addShiftBtn">
                 <span class="btn-icon">+</span>
                 새 거래 등록
@@ -99,31 +112,30 @@
                 <!-- 시프트 스왑 필드 -->
                 <div class="swap-fields" id="shiftFields">
                     <div class="form-group">
+                        <label for="shiftDate">날짜 *</label>
+                        <input type="date" id="shiftDate" name="shiftDate" required>
+                    </div>
+
+                    <div class="form-group">
                         <label for="sellingShift">파는 시프트 *</label>
-                        <div class="datetime-input">
-                            <input type="date" id="sellingShiftDate" name="sellingShiftDate" required>
-                            <div class="shift-buttons">
-                                <button type="button" class="shift-btn" data-shift="945">945</button>
-                                <button type="button" class="shift-btn" data-shift="118">118</button>
-                                <button type="button" class="shift-btn" data-shift="129">129</button>
-                                <button type="button" class="shift-btn" data-shift="마감">마감</button>
-                            </div>
-                            <input type="hidden" id="sellingShiftTime" name="sellingShiftTime" required>
+                        <div class="shift-buttons">
+                            <button type="button" class="shift-btn" data-shift="945">945</button>
+                            <button type="button" class="shift-btn" data-shift="118">118</button>
+                            <button type="button" class="shift-btn" data-shift="129">129</button>
+                            <button type="button" class="shift-btn" data-shift="마감">마감</button>
                         </div>
+                        <input type="hidden" id="sellingShiftTime" name="sellingShiftTime" required>
                     </div>
 
                     <div class="form-group">
                         <label for="buyingShift">사는 시프트 *</label>
-                        <div class="datetime-input">
-                            <input type="date" id="buyingShiftDate" name="buyingShiftDate" required>
-                            <div class="shift-buttons">
-                                <button type="button" class="shift-btn" data-shift="945">945</button>
-                                <button type="button" class="shift-btn" data-shift="118">118</button>
-                                <button type="button" class="shift-btn" data-shift="129">129</button>
-                                <button type="button" class="shift-btn" data-shift="마감">마감</button>
-                            </div>
-                            <input type="hidden" id="buyingShiftTime" name="buyingShiftTime" required>
+                        <div class="shift-buttons">
+                            <button type="button" class="shift-btn" data-shift="945">945</button>
+                            <button type="button" class="shift-btn" data-shift="118">118</button>
+                            <button type="button" class="shift-btn" data-shift="129">129</button>
+                            <button type="button" class="shift-btn" data-shift="마감">마감</button>
                         </div>
+                        <input type="hidden" id="buyingShiftTime" name="buyingShiftTime" required>
                     </div>
                 </div>
 
@@ -194,5 +206,20 @@
     <!-- JavaScript 로드 -->
     <script src="js/firebase-config.js"></script>
     <script src="js/firebase-app.js"></script>
+    
+    <!-- Service Worker 등록 -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>
