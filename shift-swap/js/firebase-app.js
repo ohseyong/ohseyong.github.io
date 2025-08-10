@@ -6,6 +6,7 @@ class FirebaseShiftSwapApp {
         this.selectedShiftId = null;
         this.currentSwapType = 'shift'; // 'shift' 또는 'dayoff'
         this.currentRoleFilter = 'all'; // 'all', 'TS', 'TE', 'Genius'
+        this.currentTypeFilter = 'all'; // 'all', 'shift', 'dayoff'
         
         this.init();
     }
@@ -198,6 +199,24 @@ class FirebaseShiftSwapApp {
                 this.renderShifts();
                 
                 console.log('역할 필터 변경:', role);
+            });
+        });
+    }
+
+    // 거래 유형별 필터 설정
+    setupTypeFilters() {
+        document.querySelectorAll('.type-filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const type = e.target.closest('.type-filter-btn').dataset.type;
+                
+                // 필터 버튼 활성화
+                document.querySelectorAll('.type-filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.closest('.type-filter-btn').classList.add('active');
+                
+                this.currentTypeFilter = type;
+                this.renderShifts();
+                
+                console.log('거래 유형 필터 변경:', type);
             });
         });
     }
@@ -598,8 +617,11 @@ class FirebaseShiftSwapApp {
             </div>
         ` : '';
 
+        // 거래유형에 따라 카드에 구분 클래스 추가 (type-shift | type-dayoff)
+        const cardTypeClass = shift.type === 'shift' ? 'type-shift' : 'type-dayoff';
+
         return `
-            <div class="shift-card ${statusClass}" data-shift-id="${shift.id}">
+            <div class="shift-card ${statusClass} ${cardTypeClass}" data-shift-id="${shift.id}">
                 <div class="shift-header">
                     <div class="user-info">
                         <span class="user-icon">👤</span>

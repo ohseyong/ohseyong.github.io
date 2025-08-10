@@ -100,7 +100,7 @@ body {
 
 /* 메인 컨테이너 */
 .main {
-    padding: 24px 0;
+    padding: 16px 0;
     min-height: calc(100vh - 80px);
 }
 
@@ -110,7 +110,7 @@ body {
     background: white;
     border-radius: 12px;
     padding: 4px;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     overflow-x: auto;
 }
@@ -167,22 +167,44 @@ body {
 /* 시프트 카드 */
 .shift-list {
     display: grid;
-    gap: 16px;
+    gap: 12px;
 }
 
 .shift-card {
     background: white;
     border-radius: 12px;
-    padding: 20px;
+    padding: 16px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     transition: all 0.2s ease;
     cursor: pointer;
     border-left: 4px solid #3b82f6;
 }
 
+/* 시프트 스왑 카드 - 연한 파란색 계열 */
+.shift-card.type-shift {
+    border-left-color: #3b82f6;
+    background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
+}
+
+/* 휴무 스왑 카드 - 연한 초록색 계열 */
+.shift-card.type-dayoff {
+    border-left-color: #10b981;
+    background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+}
+
 .shift-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* 시프트 스왑 카드 호버 효과 */
+.shift-card.type-shift:hover {
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+/* 휴무 스왑 카드 호버 효과 */
+.shift-card.type-dayoff:hover {
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }
 
 .shift-card.completed {
@@ -195,11 +217,30 @@ body {
     opacity: 0.6;
 }
 
+.shift-card.expired {
+    border-left-color: #f59e0b;
+    opacity: 0.7;
+    position: relative;
+}
+
+.expired-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #f59e0b;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    z-index: 1;
+}
+
 .shift-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .user-info {
@@ -237,6 +278,17 @@ body {
     white-space: nowrap;
     background: #f8f9fa;
     color: #6c757d;
+}
+
+.shift-type {
+    background: #f8f9fa;
+    color: #6c757d;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    white-space: nowrap;
 }
 
 .shift-main-info {
@@ -301,7 +353,7 @@ body {
 
 .shift-content {
     display: grid;
-    gap: 12px;
+    gap: 8px;
 }
 
 .shift-item {
@@ -350,8 +402,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 16px;
-    padding-top: 16px;
+    margin-top: 12px;
+    padding-top: 12px;
     border-top: 1px solid #e2e8f0;
 }
 
@@ -931,12 +983,29 @@ body {
     margin-bottom: 16px;
 }
 
+/* 필터 섹션 */
+.filter-section {
+    margin-bottom: 16px;
+}
+
+.filter-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 6px;
+    margin-top: 12px;
+}
+
+.filter-title:first-child {
+    margin-top: 0;
+}
+
 /* 역할별 필터 */
 .role-filter {
     display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-    padding: 8px;
+    gap: 6px;
+    margin-bottom: 12px;
+    padding: 6px;
     background: #f8f9fa;
     border-radius: 8px;
     overflow-x: auto;
@@ -945,8 +1014,8 @@ body {
 .role-filter-btn {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 12px;
+    gap: 4px;
+    padding: 6px 10px;
     border: 1px solid #e1e5e9;
     border-radius: 6px;
     background: white;
@@ -967,7 +1036,10 @@ body {
     border-color: #007bff;
     background: #007bff;
     color: white;
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
 }
+
+
 
 .filter-icon {
     font-size: 14px;
