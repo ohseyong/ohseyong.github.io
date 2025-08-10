@@ -12,7 +12,6 @@ class ShiftSwapUI {
         this.setupRoleFilters();
         this.setupTypeFilters();
         this.setMinDates();
-        this.setupPullToRefresh();
         this.setupHeaderTitleClick();
         
         // 알림 설정은 DOM이 완전히 로드된 후 바인딩
@@ -586,94 +585,8 @@ class ShiftSwapUI {
         return new Date(shift.createdAt || Date.now());
     }
 
-    // Pull to Refresh 기능 설정
-    setupPullToRefresh() {
-        let startY = 0;
-        let currentY = 0;
-        let isRefreshing = false;
-        const pullThreshold = 80;
-        const refreshIndicator = document.getElementById('pullToRefresh');
-        
-        if (!refreshIndicator) return;
-
-        // 터치 이벤트 (모바일)
-        document.addEventListener('touchstart', (e) => {
-            if (window.scrollY === 0) {
-                startY = e.touches[0].clientY;
-            }
-        }, { passive: true });
-
-        document.addEventListener('touchmove', (e) => {
-            if (window.scrollY === 0 && startY > 0) {
-                currentY = e.touches[0].clientY;
-                const pullDistance = currentY - startY;
-                
-                if (pullDistance > 0 && pullDistance < pullThreshold) {
-                    const progress = pullDistance / pullThreshold;
-                    refreshIndicator.style.transform = `translateY(${Math.min(pullDistance * 0.5, 60)}px)`;
-                }
-            }
-        }, { passive: true });
-
-        document.addEventListener('touchend', (e) => {
-            if (window.scrollY === 0 && startY > 0) {
-                const pullDistance = currentY - startY;
-                
-                if (pullDistance >= pullThreshold && !isRefreshing) {
-                    this.triggerRefresh();
-                } else {
-                    refreshIndicator.style.transform = 'translateY(-100%)';
-                }
-                
-                startY = 0;
-                currentY = 0;
-            }
-        }, { passive: true });
-
-        // 마우스 이벤트 (데스크톱)
-        document.addEventListener('mousedown', (e) => {
-            if (window.scrollY === 0) {
-                startY = e.clientY;
-            }
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (window.scrollY === 0 && startY > 0) {
-                currentY = e.clientY;
-                const pullDistance = currentY - startY;
-                
-                if (pullDistance > 0 && pullDistance < pullThreshold) {
-                    const progress = pullDistance / pullThreshold;
-                    refreshIndicator.style.transform = `translateY(${Math.min(pullDistance * 0.5, 60)}px)`;
-                }
-            }
-        });
-
-        document.addEventListener('mouseup', (e) => {
-            if (window.scrollY === 0 && startY > 0) {
-                const pullDistance = currentY - startY;
-                
-                if (pullDistance >= pullThreshold && !isRefreshing) {
-                    this.triggerRefresh();
-                } else {
-                    refreshIndicator.style.transform = 'translateY(-100%)';
-                }
-                
-                startY = 0;
-                currentY = 0;
-            }
-        });
-    }
-
     // 새로고침 실행
     async triggerRefresh() {
-        const refreshIndicator = document.getElementById('pullToRefresh');
-        if (!refreshIndicator) return;
-
-        // 새로고침 상태 시작
-        refreshIndicator.classList.add('show');
-        refreshIndicator.style.transform = 'translateY(0)';
-        
         try {
             // Firebase 데이터 새로고침
             if (this.app.firebaseService && !this.app.firebaseService.isLocalMode) {
@@ -696,12 +609,6 @@ class ShiftSwapUI {
         } catch (error) {
             console.error('새로고침 실패:', error);
             this.app.showNotification('새로고침 중 오류가 발생했습니다.', 'error');
-        } finally {
-            // 새로고침 상태 종료
-            setTimeout(() => {
-                refreshIndicator.classList.remove('show');
-                refreshIndicator.style.transform = 'translateY(-100%)';
-            }, 1000);
         }
     }
 

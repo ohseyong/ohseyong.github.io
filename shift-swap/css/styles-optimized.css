@@ -822,40 +822,6 @@ body {
     50% { opacity: 0.5; }
 }
 
-/* ===== Pull to Refresh ===== */
-.pull-to-refresh {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 14px;
-    font-weight: 500;
-    transform: translateY(-100%);
-    transition: transform 0.3s ease;
-    z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.pull-to-refresh.show {
-    transform: translateY(0);
-}
-
-.pull-to-refresh .refresh-icon {
-    margin-right: 8px;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
 /* ===== 알림 ===== */
 .notification {
     position: fixed;
