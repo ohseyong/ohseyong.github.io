@@ -5,8 +5,9 @@ class FirebaseShiftSwapApp {
         this.currentTab = 'selling';
         this.selectedShiftId = null;
         this.currentSwapType = 'shift'; // 'shift' 또는 'dayoff'
-        this.currentRoleFilter = 'all'; // 'all', 'TS', 'TE', 'Genius'
-        this.currentTypeFilter = 'all'; // 'all', 'shift', 'dayoff'
+        // 기본은 전체 노출 (아무 필터도 선택 안됨)
+        this.currentRoleFilter = 'all'; // 'all'이면 역할 필터 미적용
+        this.currentTypeFilter = 'all'; // 'all'이면 유형 필터 미적용
         
         this.init();
     }
@@ -21,7 +22,6 @@ class FirebaseShiftSwapApp {
         this.setupRoleFilters();
         // 거래 유형별 모아보기 필터 활성화
         this.setupTypeFilters();
-        this.initializeTypeFilterUI();
         this.setMinDates();
         this.setupNotifications();
         
@@ -239,25 +239,28 @@ class FirebaseShiftSwapApp {
         });
     }
 
-    // 역할별 필터 설정
+        // 역할별 필터 설정 (단일 선택 토글, 재클릭시 해제)
     setupRoleFilters() {
         document.querySelectorAll('.role-filter-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const role = e.target.closest('.role-filter-btn').dataset.role;
-                
-                // 필터 버튼 활성화
+                const self = e.currentTarget;
+                const role = self.dataset.role;
+                const isActive = self.classList.contains('active');
+                // 모두 비활성화
                 document.querySelectorAll('.role-filter-btn').forEach(b => b.classList.remove('active'));
-                e.target.closest('.role-filter-btn').classList.add('active');
-                
-                this.currentRoleFilter = role;
+                // 재클릭이면 해제 상태 유지 (전체 표시), 아니면 활성화
+                if (!isActive) {
+                    self.classList.add('active');
+                    this.currentRoleFilter = role;
+                } else {
+                    this.currentRoleFilter = 'all';
+                }
                 this.renderShifts();
-                
-                console.log('역할 필터 변경:', role);
             });
         });
     }
 
-    // 거래 유형별 필터 설정
+        // 거래 유형별 필터 설정 (단일 선택 토글, 재클릭시 해제)
     setupTypeFilters() {
         const container = document.querySelector('.type-filter');
         if (!container) return;
@@ -266,24 +269,20 @@ class FirebaseShiftSwapApp {
             if (!btn) return;
             const type = btn.dataset.type; // all | shift | dayoff
 
-            // 활성화 토글
+            const isActive = btn.classList.contains('active');
+            // 모두 비활성화
             container.querySelectorAll('.type-filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            this.currentTypeFilter = type;
+            if (!isActive) {
+                btn.classList.add('active');
+                this.currentTypeFilter = type;
+            } else {
+                this.currentTypeFilter = 'all';
+            }
             this.renderShifts();
         });
     }
 
-    // 거래 유형 필터 UI 초기화: '전체'만 활성화
-    initializeTypeFilterUI() {
-        const container = document.querySelector('.type-filter');
-        if (!container) return;
-        container.querySelectorAll('.type-filter-btn').forEach(b => b.classList.remove('active'));
-        const allBtn = container.querySelector('[data-type="all"]');
-        if (allBtn) allBtn.classList.add('active');
-        this.currentTypeFilter = 'all';
-    }
+    // (초기엔 아무 버튼도 활성화하지 않음)
 
     // 거래 유형 전환
     switchSwapType(type) {
