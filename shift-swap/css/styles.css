@@ -269,6 +269,20 @@ body {
     text-transform: uppercase;
 }
 
+/* 역할별 컬러 구분 */
+.user-role.role-ts {
+    background: #e0f2fe; /* light blue */
+    color: #0369a1;      /* blue-700 */
+}
+.user-role.role-te {
+    background: #e2fbe8; /* light green */
+    color: #047857;      /* green-700 */
+}
+.user-role.role-genius {
+    background: #f3e8ff; /* light purple */
+    color: #6b21a8;      /* purple-700 */
+}
+
 .shift-type {
     padding: 4px 12px;
     border-radius: 20px;
@@ -1043,6 +1057,45 @@ body {
 
 .filter-icon {
     font-size: 14px;
+}
+
+/* 거래 유형별 필터 */
+.type-filter {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    padding: 6px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+.type-filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    border: 1px solid #e1e5e9;
+    border-radius: 6px;
+    background: white;
+    color: #6c757d;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.type-filter-btn:hover {
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.type-filter-btn.active {
+    border-color: #007bff;
+    background: #007bff;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
 }
 
 /* 알림 메시지 */

@@ -19,6 +19,9 @@ class FirebaseShiftSwapApp {
         this.setupShiftButtons();
         this.setupRoleButtons();
         this.setupRoleFilters();
+        // 거래 유형별 모아보기 필터 활성화
+        this.setupTypeFilters();
+        this.initializeTypeFilterUI();
         this.setMinDates();
         this.setupNotifications();
         
@@ -205,31 +208,42 @@ class FirebaseShiftSwapApp {
 
     // 거래 유형별 필터 설정
     setupTypeFilters() {
-        document.querySelectorAll('.type-filter-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const type = e.target.closest('.type-filter-btn').dataset.type;
-                
-                // 필터 버튼 활성화
-                document.querySelectorAll('.type-filter-btn').forEach(b => b.classList.remove('active'));
-                e.target.closest('.type-filter-btn').classList.add('active');
-                
-                this.currentTypeFilter = type;
-                this.renderShifts();
-                
-                console.log('거래 유형 필터 변경:', type);
-            });
+        const container = document.querySelector('.type-filter');
+        if (!container) return;
+        container.addEventListener('click', (e) => {
+            const btn = e.target.closest('.type-filter-btn');
+            if (!btn) return;
+            const type = btn.dataset.type; // all | shift | dayoff
+
+            // 활성화 토글
+            container.querySelectorAll('.type-filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            this.currentTypeFilter = type;
+            this.renderShifts();
         });
+    }
+
+    // 거래 유형 필터 UI 초기화: '전체'만 활성화
+    initializeTypeFilterUI() {
+        const container = document.querySelector('.type-filter');
+        if (!container) return;
+        container.querySelectorAll('.type-filter-btn').forEach(b => b.classList.remove('active'));
+        const allBtn = container.querySelector('[data-type="all"]');
+        if (allBtn) allBtn.classList.add('active');
+        this.currentTypeFilter = 'all';
     }
 
     // 거래 유형 전환
     switchSwapType(type) {
         this.currentSwapType = type;
         
-        // 탭 활성화
+        // 탭 활성화 (모달 내부 type-tabs에만 적용)
         document.querySelectorAll('.type-tab').forEach(tab => {
             tab.classList.remove('active');
         });
-        document.querySelector(`[data-type="${type}"]`).classList.add('active');
+        const targetTab = document.querySelector(`.type-tabs [data-type="${type}"]`);
+        if (targetTab) targetTab.classList.add('active');
         
         // 필드 표시/숨김 및 required 속성 관리
         const shiftFields = document.getElementById('shiftFields');
@@ -516,6 +530,10 @@ class FirebaseShiftSwapApp {
         if (this.currentRoleFilter !== 'all') {
             filteredShifts = filteredShifts.filter(shift => shift.role === this.currentRoleFilter);
         }
+        // 거래 유형별 필터링
+        if (this.currentTypeFilter !== 'all') {
+            filteredShifts = filteredShifts.filter(shift => shift.type === this.currentTypeFilter);
+        }
         
         if (filteredShifts.length === 0) {
             shiftList.innerHTML = '';
@@ -626,7 +644,7 @@ class FirebaseShiftSwapApp {
                     <div class="user-info">
                         <span class="user-icon">👤</span>
                         <span class="user-name">${shift.name}</span>
-                        <span class="user-role">${shift.role}</span>
+                        <span class="user-role ${this.getRoleClass(shift.role)}">${shift.role}</span>
                     </div>
                     <div class="shift-type">${typeIcon} ${typeText}</div>
                 </div>
@@ -638,6 +656,15 @@ class FirebaseShiftSwapApp {
                 </div>
             </div>
         `;
+    }
+
+    // 역할 뱃지 클래스 매핑
+    getRoleClass(role) {
+        const key = String(role || '').toLowerCase();
+        if (key === 'ts') return 'role-ts';
+        if (key === 'te') return 'role-te';
+        if (key === 'genius') return 'role-genius';
+        return '';
     }
 
     // 아이템 포맷팅
