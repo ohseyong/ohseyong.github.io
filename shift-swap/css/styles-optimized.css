@@ -72,6 +72,8 @@ body {
     transition: all 0.2s ease;
     text-decoration: none;
     white-space: nowrap;
+    height: 44px; /* 모든 버튼의 높이 통일 */
+    box-sizing: border-box;
 }
 
 .btn-primary {
@@ -122,11 +124,13 @@ body {
 }
 
 .icon-btn { 
-    padding: 8px 10px; 
-    border-radius: 10px; 
+    padding: 0 12px; 
+    border-radius: 8px; 
     background: rgba(148,163,184,0.18); 
     color: #ffffff; 
     border: 1px solid rgba(148,163,184,0.35); 
+    min-width: 44px; /* 최소 너비 설정 */
+    justify-content: center; /* 아이콘 중앙 정렬 */
 }
 
 .icon-btn:hover { 
@@ -135,6 +139,21 @@ body {
 
 .icon-white { 
     color: #ffffff; 
+}
+
+/* 모바일에서 아이콘 크기 조정 */
+@media (max-width: 768px) {
+    .icon-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .icon-btn svg {
+        width: 14px;
+        height: 14px;
+    }
 }
 
 .btn-icon {
@@ -412,15 +431,15 @@ body {
 }
 
 .shift-headline .date-plain { 
-    font-size: 13px; 
-    font-weight: 800; 
+    font-size: 14px; 
+    font-weight: 700; 
     color: #0f172a; 
 }
 
 .shift-headline .pill {
     padding: 3px 6px;
     border-radius: 4px;
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 700;
     text-align: center;
     min-width: 35px;
@@ -438,9 +457,11 @@ body {
 
 .shift-headline .arrow { 
     opacity: 0.6; 
+    font-size: 14px;
 }
 
 .shift-headline .headline-tail { 
+    font-size: 14px;
     font-weight: 700; 
     opacity: 0.9; 
 }
@@ -879,6 +900,13 @@ body {
     .btn {
         padding: 10px 16px;
         font-size: 13px;
+        height: 40px; /* 모바일에서 높이 줄임 */
+    }
+    
+    .icon-btn {
+        padding: 0 10px;
+        min-width: 40px;
+        height: 40px;
     }
 
     .tab-btn {
@@ -892,6 +920,14 @@ body {
 
     .shift-list {
         gap: 10px;
+    }
+    
+    /* 모바일에서 시프트 헤드라인 텍스트 크기 조정 */
+    .shift-headline .date-plain,
+    .shift-headline .pill,
+    .shift-headline .arrow,
+    .shift-headline .headline-tail {
+        font-size: 13px;
     }
 
     .modal-content {
@@ -928,11 +964,23 @@ body {
 @media (max-width: 480px) {
     .header .container { 
         flex-direction: row; 
-        gap: 8px; 
+        gap: 6px; 
     }
 
     .header-title { 
         font-size: 1.1rem; 
+    }
+
+    .btn {
+        padding: 8px 12px;
+        font-size: 12px;
+        height: 36px; /* 더 작은 모바일에서 높이 더 줄임 */
+    }
+    
+    .icon-btn {
+        padding: 0 8px;
+        min-width: 36px;
+        height: 36px;
     }
 
     #addShiftBtn { 
@@ -966,6 +1014,14 @@ body {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
+    }
+    
+    /* 작은 모바일에서 시프트 헤드라인 텍스트 크기 조정 */
+    .shift-headline .date-plain,
+    .shift-headline .pill,
+    .shift-headline .arrow,
+    .shift-headline .headline-tail {
+        font-size: 12px;
     }
 
     .notification {

@@ -421,25 +421,34 @@ class FirebaseService {
     // FCM 알림 발송 (서버 API 호출)
     async sendFCMNotification(title, body) {
         try {
-            // 실제 구현에서는 서버 API를 호출하여 FCM 알림을 발송
-            // 여기서는 Firebase Functions나 별도 서버 API를 사용해야 함
             console.log('FCM 알림 발송 시도:', { title, body });
             
-            // 테스트용: 브라우저 알림으로 대체
+            // iOS Safari에서는 FCM이 제한적이므로 브라우저 알림으로 대체
+            const isIOSSafari = this.detectIOSSafari();
+            
+            if (isIOSSafari) {
+                console.log('iOS Safari에서는 FCM 대신 브라우저 알림을 사용합니다.');
+                // 브라우저 알림은 이미 sendNotification에서 처리됨
+                return;
+            }
+            
+            // 다른 플랫폼에서는 FCM 사용
             if ('Notification' in window && Notification.permission === 'granted') {
                 new Notification(title, {
                     body: body,
-                    icon: 'assets/jekyll.png',
-                    badge: 'assets/jekyll.png',
+                    icon: 'apple-touch-icon.png',
+                    badge: 'apple-touch-icon.png',
                     vibrate: [100, 50, 100],
                     tag: 'shift-swap-notification'
                 });
             }
             
-            // 예시: Firebase Functions 호출
-            // const functions = firebase.functions();
-            // const sendNotification = functions.httpsCallable('sendNotification');
-            // await sendNotification({ title, body });
+            // TODO: 실제 서버 API 구현 시
+            // const response = await fetch('/api/send-notification', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ title, body, deviceTokens })
+            // });
             
         } catch (error) {
             console.error('FCM 알림 발송 실패:', error);

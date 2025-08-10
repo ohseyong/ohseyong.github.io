@@ -480,7 +480,7 @@ class ShiftSwapUI {
             </div>
             ${shift.reason ? `
             <div class="detail-item">
-                <div class="detail-label">사유</div>
+                <div class="detail-label">메모</div>
                 <div class="detail-value">${shift.reason}</div>
             </div>
             ` : ''}
