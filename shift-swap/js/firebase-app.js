@@ -40,6 +40,19 @@ class FirebaseShiftSwapApp {
         if (permission !== 'granted') {
             this.showNotification('현재 알림 설정이 꺼져 있습니다. 알림 설정을 확인하세요.', 'info');
         }
+        // FCM 초기화 (토큰 요청)
+        try {
+            if (firebase.messaging) {
+                const messaging = firebase.messaging();
+                const token = await messaging.getToken({ vapidKey: undefined });
+                if (token) {
+                    localStorage.setItem('fcmToken', token);
+                    console.log('FCM Token:', token);
+                }
+            }
+        } catch (e) {
+            console.warn('FCM 초기화 실패:', e);
+        }
     }
 
     // 오늘 이전의 모든 시프트를 자동 취소 처리 (시프트 스왑 대상)
@@ -438,29 +451,58 @@ class FirebaseShiftSwapApp {
     // 알림 설정 바인딩
     bindNotificationSettings() {
         const openBtn = document.getElementById('openNotificationSettings');
-        const closeBtn = document.getElementById('closeNotificationSettings');
-        const closeFooterBtn = document.getElementById('closeNotificationSettingsFooter');
-        const modal = document.getElementById('notificationSettingsModal');
-        const overlay = modal ? modal.querySelector('.modal-overlay') : null;
-        const requestBtn = document.getElementById('requestNotificationPermission');
-        const statusSpan = document.getElementById('notificationPermissionStatus');
-        const saveBtn = document.getElementById('saveNotificationPrefs');
-        const roleBtns = document.querySelectorAll('#notificationRoleButtons .role-btn');
-
-        const updateStatus = () => {
-            if (!statusSpan) return;
-            const perm = Notification && Notification.permission ? Notification.permission : 'unsupported';
-            statusSpan.textContent = `권한 상태: ${perm}`;
-        };
-
-        const show = () => { if (modal) modal.classList.add('show'); document.body.style.overflow = 'hidden'; updateStatus(); };
-        const hide = () => { if (modal) modal.classList.remove('show'); document.body.style.overflow = ''; };
-
         if (openBtn) {
             openBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                show();
+                // 동적으로 요소를 조회 (초기 렌더 순서 이슈 대응)
+                const modal = document.getElementById('notificationSettingsModal');
+                if (!modal) return;
+
+                const statusSpan = document.getElementById('notificationPermissionStatus');
+                const requestBtn = document.getElementById('requestNotificationPermission');
+                const saveBtn = document.getElementById('saveNotificationPrefs');
+                const closeBtn = document.getElementById('closeNotificationSettings');
+                const closeFooterBtn = document.getElementById('closeNotificationSettingsFooter');
+                const overlay = modal.querySelector('.modal-overlay');
+                const roleBtns = modal.querySelectorAll('#notificationRoleButtons .role-btn');
+
+                const updateStatus = () => {
+                    if (!statusSpan) return;
+                    const perm = (window.Notification && Notification.permission) ? Notification.permission : 'unsupported';
+                    statusSpan.textContent = `권한 상태: ${perm}`;
+                };
+
+                const hide = () => { modal.classList.remove('show'); document.body.style.overflow = ''; };
+
+                // 1회 바인딩 (중복 방지 위해 기존 리스너 제거는 단순화)
+                requestBtn && requestBtn.addEventListener('click', async () => {
+                    try {
+                        if (!('Notification' in window)) return;
+                        await Notification.requestPermission();
+                        updateStatus();
+                    } catch (e) { console.error(e); }
+                }, { once: true });
+
+                saveBtn && saveBtn.addEventListener('click', () => {
+                    const selected = Array.from(roleBtns).filter(b => b.classList.contains('active')).map(b => b.dataset.role);
+                    localStorage.setItem('notificationRoles', JSON.stringify(selected));
+                    this.showNotification('알림 설정이 저장되었습니다.', 'success');
+                    hide();
+                }, { once: true });
+
+                closeBtn && closeBtn.addEventListener('click', hide, { once: true });
+                closeFooterBtn && closeFooterBtn.addEventListener('click', hide, { once: true });
+                overlay && overlay.addEventListener('click', (ev) => { if (ev.target === overlay) hide(); }, { once: true });
+
+                // role 버튼 토글
+                roleBtns.forEach(btn => {
+                    btn.addEventListener('click', () => { btn.classList.toggle('active'); });
+                });
+
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                updateStatus();
             });
         }
         closeBtn && closeBtn.addEventListener('click', hide);

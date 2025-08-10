@@ -25,6 +25,7 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js"></script>
 </head>
 <body>
     <!-- 헤더 -->
@@ -33,7 +34,7 @@
             <h1 class="header-title">가로수길 스케줄 스왑</h1>
             <div class="header-actions">
                 <button class="btn icon-btn" id="openNotificationSettings" aria-label="알림 설정">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="icon-white">
                         <path d="M12 22a2 2 0 0 0 2-2H10a2 2 0 0 0 2 2Zm6-6V11a6 6 0 1 0-12 0v5l-2 2v1h16v-1l-2-2Z"/>
                     </svg>
                 </button>
@@ -263,6 +264,15 @@
                     })
                     .catch((registrationError) => {
                         console.log('SW registration failed: ', registrationError);
+                    });
+
+                // Firebase Messaging SW (scope: /shift-swap/)
+                navigator.serviceWorker.register('firebase-messaging-sw.js', { scope: './' })
+                    .then((registration) => {
+                        console.log('Messaging SW registered: ', registration);
+                    })
+                    .catch((err) => {
+                        console.log('Messaging SW registration failed: ', err);
                     });
             });
         }
