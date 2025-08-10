@@ -16,6 +16,7 @@ class ShiftSwapApp {
         // UI와 Firebase 서비스 초기화
         this.ui = new ShiftSwapUI(this);
         this.firebaseService = new FirebaseService(this);
+        this.calendarService = new CalendarService(this);
         
         this.bindEvents();
         this.switchSwapType('shift');
@@ -24,6 +25,16 @@ class ShiftSwapApp {
         setTimeout(() => {
             this.bindNotificationSettingsDirectly();
         }, 200);
+        
+        // 캘린더 서비스 초기화
+        setTimeout(() => {
+            this.calendarService.init();
+            // 페이지 로딩 시마다 캘린더 동기화 실행
+            this.calendarService.autoSync();
+            
+            // 통합 토스트 메시지 표시
+            this.showInitialToasts();
+        }, 500);
     }
 
     // 이벤트 바인딩
@@ -330,6 +341,28 @@ class ShiftSwapApp {
     // 테스트 알림 발송
     sendTestNotification() {
         this.firebaseService.sendTestNotification();
+    }
+
+    // 초기 토스트 메시지 표시
+    showInitialToasts() {
+        // 1. 연결됨 - 즉시 표시
+        this.ui.showNotification('연결됨', 'info');
+
+        // 2. 알림 설정 - 1.5초 후 표시
+        setTimeout(() => {
+            if (Notification.permission !== 'granted') {
+                this.ui.showNotification('알림 설정 시 새 매물 등록 시 알림을 받을 수 있습니다', 'info');
+            }
+        }, 1500);
+
+        // 3. 캘린더 설정 - 2.5초 후 표시
+        setTimeout(() => {
+            if (this.calendarService.calendarUrl) {
+                this.ui.showNotification('캘린더가 동기화된 상태입니다', 'info');
+            } else {
+                this.ui.showNotification('캘린더 설정 시 내가 가진 스케줄과 일치하는 매물이 강조 표시됩니다', 'info');
+            }
+        }, 2500);
     }
 }
 

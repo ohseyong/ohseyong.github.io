@@ -34,6 +34,11 @@
         <div class="container">
             <h1 class="header-title">가로수길 스케줄 스왑</h1>
             <div class="header-actions">
+                <button class="btn icon-btn" id="calendarSyncBtn" aria-label="캘린더 연동" title="캘린더 연동">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="icon-white">
+                        <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                    </svg>
+                </button>
                 <button class="btn icon-btn" id="openNotificationSettings" aria-label="알림 설정">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="icon-white">
                         <path d="M12 22a2 2 0 0 0 2-2H10a2 2 0 0 0 2 2Zm6-6V11a6 6 0 1 0-12 0v5l-2 2v1h16v-1l-2-2Z"/>
@@ -41,7 +46,7 @@
                 </button>
                 <button class="btn btn-primary" id="addShiftBtn">
                 <span class="btn-icon">+</span>
-                새 거래 등록
+                새 스왑요청
                 </button>
             </div>
         </div>
@@ -255,6 +260,7 @@
     <script src="js/firebase-config.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/firebase-service.js"></script>
+    <script src="js/calendar-service.js"></script>
     <script src="js/app.js"></script>
     
     <!-- Service Worker 등록 -->
@@ -282,6 +288,59 @@
             console.log('Service Worker not supported or not in secure context');
         }
     </script>
+
+    <!-- 캘린더 연동 모달 -->
+    <div class="modal" id="calendarSyncModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>캘린더 연동</h2>
+                <button class="modal-close" id="closeCalendarSync">&times;</button>
+            </div>
+            <div class="shift-detail" style="padding:0 24px 24px 24px;">
+                <div class="detail-item">
+                    <div class="detail-label">ICS 캘린더 링크</div>
+                    <div class="detail-value">
+                        <input type="url" id="calendarUrl" placeholder="https://sm-cal.apple.com/cal/..." class="form-input" style="width:100%;">
+                        <p style="font-size:12px; color:#64748b; margin-top:4px;">Apple 캘린더 공유 링크를 입력하세요</p>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">내 역할</div>
+                    <div class="detail-value">
+                        <div class="role-buttons" id="calendarRoleButtons">
+                            <button type="button" class="role-btn" data-role="TS">TS</button>
+                            <button type="button" class="role-btn" data-role="TE">TE</button>
+                            <button type="button" class="role-btn" data-role="Genius">Genius</button>
+                        </div>
+                        <p style="font-size:12px; color:#64748b; margin-top:4px;">내 역할을 선택하면 해당 역할의 매물만 강조됩니다</p>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">연동 상태</div>
+                    <div class="detail-value">
+                        <div id="calendarStatus" style="font-size:14px; color:#64748b;">
+                            <span id="lastUpdate">마지막 업데이트: 없음</span><br>
+                            <span id="lastCheck">마지막 확인: 없음</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">시프트 매칭</div>
+                    <div class="detail-value">
+                        <div id="shiftMatching" style="font-size:14px; color:#64748b;">
+                            현재 등록된 매물과 캘린더 일정을 비교합니다.
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-secondary" id="closeCalendarSyncFooter">닫기</button>
+                    <button class="btn btn-primary" id="saveCalendarSync">저장</button>
+                    <button class="btn btn-secondary" id="testCalendarSync">테스트</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- 알림 설정 모달 -->
     <div class="modal" id="notificationSettingsModal">

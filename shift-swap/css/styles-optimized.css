@@ -22,7 +22,7 @@ body {
 .header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 16px 0;
+    padding: 12px 0;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -298,6 +298,28 @@ body {
     z-index: 1;
 }
 
+/* ===== 캘린더 매칭 ===== */
+.shift-card.matched {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+
+.calendar-match {
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-block;
+    margin-right: 8px;
+    white-space: nowrap;
+}
+
+.calendar-match-icon {
+    margin-right: 2px;
+}
+
 /* ===== 시프트 헤더 ===== */
 .shift-header {
     display: flex;
@@ -347,9 +369,26 @@ body {
 }
 
 .shift-type {
-    font-size: 11px;
+    font-size: 12px;
     color: #64748b;
     font-weight: 500;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header-right .shift-type {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.header-right .shift-date {
+    font-size: 10px;
+    color: #94a3b8;
 }
 
 /* ===== 시프트 헤드라인 ===== */
@@ -416,12 +455,11 @@ body {
     border-top: 1px solid #e2e8f0;
 }
 
-.shift-date {
-    font-size: 11px;
-    color: #64748b;
+.shift-footer-left {
+    flex: 1;
 }
 
-.shift-actions {
+.shift-footer-right {
     display: flex;
     gap: 6px;
 }
@@ -429,6 +467,11 @@ body {
 .shift-actions .btn {
     padding: 6px 12px;
     font-size: 11px;
+}
+
+.shift-footer .calendar-match {
+    margin-right: 0;
+    margin-left: 0;
 }
 
 /* ===== 빈 상태 ===== */
@@ -722,9 +765,8 @@ body {
 /* ===== 연결 상태 ===== */
 .connection-status {
     position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 20px;
+    right: 20px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -772,7 +814,7 @@ body {
 /* ===== 알림 ===== */
 .notification {
     position: fixed;
-    top: 20px;
+    bottom: 20px;
     right: 20px;
     background: white;
     border: 1px solid #e2e8f0;
@@ -919,11 +961,13 @@ body {
         right: 10px;
         left: 10px;
         max-width: none;
+        bottom: 10px;
     }
 
     .connection-status {
         left: 10px;
         right: 10px;
+        bottom: 10px;
         transform: none;
         width: auto;
     }

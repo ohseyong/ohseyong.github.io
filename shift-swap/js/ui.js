@@ -303,7 +303,17 @@ class ShiftSwapUI {
             filteredShifts = filteredShifts.filter(shift => shift.type === this.app.currentTypeFilter);
         }
         
-        filteredShifts.sort((a, b) => this.getSellingDateForSort(a) - this.getSellingDateForSort(b));
+        // 매칭된 카드를 최상단에 정렬
+        filteredShifts.sort((a, b) => {
+            const aMatched = a.calendarMatch?.hasMatch || false;
+            const bMatched = b.calendarMatch?.hasMatch || false;
+            
+            if (aMatched && !bMatched) return -1;
+            if (!aMatched && bMatched) return 1;
+            
+            // 둘 다 매칭되거나 둘 다 매칭되지 않은 경우 날짜순 정렬
+            return this.getSellingDateForSort(a) - this.getSellingDateForSort(b);
+        });
         
         if (filteredShifts.length === 0) {
             shiftList.innerHTML = '';
@@ -396,18 +406,25 @@ class ShiftSwapUI {
         const expiredBadge = (shift.status === 'cancelled' && shift.cancelReason === 'expired')
             ? '<div class="expired-badge">날짜가 지나서 취소되었습니다</div>'
             : '';
+            
+        // 캘린더 매칭 결과 표시 (매칭된 경우만)
+        const calendarMatchBadge = (shift.calendarMatch?.hasMatch && shift.status === 'selling')
+            ? `<span class="calendar-match">내가 가지고 있는 스케줄이에요!</span>`
+            : '';
 
         const actions = shift.status === 'selling' ? `
             <div class="shift-actions">
                 <button class="btn btn-success btn-complete">거래완료</button>
-                <button class="btn btn-danger btn-cancel">취소</button>
+                <button class="btn btn-danger btn-cancel">거래취소</button>
             </div>
         ` : '';
 
         const cardTypeClass = shift.type === 'shift' ? 'type-shift' : 'type-dayoff';
 
+        const matchedClass = (shift.calendarMatch?.hasMatch && shift.status === 'selling') ? ' matched' : '';
+        
         return `
-            <div class="shift-card ${statusClass} ${cardTypeClass}" data-shift-id="${shift.id}">
+            <div class="shift-card ${statusClass} ${cardTypeClass}${matchedClass}" data-shift-id="${shift.id}">
                 ${expiredBadge}
                 <div class="shift-header">
                     <div class="user-info">
@@ -415,13 +432,20 @@ class ShiftSwapUI {
                         <span class="user-name">${shift.name}</span>
                         <span class="user-role ${this.getRoleClass(shift.role)}">${shift.role}</span>
                     </div>
-                    <div class="shift-type">${typeIcon} ${typeText}</div>
+                    <div class="header-right">
+                        <div class="shift-type">${typeIcon} ${typeText}</div>
+                        <div class="shift-date">${this.formatDate(shift.createdAt)}</div>
+                    </div>
                 </div>
                 ${cardContent}
                 ${shift.reason ? `<div class="shift-reason">💬 ${shift.reason}</div>` : ''}
                 <div class="shift-footer">
-                    <div class="shift-date">${this.formatDate(shift.createdAt)}</div>
-                    ${actions}
+                    <div class="shift-footer-left">
+                        ${calendarMatchBadge}
+                    </div>
+                    <div class="shift-footer-right">
+                        ${actions}
+                    </div>
                 </div>
             </div>
         `;
@@ -538,23 +562,9 @@ class ShiftSwapUI {
 
     formatDate(dateString) {
         const date = new Date(dateString);
-        const now = new Date();
-        const diffTime = Math.abs(now - date);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
-        if (diffDays === 1) {
-            return '오늘';
-        } else if (diffDays === 2) {
-            return '어제';
-        } else if (diffDays <= 7) {
-            return `${diffDays - 1}일 전`;
-        } else {
-            return date.toLocaleDateString('ko-KR', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-        }
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        return `${month}/${day} 등록`;
     }
 
     getSellingDateForSort(shift) {

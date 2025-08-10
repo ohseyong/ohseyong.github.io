@@ -63,14 +63,21 @@ class FirebaseService {
                 }
             } else if (permission === 'denied') {
                 console.log('알림 권한이 거부되었습니다. 사용자가 수동으로 권한을 허용해야 합니다.');
-                this.app.showNotification('알림 권한이 거부되었습니다. 브라우저 설정에서 알림을 허용해주세요.', 'info');
+                // 토스트는 app.js에서 통합 관리
             } else if (permission === 'default') {
                 console.log('알림 권한이 아직 요청되지 않았습니다.');
+                // 토스트는 app.js에서 통합 관리
             }
         } catch (error) {
             console.error('Firebase Messaging 설정 실패:', error);
             // Firebase Messaging 실패해도 브라우저 알림은 계속 사용 가능
         }
+    }
+
+    // 알림 설정 토스트 메시지 (비활성화 - app.js에서 통합 관리)
+    showNotificationSetupToast() {
+        // 토스트는 app.js에서 통합 관리됨
+        console.log('토스트는 app.js에서 통합 관리됩니다');
     }
 
     // FCM 토큰 저장
@@ -115,6 +122,11 @@ class FirebaseService {
                 // 데이터 로드 후 UI 업데이트
                 this.app.ui.renderShifts();
                 this.app.ui.updateTabCounts();
+                
+                // 캘린더 매칭 업데이트 (한 번만 실행)
+                if (this.app.calendarService && this.app.calendarService.calendarEvents.length > 0) {
+                    this.app.calendarService.compareShiftsWithCalendar();
+                }
             });
 
             // 연결 상태 감지
