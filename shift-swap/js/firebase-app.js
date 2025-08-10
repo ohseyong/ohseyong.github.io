@@ -569,6 +569,24 @@ class FirebaseShiftSwapApp {
         this.switchSwapType('shift');
     }
 
+    // 판매 시프트(또는 휴무) 날짜 기준 정렬용 Date (가까운 날짜 우선)
+    getSellingDateForSort(shift) {
+        try {
+            if (shift.type === 'shift') {
+                const [dateStr, timeCode] = (shift.sellingItem || '').split(' ');
+                const d = new Date(dateStr);
+                const orderMap = { '945': 0, '118': 1, '129': 2, '마감': 3 };
+                const idx = orderMap[timeCode] ?? 0;
+                d.setHours(0 + idx, 0, 0, 0);
+                return d;
+            }
+            if (shift.type === 'dayoff') {
+                return new Date(shift.sellingItem);
+            }
+        } catch (e) {}
+        return new Date(shift.createdAt || Date.now());
+    }
+
     // 시프트 렌더링
     renderShifts() {
         const shiftList = document.getElementById('shiftList');
@@ -584,6 +602,8 @@ class FirebaseShiftSwapApp {
         if (this.currentTypeFilter !== 'all') {
             filteredShifts = filteredShifts.filter(shift => shift.type === this.currentTypeFilter);
         }
+        // 기본 정렬: 판매 날짜가 가까운 순
+        filteredShifts.sort((a, b) => this.getSellingDateForSort(a) - this.getSellingDateForSort(b));
         
         if (filteredShifts.length === 0) {
             shiftList.innerHTML = '';
@@ -609,7 +629,9 @@ class FirebaseShiftSwapApp {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const shiftId = btn.closest('.shift-card').dataset.shiftId;
-                this.showConfirmModal(shiftId);
+                // 추가 컨펌 메시지
+                const ok = confirm('거래는 당사자간 연락을 통해 진행하시고, 거래 성사 시 "거래완료" 버튼을 눌러주세요.\n거래 당사자인 경우에만 거래완료 처리를 부탁드립니다.\n\n계속하시겠습니까?');
+                if (ok) this.showConfirmModal(shiftId);
             });
         });
 
@@ -617,7 +639,8 @@ class FirebaseShiftSwapApp {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const shiftId = btn.closest('.shift-card').dataset.shiftId;
-                this.cancelShift(shiftId);
+                const ok = confirm('거래 요청이 완전히 삭제됩니다. 계속합니까?\n올린 당사자인 경우에만 삭제하세요. 타인의 매물을 삭제하지 말아주세요!');
+                if (ok) this.cancelShift(shiftId);
             });
         });
     }
