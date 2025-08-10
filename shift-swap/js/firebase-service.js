@@ -3,12 +3,96 @@ class FirebaseService {
     constructor(app) {
         this.app = app;
         this.isLocalMode = false;
+        this.messaging = null;
         this.init();
     }
 
     init() {
         this.setupFirebaseListeners();
         this.setupNotifications();
+        this.setupFirebaseMessaging();
+    }
+
+    // Firebase Messaging 설정
+    async setupFirebaseMessaging() {
+        try {
+            if (!firebase.messaging) {
+                console.log('Firebase Messaging not available');
+                return;
+            }
+
+            this.messaging = firebase.messaging();
+            
+            // 현재 알림 권한 상태 확인
+            let permission = Notification.permission;
+            
+            // 권한이 없는 경우에만 요청
+            if (permission === 'default') {
+                permission = await Notification.requestPermission();
+            }
+            
+            if (permission === 'granted') {
+                console.log('알림 권한이 허용되었습니다.');
+                
+                try {
+                    // FCM 토큰 가져오기
+                    const token = await this.messaging.getToken();
+                    if (token) {
+                        console.log('FCM 토큰:', token);
+                        this.saveFCMToken(token);
+                    }
+                    
+                    // 토큰 갱신 리스너
+                    this.messaging.onTokenRefresh(() => {
+                        this.messaging.getToken().then((refreshedToken) => {
+                            console.log('FCM 토큰 갱신:', refreshedToken);
+                            this.saveFCMToken(refreshedToken);
+                        }).catch((error) => {
+                            console.error('토큰 갱신 실패:', error);
+                        });
+                    });
+                    
+                    // 포그라운드 메시지 리스너
+                    this.messaging.onMessage((payload) => {
+                        console.log('포그라운드 메시지 수신:', payload);
+                        this.showNotification(payload.notification.title, payload.notification.body);
+                    });
+                } catch (tokenError) {
+                    console.error('FCM 토큰 가져오기 실패:', tokenError);
+                    // 토큰 가져오기 실패해도 브라우저 알림은 계속 사용 가능
+                }
+            } else if (permission === 'denied') {
+                console.log('알림 권한이 거부되었습니다. 사용자가 수동으로 권한을 허용해야 합니다.');
+                this.app.showNotification('알림 권한이 거부되었습니다. 브라우저 설정에서 알림을 허용해주세요.', 'info');
+            } else if (permission === 'default') {
+                console.log('알림 권한이 아직 요청되지 않았습니다.');
+            }
+        } catch (error) {
+            console.error('Firebase Messaging 설정 실패:', error);
+            // Firebase Messaging 실패해도 브라우저 알림은 계속 사용 가능
+        }
+    }
+
+    // FCM 토큰 저장
+    saveFCMToken(token) {
+        try {
+            localStorage.setItem('fcmToken', token);
+            console.log('FCM 토큰이 로컬 스토리지에 저장되었습니다.');
+            
+            // Firebase에 토큰 저장 (선택사항)
+            if (database && !this.isLocalMode) {
+                database.ref('fcmTokens').child(token).set({
+                    timestamp: new Date().toISOString(),
+                    userAgent: navigator.userAgent
+                }).then(() => {
+                    console.log('FCM 토큰이 Firebase에 저장되었습니다.');
+                }).catch((error) => {
+                    console.error('FCM 토큰 Firebase 저장 실패:', error);
+                });
+            }
+        } catch (error) {
+            console.error('FCM 토큰 저장 실패:', error);
+        }
     }
 
     // Firebase 리스너 설정
@@ -129,21 +213,89 @@ class FirebaseService {
         }
     }
 
-    // 알림 발송
-    sendNotification(title, body) {
+    // 알림 발송 (브라우저 알림 + FCM)
+    async sendNotification(title, body) {
+        console.log('알림 발송 시도:', { title, body });
+        
+        // 브라우저 알림
         if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification(title, {
-                body: body,
-                icon: '/assets/icon-192x192.png',
-                badge: '/assets/icon-72x72.png',
-                vibrate: [100, 50, 100]
-            });
+            try {
+                new Notification(title, {
+                    body: body,
+                    icon: 'assets/jekyll.png',
+                    badge: 'assets/jekyll.png',
+                    vibrate: [100, 50, 100],
+                    tag: 'shift-swap-notification'
+                });
+                console.log('브라우저 알림 발송 성공');
+            } catch (error) {
+                console.error('브라우저 알림 발송 실패:', error);
+            }
+        } else {
+            console.log('브라우저 알림 권한이 없습니다.');
         }
+
+        // FCM 알림 (Firebase가 연결된 경우)
+        if (!this.isLocalMode && this.messaging && Notification.permission === 'granted') {
+            try {
+                // 서버에 알림 요청 (실제 구현에서는 서버 API 호출)
+                await this.sendFCMNotification(title, body);
+            } catch (error) {
+                console.error('FCM 알림 발송 실패:', error);
+            }
+        } else {
+            console.log('FCM 알림 발송 조건이 충족되지 않습니다.');
+        }
+    }
+
+    // FCM 알림 발송 (서버 API 호출)
+    async sendFCMNotification(title, body) {
+        try {
+            // 실제 구현에서는 서버 API를 호출하여 FCM 알림을 발송
+            // 여기서는 Firebase Functions나 별도 서버 API를 사용해야 함
+            console.log('FCM 알림 발송 시도:', { title, body });
+            
+            // 테스트용: 브라우저 알림으로 대체
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification(title, {
+                    body: body,
+                    icon: 'assets/jekyll.png',
+                    badge: 'assets/jekyll.png',
+                    vibrate: [100, 50, 100],
+                    tag: 'shift-swap-notification'
+                });
+            }
+            
+            // 예시: Firebase Functions 호출
+            // const functions = firebase.functions();
+            // const sendNotification = functions.httpsCallable('sendNotification');
+            // await sendNotification({ title, body });
+            
+        } catch (error) {
+            console.error('FCM 알림 발송 실패:', error);
+        }
+    }
+
+    // 테스트용 알림 발송
+    sendTestNotification() {
+        const testShift = {
+            name: 'Raymond',
+            role: 'TE',
+            type: 'shift',
+            sellingItem: '2024-08-11 118',
+            buyingItem: '2024-08-11 945'
+        };
+        
+        const notificationMessage = this.createNotificationMessage(testShift);
+        this.sendNotification(notificationMessage.title, notificationMessage.body);
     }
 
     // 새 거래 추가
     async addShift(shift) {
         try {
+            // 알림 메시지 생성
+            const notificationMessage = this.createNotificationMessage(shift);
+            
             if (this.isLocalMode) {
                 // 로컬 모드
                 const newId = Date.now().toString();
@@ -153,12 +305,12 @@ class FirebaseService {
                 this.app.ui.renderShifts();
                 this.app.ui.updateTabCounts();
                 this.app.showNotification('거래가 성공적으로 등록되었습니다! (로컬 모드)', 'success');
-                this.sendNotification('새 거래 등록', `${shift.name}님이 새로운 거래를 등록했습니다.`);
+                this.sendNotification(notificationMessage.title, notificationMessage.body);
             } else {
                 // Firebase 모드
                 await database.ref('shifts').push().set(shift);
                 this.app.showNotification('거래가 성공적으로 등록되었습니다!', 'success');
-                this.sendNotification('새 거래 등록', `${shift.name}님이 새로운 거래를 등록했습니다.`);
+                this.sendNotification(notificationMessage.title, notificationMessage.body);
             }
             return true;
         } catch (error) {
@@ -166,6 +318,43 @@ class FirebaseService {
             this.app.showNotification('거래 등록에 실패했습니다. 다시 시도해주세요.', 'error');
             return false;
         }
+    }
+
+    // 알림 메시지 생성
+    createNotificationMessage(shift) {
+        let title, body;
+        
+        if (shift.type === 'shift') {
+            // 시프트 스왑
+            const [date, sellingShift] = shift.sellingItem.split(' ');
+            const [_, buyingShift] = shift.buyingItem.split(' ');
+            
+            // 날짜 포맷팅 (M/D 형식)
+            const dateObj = new Date(date);
+            const shortDate = `${dateObj.getMonth() + 1}/${dateObj.getDate()}`;
+            
+            // 제목: [역할명] M/D 시프트 구하는 팀원이 있어요
+            title = `[${shift.role}] ${shortDate} ${buyingShift} 구하는 팀원이 있어요`;
+            
+            // 내용: 이름 : M/D 시프트로 시프트을 구합니다.
+            body = `${shift.name} : ${shortDate} ${sellingShift}으로 ${buyingShift}을 구합니다.`;
+        } else {
+            // 휴무 스왑
+            const sellingDate = new Date(shift.sellingItem);
+            const buyingDate = new Date(shift.buyingItem);
+            
+            // 날짜 포맷팅 (M/D 형식)
+            const sellingShortDate = `${sellingDate.getMonth() + 1}/${sellingDate.getDate()}`;
+            const buyingShortDate = `${buyingDate.getMonth() + 1}/${buyingDate.getDate()}`;
+            
+            // 제목: [역할명] M/D 휴무 구하는 팀원이 있어요
+            title = `[${shift.role}] ${buyingShortDate} 휴무 구하는 팀원이 있어요`;
+            
+            // 내용: 이름 : M/D 휴무로 M/D 휴무를 구합니다.
+            body = `${shift.name} : ${sellingShortDate} 휴무로 ${buyingShortDate} 휴무를 구합니다.`;
+        }
+        
+        return { title, body };
     }
 
     // 거래 완료 처리

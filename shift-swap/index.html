@@ -13,9 +13,9 @@
     <meta name="mobile-web-app-capable" content="yes">
     
     <!-- 아이콘 -->
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/icon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/jekyll.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/jekyll.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/jekyll.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/jekyll.png">
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="css/styles-optimized.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,6 +26,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-functions-compat.js"></script>
 </head>
 <body>
     <!-- 헤더 -->
@@ -59,7 +60,7 @@
             <nav class="tab-nav">
                 <button class="tab-btn active" data-tab="selling">
                     <span class="tab-icon">📋</span>
-                    거래중
+                    매물 목록
                     <span class="tab-count" id="sellingCount">0</span>
                 </button>
                 <button class="tab-btn" data-tab="completed">
@@ -77,10 +78,6 @@
             <!-- 필터 섹션 -->
             <div class="filter-section">
                 <div class="role-filter">
-                    <button class="role-filter-btn active" data-role="all">
-                        <span class="filter-icon">🌐</span>
-                        전체
-                    </button>
                     <button class="role-filter-btn" data-role="TS">
                         <span class="filter-icon">🛠️</span>
                         TS
@@ -96,10 +93,6 @@
                 </div>
                 
                 <div class="type-filter">
-                    <button class="type-filter-btn active" data-type="all">
-                        <span class="filter-icon">🌐</span>
-                        전체
-                    </button>
                     <button class="type-filter-btn" data-type="shift">
                         <span class="filter-icon">🔄</span>
                         시프트 스왑
@@ -266,7 +259,7 @@
     
     <!-- Service Worker 등록 -->
     <script>
-        if ('serviceWorker' in navigator) {
+        if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
                     .then((registration) => {
@@ -285,6 +278,8 @@
                         console.log('Messaging SW registration failed: ', err);
                     });
             });
+        } else {
+            console.log('Service Worker not supported or not in secure context');
         }
     </script>
 

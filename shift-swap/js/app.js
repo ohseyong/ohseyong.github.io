@@ -19,6 +19,11 @@ class ShiftSwapApp {
         
         this.bindEvents();
         this.switchSwapType('shift');
+        
+        // 알림 설정 버튼 직접 바인딩 (백업)
+        setTimeout(() => {
+            this.bindNotificationSettingsDirectly();
+        }, 200);
     }
 
     // 이벤트 바인딩
@@ -282,7 +287,8 @@ class ShiftSwapApp {
         notification.textContent = message;
         notification.className = `notification ${type} show`;
         
-        const duration = message.includes('알림 설정') ? 1500 : 3000;
+        // 알림 설정 관련 메시지는 더 짧게 표시
+        const duration = message.includes('알림 설정') ? 2000 : 3000;
         
         setTimeout(() => {
             notification.classList.remove('show');
@@ -298,6 +304,20 @@ class ShiftSwapApp {
         this.ui.updateTabCounts();
     }
 
+    // 알림 설정 직접 바인딩 (백업 메서드)
+    bindNotificationSettingsDirectly() {
+        const openBtn = document.getElementById('openNotificationSettings');
+        if (openBtn) {
+            console.log('앱 클래스에서 알림 설정 버튼 직접 바인딩');
+            openBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('앱 클래스에서 알림 설정 버튼 클릭됨');
+                this.showModal('notificationSettingsModal');
+            });
+        }
+    }
+
     // 개발용 메서드들
     clearData() {
         this.firebaseService.clearData();
@@ -306,7 +326,14 @@ class ShiftSwapApp {
     addSampleData() {
         this.firebaseService.addSampleData();
     }
+
+    // 테스트 알림 발송
+    sendTestNotification() {
+        this.firebaseService.sendTestNotification();
+    }
 }
 
-// 전역 인스턴스 생성
-window.shiftSwapApp = new ShiftSwapApp();
+// DOM이 완전히 로드된 후 앱 초기화
+document.addEventListener('DOMContentLoaded', () => {
+    window.shiftSwapApp = new ShiftSwapApp();
+});

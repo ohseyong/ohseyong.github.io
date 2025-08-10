@@ -11,8 +11,12 @@ class ShiftSwapUI {
         this.setupRoleButtons();
         this.setupRoleFilters();
         this.setupTypeFilters();
-        this.bindNotificationSettings();
         this.setMinDates();
+        
+        // 알림 설정은 DOM이 완전히 로드된 후 바인딩
+        setTimeout(() => {
+            this.bindNotificationSettings();
+        }, 100);
     }
 
     // 거래 유형 탭 설정
@@ -30,11 +34,13 @@ class ShiftSwapUI {
         document.querySelectorAll('.shift-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const shiftButtons = e.target.closest('.shift-buttons');
-                const hiddenInput = shiftButtons.nextElementSibling;
+                const hiddenInput = shiftButtons?.nextElementSibling;
                 
-                shiftButtons.querySelectorAll('.shift-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                hiddenInput.value = e.target.dataset.shift;
+                if (shiftButtons && hiddenInput) {
+                    shiftButtons.querySelectorAll('.shift-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    hiddenInput.value = e.target.dataset.shift;
+                }
             });
         });
     }
@@ -44,11 +50,13 @@ class ShiftSwapUI {
         document.querySelectorAll('.role-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const roleButtons = e.target.closest('.role-buttons');
-                const hiddenInput = roleButtons.nextElementSibling;
+                const hiddenInput = roleButtons?.nextElementSibling;
                 
-                roleButtons.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                hiddenInput.value = e.target.dataset.role;
+                if (roleButtons && hiddenInput) {
+                    roleButtons.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    hiddenInput.value = e.target.dataset.role;
+                }
             });
         });
     }
@@ -63,10 +71,17 @@ class ShiftSwapUI {
             if (!btn) return;
 
             const role = btn.dataset.role;
-            this.app.currentRoleFilter = role;
-
-            container.querySelectorAll('.role-filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            
+            // 토글 기능: 이미 선택된 필터를 다시 클릭하면 해제
+            if (this.app.currentRoleFilter === role) {
+                this.app.currentRoleFilter = 'all';
+                btn.classList.remove('active');
+            } else {
+                // 다른 필터가 선택되어 있으면 해제하고 새 필터 선택
+                container.querySelectorAll('.role-filter-btn').forEach(b => b.classList.remove('active'));
+                this.app.currentRoleFilter = role;
+                btn.classList.add('active');
+            }
             
             this.app.renderShifts();
         });
@@ -82,10 +97,17 @@ class ShiftSwapUI {
             if (!btn) return;
 
             const type = btn.dataset.type;
-            this.app.currentTypeFilter = type;
-
-            container.querySelectorAll('.type-filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            
+            // 토글 기능: 이미 선택된 필터를 다시 클릭하면 해제
+            if (this.app.currentTypeFilter === type) {
+                this.app.currentTypeFilter = 'all';
+                btn.classList.remove('active');
+            } else {
+                // 다른 필터가 선택되어 있으면 해제하고 새 필터 선택
+                container.querySelectorAll('.type-filter-btn').forEach(b => b.classList.remove('active'));
+                this.app.currentTypeFilter = type;
+                btn.classList.add('active');
+            }
             
             this.app.renderShifts();
         });
@@ -93,9 +115,22 @@ class ShiftSwapUI {
 
     // 알림 설정 모달 바인딩
     bindNotificationSettings() {
+        console.log('알림 설정 바인딩 시작...');
+        
         const openBtn = document.getElementById('openNotificationSettings');
         const modal = document.getElementById('notificationSettingsModal');
-        if (!openBtn || !modal) return;
+        
+        console.log('찾은 요소들:', { openBtn, modal });
+        
+        if (!openBtn) {
+            console.error('알림 설정 버튼을 찾을 수 없습니다!');
+            return;
+        }
+        
+        if (!modal) {
+            console.error('알림 설정 모달을 찾을 수 없습니다!');
+            return;
+        }
 
         const closeBtn = document.getElementById('closeNotificationSettings');
         const closeFooterBtn = document.getElementById('closeNotificationSettingsFooter');
@@ -105,6 +140,8 @@ class ShiftSwapUI {
         const roleBtns = modal.querySelectorAll('#notificationRoleButtons .role-btn');
         const saveBtn = document.getElementById('saveNotificationPrefs');
 
+        console.log('모달 내부 요소들:', { closeBtn, closeFooterBtn, overlay, statusSpan, requestBtn, roleBtns: roleBtns.length, saveBtn });
+
         const updateStatus = () => {
             if (!('Notification' in window)) {
                 if (statusSpan) statusSpan.textContent = '권한 상태: 지원되지 않음';
@@ -113,32 +150,98 @@ class ShiftSwapUI {
             if (statusSpan) statusSpan.textContent = `권한 상태: ${Notification.permission}`;
         };
 
-        const show = () => { this.app.showModal('notificationSettingsModal'); updateStatus(); };
-        const hide = () => { this.app.hideModal('notificationSettingsModal'); };
-
-        openBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); show(); });
-        closeBtn && closeBtn.addEventListener('click', hide);
-        closeFooterBtn && closeFooterBtn.addEventListener('click', hide);
-        overlay && overlay.addEventListener('click', (e) => { if (e.target === overlay) hide(); });
-
-        requestBtn && requestBtn.addEventListener('click', async () => {
+        const show = () => { 
+            console.log('알림 설정 모달 열기 시도');
             try {
-                if (!('Notification' in window)) return;
-                await Notification.requestPermission();
-                updateStatus();
-            } catch (_) {}
+                this.app.showModal('notificationSettingsModal'); 
+                updateStatus(); 
+                console.log('알림 설정 모달 열기 성공');
+            } catch (error) {
+                console.error('모달 열기 실패:', error);
+            }
+        };
+        
+        const hide = () => { 
+            console.log('알림 설정 모달 닫기');
+            try {
+                this.app.hideModal('notificationSettingsModal'); 
+            } catch (error) {
+                console.error('모달 닫기 실패:', error);
+            }
+        };
+
+        // 기존 이벤트 리스너 제거 (중복 방지)
+        openBtn.removeEventListener('click', show);
+        
+        // 이벤트 리스너 등록
+        openBtn.addEventListener('click', (e) => { 
+            e.preventDefault(); 
+            e.stopPropagation(); 
+            console.log('알림 설정 버튼 클릭됨!');
+            show(); 
         });
+        
+        if (closeBtn) {
+            closeBtn.removeEventListener('click', hide);
+            closeBtn.addEventListener('click', hide);
+        }
+        
+        if (closeFooterBtn) {
+            closeFooterBtn.removeEventListener('click', hide);
+            closeFooterBtn.addEventListener('click', hide);
+        }
+        
+        if (overlay) {
+            overlay.removeEventListener('click', hide);
+            overlay.addEventListener('click', (e) => { 
+                if (e.target === overlay) hide(); 
+            });
+        }
+
+        if (requestBtn) {
+            requestBtn.removeEventListener('click', updateStatus);
+            requestBtn.addEventListener('click', async () => {
+                try {
+                    if (!('Notification' in window)) return;
+                    const permission = await Notification.requestPermission();
+                    updateStatus();
+                    
+                    // 권한이 허용된 경우 Firebase Messaging 재설정
+                    if (permission === 'granted') {
+                        console.log('알림 권한이 허용되었습니다. Firebase Messaging을 재설정합니다.');
+                        await this.app.firebaseService.setupFirebaseMessaging();
+                        this.app.showNotification('알림 권한이 허용되었습니다!', 'success');
+                    } else {
+                        this.app.showNotification('알림 권한이 거부되었습니다.', 'error');
+                    }
+                } catch (error) {
+                    console.error('알림 권한 요청 실패:', error);
+                    this.app.showNotification('알림 권한 요청에 실패했습니다.', 'error');
+                }
+            });
+        }
 
         roleBtns.forEach(btn => {
+            btn.removeEventListener('click', () => btn.classList.toggle('active'));
             btn.addEventListener('click', () => btn.classList.toggle('active'));
         });
 
-        saveBtn && saveBtn.addEventListener('click', () => {
-            const selected = Array.from(roleBtns).filter(b => b.classList.contains('active')).map(b => b.dataset.role);
-            try { localStorage.setItem('notificationRoles', JSON.stringify(selected)); } catch (_) {}
-            this.app.showNotification('알림 설정이 저장되었습니다.', 'success');
-            hide();
-        });
+        if (saveBtn) {
+            saveBtn.removeEventListener('click', () => {});
+            saveBtn.addEventListener('click', () => {
+                const selected = Array.from(roleBtns).filter(b => b.classList.contains('active')).map(b => b.dataset.role);
+                try { 
+                    localStorage.setItem('notificationRoles', JSON.stringify(selected)); 
+                    console.log('알림 설정 저장됨:', selected);
+                } catch (error) {
+                    console.error('알림 설정 저장 실패:', error);
+                }
+                this.app.showNotification('알림 설정이 저장되었습니다.', 'success');
+                hide();
+            });
+        }
+        
+        console.log('알림 설정 바인딩 완료!');
     }
 
     // 최소 날짜 설정
@@ -394,17 +497,17 @@ class ShiftSwapUI {
             indicator.className = 'status-indicator online';
             text.textContent = '실시간 연결됨';
             
+            // 토스트처럼 표시
+            statusElement.classList.add('show');
+            
+            // 1초 후 자동 숨김
             setTimeout(() => {
-                statusElement.style.opacity = '0';
-                setTimeout(() => {
-                    statusElement.style.display = 'none';
-                }, 300);
-            }, 3000);
+                statusElement.classList.remove('show');
+            }, 1000);
         } else {
             indicator.className = 'status-indicator offline';
             text.textContent = '연결 끊김';
-            statusElement.style.display = 'flex';
-            statusElement.style.opacity = '1';
+            statusElement.classList.add('show');
         }
     }
 
