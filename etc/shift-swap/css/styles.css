@@ -1,0 +1,882 @@
+/* 기본 스타일 리셋 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+/* 헤더 */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* 버튼 스타일 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: #e2e8f0;
+    color: #475569;
+}
+
+.btn-secondary:hover {
+    background-color: #cbd5e1;
+}
+
+.btn-success {
+    background-color: #10b981;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #059669;
+}
+
+.btn-danger {
+    background-color: #ef4444;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #dc2626;
+}
+
+.btn-icon {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* 메인 컨테이너 */
+.main {
+    padding: 24px 0;
+    min-height: calc(100vh - 80px);
+}
+
+/* 탭 네비게이션 */
+.tab-nav {
+    display: flex;
+    background: white;
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    overflow-x: auto;
+}
+
+.tab-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+.tab-btn.active {
+    background-color: #3b82f6;
+    color: white;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.tab-btn:hover:not(.active) {
+    background-color: #f1f5f9;
+    color: #475569;
+}
+
+.tab-icon {
+    font-size: 16px;
+}
+
+.tab-count {
+    background-color: rgba(255,255,255,0.2);
+    color: inherit;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 20px;
+    text-align: center;
+}
+
+.tab-btn.active .tab-count {
+    background-color: rgba(255,255,255,0.3);
+}
+
+/* 시프트 카드 */
+.shift-list {
+    display: grid;
+    gap: 16px;
+}
+
+.shift-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border-left: 4px solid #3b82f6;
+}
+
+.shift-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.shift-card.completed {
+    border-left-color: #10b981;
+    opacity: 0.8;
+}
+
+.shift-card.cancelled {
+    border-left-color: #ef4444;
+    opacity: 0.6;
+}
+
+.shift-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.shift-name {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 16px;
+}
+
+.shift-type {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.shift-type.sell {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.shift-type.buy {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.shift-content {
+    display: grid;
+    gap: 12px;
+}
+
+.shift-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.shift-item-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+.shift-item-icon.selling {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.shift-item-icon.buying {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.shift-item-text {
+    flex: 1;
+    font-size: 14px;
+    color: #475569;
+}
+
+.shift-reason {
+    margin-top: 12px;
+    padding: 12px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #64748b;
+    font-style: italic;
+}
+
+.shift-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.shift-date {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.shift-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* 빈 상태 */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #64748b;
+}
+
+.empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.empty-state h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #475569;
+}
+
+.empty-state p {
+    font-size: 14px;
+}
+
+/* 모달 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: none;
+}
+
+.modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    position: relative;
+    background: white;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 24px 0 24px;
+    margin-bottom: 24px;
+}
+
+.modal-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+    background-color: #f1f5f9;
+    color: #64748b;
+}
+
+/* 폼 스타일 */
+.shift-form {
+    padding: 0 24px 24px 24px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #374151;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* 라디오 버튼 */
+.radio-group {
+    display: flex;
+    gap: 16px;
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.radio-item input[type="radio"] {
+    display: none;
+}
+
+.radio-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #d1d5db;
+    border-radius: 50%;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.radio-item input[type="radio"]:checked + .radio-custom {
+    border-color: #3b82f6;
+    background-color: #3b82f6;
+}
+
+.radio-item input[type="radio"]:checked + .radio-custom::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background-color: white;
+    border-radius: 50%;
+}
+
+/* 폼 액션 */
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 32px;
+}
+
+/* 시프트 상세 */
+.shift-detail {
+    padding: 0 24px 24px 24px;
+}
+
+.detail-item {
+    margin-bottom: 20px;
+}
+
+.detail-label {
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.detail-value {
+    color: #1e293b;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.detail-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* 확인 모달 */
+.confirm-content {
+    text-align: center;
+    padding: 0 24px 24px 24px;
+}
+
+.confirm-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.confirm-content h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1e293b;
+}
+
+.confirm-content p {
+    color: #64748b;
+    margin-bottom: 24px;
+}
+
+.confirm-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 12px;
+    }
+    
+    .header-title {
+        font-size: 1.25rem;
+    }
+    
+    .btn {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+    
+    .tab-btn {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+    
+    .shift-card {
+        padding: 16px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 20px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
+    
+    .detail-actions {
+        flex-direction: column;
+    }
+    
+    .detail-actions .btn {
+        width: 100%;
+    }
+    
+    .confirm-actions {
+        flex-direction: column;
+    }
+    
+    .confirm-actions .btn {
+        width: 100%;
+    }
+}
+
+/* 연결 상태 표시 */
+.connection-status {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    transition: opacity 0.3s ease;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.status-indicator.online {
+    background-color: #10b981;
+}
+
+.status-indicator.offline {
+    background-color: #ef4444;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* 알림 스타일 */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 1001;
+    max-width: 300px;
+    animation: slideIn 0.3s ease;
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+}
+
+.notification-message {
+    font-size: 14px;
+    color: #1e293b;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 12px;
+}
+
+.notification-close:hover {
+    color: #64748b;
+}
+
+.notification-success {
+    border-left: 4px solid #10b981;
+}
+
+.notification-error {
+    border-left: 4px solid #ef4444;
+}
+
+.notification-info {
+    border-left: 4px solid #3b82f6;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* 새로고침 안내 */
+.refresh-notice {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    animation: slideIn 0.3s ease;
+}
+
+.notice-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.notice-content span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.notice-content .btn {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.notice-content .btn:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+/* 거래 유형 탭 */
+.type-tabs {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.type-tab {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    background: white;
+    color: #6c757d;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.type-tab:hover {
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.type-tab.active {
+    border-color: #007bff;
+    background: #007bff;
+    color: white;
+}
+
+.type-icon {
+    font-size: 16px;
+}
+
+/* 날짜/시간 입력 */
+.datetime-input {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.datetime-input input[type="date"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e1e5e9;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.datetime-input input[type="date"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* 시프트 버튼 */
+.shift-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.shift-btn {
+    padding: 12px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    background: white;
+    color: #6c757d;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.shift-btn:hover {
+    border-color: #007bff;
+    color: #007bff;
+    background: #f8f9fa;
+}
+
+.shift-btn.active {
+    border-color: #007bff;
+    background: #007bff;
+    color: white;
+}
+
+.shift-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 거래 필드 */
+.swap-fields {
+    margin-bottom: 16px;
+}
+
+/* 알림 메시지 */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 6px;
+    color: white;
+    font-weight: 500;
+    z-index: 1000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    display: none;
+}
+
+.notification.show {
+    transform: translateX(0);
+    display: block;
+}
+
+.notification.success {
+    background: #28a745;
+}
+
+.notification.error {
+    background: #dc3545;
+}
+
+.notification.info {
+    background: #17a2b8;
+}
+
+@media (max-width: 480px) {
+    .header .container {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+    
+    .tab-nav {
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .tab-btn {
+        justify-content: flex-start;
+    }
+    
+    .notification {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+}
