@@ -206,15 +206,16 @@ class CalendarService {
             this.hideCalendarInfo();
             
             // 저장 완료 토스트 메시지 표시
-            this.app.showNotification('저장되었습니다! 페이지를 새로고침 해보세요.', 'success');
+            this.app.showNotification('저장되었습니다!', 'success');
             
-            // 저장 후 즉시 캘린더 동기화 실행 및 순차적 토스트 표시
-            this.syncCalendar().then(() => {
-                this.showSequentialToasts();
-            }).catch(error => {
-                console.error('캘린더 동기화 실패:', error);
-                this.showSequentialToasts(true);
-            });
+            // 잠시 후 캘린더 동기화 시작 (토스트 메시지가 먼저 표시되도록)
+            setTimeout(() => {
+                this.syncCalendar().catch(error => {
+                    console.error('캘린더 동기화 실패:', error);
+                    // 에러 토스트는 syncCalendar 내부 또는 여기서 처리 가능
+                });
+            }, 500);
+
         } catch (error) {
             console.error('캘린더 설정 저장 실패:', error);
             this.app.showNotification('설정 저장에 실패했습니다.', 'error');
@@ -306,6 +307,9 @@ class CalendarService {
             return;
         }
 
+        // 동기화 시작 토스트 표시
+        this.app.showNotification('캘린더 동기화 중...', 'info');
+
         try {
             console.log('캘린더 동기화 시작:', this.calendarUrl);
             
@@ -336,8 +340,10 @@ class CalendarService {
             this.compareShiftsWithCalendar();
             
             console.log('캘린더 동기화 완료');
+            this.app.showNotification('캘린더 동기화 완료!', 'success');
         } catch (error) {
             console.error('캘린더 동기화 실패:', error);
+            this.app.showNotification('캘린더 동기화 실패. URL을 확인해주세요.', 'error');
             throw error;
         }
     }
