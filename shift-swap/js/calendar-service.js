@@ -199,22 +199,16 @@ class CalendarService {
             localStorage.setItem('calendarSettings', JSON.stringify(settings));
             this.updateStatusDisplay();
             
-            // 모달 닫기
             this.hideCalendarModal();
-            
-            // 캘린더 연동 안내 메시지 숨기기
             this.hideCalendarInfo();
             
-            // 저장 완료 토스트 메시지 표시
-            this.app.showNotification('저장되었습니다!', 'success');
+            this.app.showNotification('저장되었습니다! 페이지를 새로고침하세요.', 'success');
             
-            // 잠시 후 캘린더 동기화 시작 (토스트 메시지가 먼저 표시되도록)
-            setTimeout(() => {
-                this.syncCalendar().catch(error => {
-                    console.error('캘린더 동기화 실패:', error);
-                    // 에러 토스트는 syncCalendar 내부 또는 여기서 처리 가능
-                });
-            }, 500);
+            // 저장 후 즉시 캘린더 동기화 실행
+            this.syncCalendar().catch(error => {
+                console.error('저장 후 캘린더 동기화 실패:', error);
+                // 에러 토스트는 syncCalendar 내부에서 처리됩니다.
+            });
 
         } catch (error) {
             console.error('캘린더 설정 저장 실패:', error);
@@ -303,12 +297,11 @@ class CalendarService {
 
     async syncCalendar() {
         if (!this.calendarUrl) {
-            console.log('캘린더 URL이 설정되지 않음');
+            console.log('캘린더 URL이 설정되지 않아 동기화를 건너뜁니다.');
             return;
         }
 
-        // 동기화 시작 토스트 표시
-        this.app.showNotification('캘린더 동기화 중...', 'info');
+        this.app.showNotification('캘린더 동기화 중...', 'info', 2000);
 
         try {
             console.log('캘린더 동기화 시작:', this.calendarUrl);
