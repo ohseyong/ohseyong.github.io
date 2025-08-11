@@ -45,7 +45,6 @@ class CalendarService {
         const closeCalendarSync = document.getElementById('closeCalendarSync');
         const closeCalendarSyncFooter = document.getElementById('closeCalendarSyncFooter');
         const saveCalendarSync = document.getElementById('saveCalendarSync');
-        const testCalendarSync = document.getElementById('testCalendarSync');
 
         if (closeCalendarSync) {
             closeCalendarSync.addEventListener('click', () => this.hideCalendarModal());
@@ -55,9 +54,6 @@ class CalendarService {
         }
         if (saveCalendarSync) {
             saveCalendarSync.addEventListener('click', () => this.saveCalendarSettings());
-        }
-        if (testCalendarSync) {
-            testCalendarSync.addEventListener('click', () => this.testCalendarSync());
         }
 
         // 역할 선택 버튼 이벤트
@@ -178,12 +174,12 @@ class CalendarService {
 
         const url = urlInput.value.trim();
         if (!url) {
-            this.app.ui.showNotification('캘린더 URL을 입력해주세요.', 'error');
+            this.app.showNotification('캘린더 URL을 입력해주세요.', 'error');
             return;
         }
 
         if (!this.isValidCalendarUrl(url)) {
-            this.app.ui.showNotification('올바른 캘린더 URL을 입력해주세요.', 'error');
+            this.app.showNotification('올바른 캘린더 URL을 입력해주세요.', 'error');
             return;
         }
 
@@ -202,11 +198,15 @@ class CalendarService {
         try {
             localStorage.setItem('calendarSettings', JSON.stringify(settings));
             this.updateStatusDisplay();
-            this.app.ui.showNotification('캘린더 설정이 저장되었습니다.', 'success');
+            
+            // 모달 닫기
             this.hideCalendarModal();
             
             // 캘린더 연동 안내 메시지 숨기기
             this.hideCalendarInfo();
+            
+            // 저장 완료 토스트 메시지 표시
+            this.app.showNotification('저장되었습니다! 페이지를 새로고침 해보세요.', 'success');
             
             // 저장 후 즉시 캘린더 동기화 실행 및 순차적 토스트 표시
             this.syncCalendar().then(() => {
@@ -217,7 +217,7 @@ class CalendarService {
             });
         } catch (error) {
             console.error('캘린더 설정 저장 실패:', error);
-            this.app.ui.showNotification('설정 저장에 실패했습니다.', 'error');
+            this.app.showNotification('설정 저장에 실패했습니다.', 'error');
         }
     }
 
@@ -298,23 +298,6 @@ class CalendarService {
         }
 
         matchingDiv.innerHTML = html;
-    }
-
-    async testCalendarSync() {
-        if (!this.calendarUrl) {
-            this.app.ui.showNotification('먼저 캘린더 URL을 저장해주세요.', 'error');
-            return;
-        }
-
-        this.app.ui.showNotification('캘린더 동기화 테스트 중...', 'info');
-        
-        try {
-            await this.syncCalendar();
-            this.showSequentialToasts();
-        } catch (error) {
-            console.error('캘린더 동기화 테스트 실패:', error);
-            this.showSequentialToasts(true);
-        }
     }
 
     async syncCalendar() {

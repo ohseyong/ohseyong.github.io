@@ -522,17 +522,14 @@ class ShiftSwapUI {
             indicator.className = 'status-indicator online';
             text.textContent = '실시간 연결됨';
             
-            // 토스트처럼 표시
-            statusElement.classList.add('show');
-            
-            // 1초 후 자동 숨김
-            setTimeout(() => {
-                statusElement.classList.remove('show');
-            }, 1000);
+            // 토스트 큐를 통해 '연결됨' 메시지만 표시하고, 상단 바는 숨김
+            this.app.showNotification('연결됨', 'info', 1500);
+            statusElement.classList.remove('show');
+
         } else {
             indicator.className = 'status-indicator offline';
             text.textContent = '연결 끊김';
-            statusElement.classList.add('show');
+            statusElement.classList.add('show'); // 연결이 끊겼을 때만 상단 바 표시
         }
     }
 
