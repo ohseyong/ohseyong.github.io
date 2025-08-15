@@ -578,7 +578,7 @@ class ShiftSwapUI {
     }
 
     // 연결 상태 업데이트
-    updateConnectionStatus(connected) {
+    updateConnectionStatus(connected, showToast = true) {
         const statusElement = document.getElementById('connectionStatus');
         const indicator = statusElement.querySelector('.status-indicator');
         const text = statusElement.querySelector('.status-text');
@@ -587,14 +587,17 @@ class ShiftSwapUI {
             indicator.className = 'status-indicator online';
             text.textContent = '실시간 연결됨';
             
-            // 토스트 큐를 통해 '연결됨' 메시지만 표시하고, 상단 바는 숨김
-            this.app.showNotification('연결됨', 'info', 1500);
+            // 초기 로딩 시에는 토스트를 표시하지 않음
+            if (showToast) {
+                this.app.showNotification('연결됨', 'info', 1500);
+            }
             statusElement.classList.remove('show');
 
         } else {
             indicator.className = 'status-indicator offline';
             text.textContent = '연결 끊김';
-            statusElement.classList.add('show'); // 연결이 끊겼을 때만 상단 바 표시
+            // 연결 끊김 시 상단 바만 표시하고 토스트는 표시하지 않음
+            statusElement.classList.add('show');
         }
     }
 
