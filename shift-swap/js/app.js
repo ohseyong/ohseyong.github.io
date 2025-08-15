@@ -29,16 +29,18 @@ class ShiftSwapApp {
         }, 200);
         
         // 캘린더 서비스 초기화 및 자동 동기화
-        setTimeout(() => {
+        setTimeout(async () => {
             this.calendarService.init();
             // 페이지 로딩 시마다 캘린더 동기화 실행
-            this.calendarService.autoSync();
-        }, 100);
-        
-        // 통합 토스트 메시지 표시 (다른 초기화 완료 후)
-        setTimeout(() => {
+            try {
+                await this.calendarService.autoSync();
+            } catch (error) {
+                console.error('자동 캘린더 동기화 실패:', error);
+            }
+            
+            // 캘린더 동기화 완료 후 토스트 메시지 표시
             this.showInitialToasts();
-        }, 500); // 이전 100ms에서 조금 더 여유를 줌
+        }, 100);
     }
 
     // 이벤트 바인딩
@@ -170,7 +172,21 @@ class ShiftSwapApp {
             }
             
             sellingItem = `${shiftDate} ${sellingTime}`;
-            buyingItem = `${shiftDate} ${buyingTime}`;
+            
+            // 구하는 시프트가 다중 선택인지 확인
+            try {
+                const buyingShifts = JSON.parse(buyingTime);
+                if (Array.isArray(buyingShifts) && buyingShifts.length > 0) {
+                    // 다중 선택된 경우, 하나의 거래에 모든 구하는 시프트를 JSON으로 저장
+                    buyingItem = JSON.stringify(buyingShifts);
+                } else {
+                    // 빈 배열인 경우 단일 시프트로 처리
+                    buyingItem = `${shiftDate} ${buyingTime}`;
+                }
+            } catch (e) {
+                // JSON 파싱 실패 시 단일 시프트로 처리
+                buyingItem = `${shiftDate} ${buyingTime}`;
+            }
         } else {
             const sellingDayoff = formData.get('sellingDayoff');
             const buyingDayoff = formData.get('buyingDayoff');
@@ -198,10 +214,37 @@ class ShiftSwapApp {
         // Firebase 서비스를 통해 거래 추가 (중복 방지)
         const success = await this.firebaseService.addShift(shift);
         if (success) {
+            // 다중 선택인지 확인하여 적절한 메시지 표시
+            try {
+                const buyingShifts = JSON.parse(buyingItem);
+                if (Array.isArray(buyingShifts) && buyingShifts.length > 1) {
+                    this.showNotification(`${buyingShifts.length}개의 시프트를 구하는 거래가 등록되었습니다!`, 'success');
+                } else {
+                    this.showNotification('거래가 등록되었습니다!', 'success');
+                }
+            } catch (e) {
+                this.showNotification('거래가 등록되었습니다!', 'success');
+            }
             this.saveUserPreferences(name, role);
             this.hideModal('addShiftModal');
             this.resetForm();
         }
+    }
+
+    // 개별 시프트 생성 헬퍼 함수
+    async createShift(name, role, sellingItem, buyingItem, reason, type = null) {
+        const shift = {
+            name: name,
+            role: role,
+            type: type || this.currentSwapType,
+            sellingItem: sellingItem,
+            buyingItem: buyingItem,
+            reason: reason,
+            status: 'selling',
+            createdAt: new Date().toISOString()
+        };
+
+        return await this.firebaseService.addShift(shift);
     }
 
     // 사용자 선호도 저장
@@ -239,6 +282,12 @@ class ShiftSwapApp {
         document.querySelectorAll('.role-btn').forEach(btn => {
             btn.classList.remove('active');
         });
+        
+        // 다중 선택 표시 초기화
+        const selectedDisplay = document.getElementById('selectedShiftsDisplay');
+        if (selectedDisplay) {
+            selectedDisplay.style.display = 'none';
+        }
         
         this.switchSwapType('shift');
     }
@@ -386,10 +435,13 @@ class ShiftSwapApp {
         // 3. 캘린더 설정
         const hasCalendarUrl = this.calendarService.calendarUrl;
         const hasCalendarEvents = this.calendarService.calendarEvents.length > 0;
-        console.log('캘린더 상태:', { hasCalendarUrl, hasCalendarEvents });
+        const hasLastCheck = this.calendarService.lastCheck;
+        console.log('캘린더 상태:', { hasCalendarUrl, hasCalendarEvents, hasLastCheck });
         
-        if (hasCalendarUrl && hasCalendarEvents) {
+        if (hasCalendarUrl && hasCalendarEvents && hasLastCheck) {
             this.showNotification('캘린더가 동기화된 상태입니다', 'success', toastDuration);
+        } else if (hasCalendarUrl && hasLastCheck) {
+            this.showNotification('캘린더 설정은 되어 있지만 동기화가 필요합니다', 'info', toastDuration);
         } else if (hasCalendarUrl) {
             this.showNotification('캘린더 설정은 되어 있지만 동기화가 필요합니다', 'info', toastDuration);
         } else {

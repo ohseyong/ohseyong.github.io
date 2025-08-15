@@ -333,7 +333,7 @@ class CalendarService {
             this.compareShiftsWithCalendar();
             
             console.log('캘린더 동기화 완료');
-            this.app.showNotification('캘린더 동기화 완료!', 'success');
+            // 토스트는 app.js에서 통합 관리하므로 여기서는 표시하지 않음
         } catch (error) {
             console.error('캘린더 동기화 실패:', error);
             this.app.showNotification('캘린더 동기화 실패. URL을 확인해주세요.', 'error');

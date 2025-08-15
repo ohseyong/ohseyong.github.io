@@ -190,14 +190,18 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="buyingShift">사는 시프트 *</label>
-                        <div class="shift-buttons">
+                        <label for="buyingShift">사는 시프트 * (여러 개 선택 가능)</label>
+                        <div class="shift-buttons buying-shift-buttons">
                             <button type="button" class="shift-btn" data-shift="945">945</button>
                             <button type="button" class="shift-btn" data-shift="118">118</button>
                             <button type="button" class="shift-btn" data-shift="129">129</button>
                             <button type="button" class="shift-btn" data-shift="마감">마감</button>
                         </div>
                         <input type="hidden" id="buyingShiftTime" name="buyingShiftTime" required>
+                        <div class="selected-shifts-display" id="selectedShiftsDisplay" style="display: none;">
+                            <span class="selected-label">선택된 시프트:</span>
+                            <div class="selected-shifts-list" id="selectedShiftsList"></div>
+                        </div>
                     </div>
                 </div>
 

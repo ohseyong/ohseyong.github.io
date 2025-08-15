@@ -505,6 +505,13 @@ body {
     color: #166534; 
 }
 
+.shift-headline .pill-multiple {
+    margin-right: 6px;
+    font-size: 12px;
+    padding: 2px 6px;
+    display: inline-block;
+}
+
 .shift-headline .arrow { 
     opacity: 0.6; 
     font-size: 14px;
@@ -686,6 +693,14 @@ body {
     font-size: 14px;
     transition: all 0.2s ease;
     background-color: white;
+    box-sizing: border-box;
+}
+
+/* 날짜 입력 필드 특별 스타일 */
+.form-group input[type="date"] {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .form-group input:focus,
@@ -730,6 +745,60 @@ body {
     background-color: #3b82f6;
     color: white;
     border-color: #3b82f6;
+}
+
+/* 다중 선택 관련 스타일 */
+.buying-shift-buttons .shift-btn.active {
+    background-color: #10b981;
+    border-color: #10b981;
+    position: relative;
+}
+
+.buying-shift-buttons .shift-btn.active::after {
+    content: '✓';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: #059669;
+    color: white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid white;
+}
+
+.selected-shifts-display {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.selected-label {
+    color: #059669;
+    font-weight: 500;
+    margin-right: 8px;
+}
+
+.selected-shifts-list {
+    display: inline-flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.selected-shift-tag {
+    background: #10b981;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
 }
 
 /* ===== 거래 유형 탭 ===== */
@@ -983,6 +1052,42 @@ body {
     .modal-content {
         width: 95%;
         margin: 20px;
+        max-height: 85vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .shift-form {
+        padding: 20px;
+        min-width: 0;
+    }
+
+    .form-group input[type="date"] {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    /* 모바일에서 폼 요소들이 모달을 벗어나지 않도록 */
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .shift-buttons {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .shift-btn {
+        min-width: 50px;
+        padding: 6px 10px;
+        font-size: 13px;
     }
 
     .form-actions { 
@@ -1084,12 +1189,19 @@ body {
     }
 
     .notification {
-        right: 10px;
-        left: 10px;
-        max-width: none;
+        right: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(100%);
+        max-width: calc(100vw - 40px);
         bottom: 30px;
         font-size: 13px;
         padding: 12px 16px;
+        width: auto;
+        text-align: center;
+    }
+
+    .notification.show {
+        transform: translateX(-50%) translateY(0);
     }
 
     .connection-status {
@@ -1118,5 +1230,19 @@ body {
     .calendar-link-btn {
         padding: 6px 12px;
         font-size: 12px;
+    }
+
+    /* 모바일에서 다중 선택 시프트 스타일 */
+    .shift-headline .pill-multiple {
+        font-size: 11px;
+        padding: 1px 4px;
+        margin-right: 3px;
+        display: inline-block;
+    }
+
+    /* 작은 모바일에서 시프트 헤드라인 줄바꿈 방지 */
+    .shift-headline {
+        flex-wrap: wrap;
+        gap: 2px;
     }
 }

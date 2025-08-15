@@ -38,12 +38,47 @@ class ShiftSwapUI {
                 const hiddenInput = shiftButtons?.nextElementSibling;
                 
                 if (shiftButtons && hiddenInput) {
-                    shiftButtons.querySelectorAll('.shift-btn').forEach(b => b.classList.remove('active'));
-                    e.target.classList.add('active');
-                    hiddenInput.value = e.target.dataset.shift;
+                    // 구하는 시프트 버튼인지 확인
+                    if (shiftButtons.classList.contains('buying-shift-buttons')) {
+                        // 다중 선택 로직
+                        e.target.classList.toggle('active');
+                        this.updateSelectedShiftsDisplay();
+                    } else {
+                        // 파는 시프트는 단일 선택
+                        shiftButtons.querySelectorAll('.shift-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        hiddenInput.value = e.target.dataset.shift;
+                    }
                 }
             });
         });
+    }
+
+    // 선택된 시프트 표시 업데이트
+    updateSelectedShiftsDisplay() {
+        const buyingButtons = document.querySelector('.buying-shift-buttons');
+        const hiddenInput = document.getElementById('buyingShiftTime');
+        const displayDiv = document.getElementById('selectedShiftsDisplay');
+        const listDiv = document.getElementById('selectedShiftsList');
+        
+        if (!buyingButtons || !hiddenInput || !displayDiv || !listDiv) return;
+        
+        const selectedShifts = Array.from(buyingButtons.querySelectorAll('.shift-btn.active'))
+            .map(btn => btn.dataset.shift);
+        
+        if (selectedShifts.length > 0) {
+            // 선택된 시프트들을 표시
+            listDiv.innerHTML = selectedShifts.map(shift => 
+                `<span class="selected-shift-tag">${shift}</span>`
+            ).join('');
+            displayDiv.style.display = 'block';
+            
+            // hidden input에 선택된 시프트들을 JSON 배열로 저장
+            hiddenInput.value = JSON.stringify(selectedShifts);
+        } else {
+            displayDiv.style.display = 'none';
+            hiddenInput.value = '';
+        }
     }
 
     // 역할 버튼 설정
@@ -369,18 +404,48 @@ class ShiftSwapUI {
         let cardContent = '';
         if (shift.type === 'shift') {
             const [date, sellingShift] = shift.sellingItem.split(' ');
-            const [_, buyingShift] = shift.buyingItem.split(' ');
             const formattedDate = new Date(date).toLocaleDateString('ko-KR', {
                 month: 'long',
                 day: 'numeric'
             });
+            
+            // 구하는 시프트 처리 - JSON 배열인지 먼저 확인
+            let buyingShiftsDisplay = '';
+            
+            // JSON 배열인지 확인 (대괄호로 시작하는지)
+            if (shift.buyingItem && shift.buyingItem.trim().startsWith('[')) {
+                try {
+                    const buyingShifts = JSON.parse(shift.buyingItem);
+                    if (Array.isArray(buyingShifts) && buyingShifts.length > 1) {
+                        // 다중 선택된 경우, 한 줄에 모든 시프트를 표시
+                        buyingShiftsDisplay = buyingShifts.map(shift => 
+                            `<span class="pill pill-buying pill-multiple">${shift}</span>`
+                        ).join(' ');
+                    } else if (Array.isArray(buyingShifts) && buyingShifts.length === 1) {
+                        // 단일 선택된 경우
+                        buyingShiftsDisplay = `<span class="pill pill-buying">${buyingShifts[0]}</span>`;
+                    } else {
+                        // 빈 배열인 경우
+                        buyingShiftsDisplay = `<span class="pill pill-buying">선택된 시프트 없음</span>`;
+                    }
+                } catch (e) {
+                    // JSON 파싱 실패 시 기존 방식으로 fallback
+                    const [_, buyingShift] = shift.buyingItem.split(' ');
+                    buyingShiftsDisplay = `<span class="pill pill-buying">${buyingShift || '알 수 없음'}</span>`;
+                }
+            } else {
+                // 기존 방식: 날짜와 시프트 분리
+                const [_, buyingShift] = shift.buyingItem.split(' ');
+                buyingShiftsDisplay = `<span class="pill pill-buying">${buyingShift || '알 수 없음'}</span>`;
+            }
+            
             const headlineHtml = `
                 <div class="shift-headline">
                     <span class="date-plain">${formattedDate}</span>
                     <span class="pill pill-selling">${sellingShift}</span>
                     <span class="postposition">로</span>
                     <span class="arrow">→</span>
-                    <span class="pill pill-buying">${buyingShift}</span>
+                    ${buyingShiftsDisplay}
                     <span class="headline-tail">구합니다</span>
                 </div>`;
             cardContent = `${headlineHtml}`;
@@ -544,12 +609,34 @@ class ShiftSwapUI {
 
     formatItem(item, type) {
         if (type === 'shift') {
+            // JSON 배열인지 확인 (대괄호로 시작하는지)
+            if (item && item.trim().startsWith('[')) {
+                try {
+                    const buyingShifts = JSON.parse(item);
+                    if (Array.isArray(buyingShifts) && buyingShifts.length > 0) {
+                        // 다중 선택된 경우, 모든 시프트를 표시
+                        if (buyingShifts.length === 1) {
+                            return buyingShifts[0];
+                        } else {
+                            return buyingShifts.join(', ');
+                        }
+                    }
+                } catch (e) {
+                    // JSON 파싱 실패 시 기존 방식 사용
+                }
+            }
+            
+            // 기존 방식: 날짜와 시프트 분리
             const [date, time] = item.split(' ');
-            const formattedDate = new Date(date).toLocaleDateString('ko-KR', {
-                month: 'long',
-                day: 'numeric'
-            });
-            return `${formattedDate} ${time}`;
+            if (date && time) {
+                const formattedDate = new Date(date).toLocaleDateString('ko-KR', {
+                    month: 'long',
+                    day: 'numeric'
+                });
+                return `${formattedDate} ${time}`;
+            } else {
+                return item || '알 수 없음'; // 파싱 실패 시 원본 반환
+            }
         } else {
             return new Date(item).toLocaleDateString('ko-KR', {
                 month: 'long',
