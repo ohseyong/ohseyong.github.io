@@ -1051,13 +1051,11 @@ body {
 
     .modal-content {
         width: 95%;
-        margin: 20px;
+        margin: 20px auto;
         max-height: 85vh;
         overflow-y: auto;
         overflow-x: hidden;
         position: relative;
-        left: 50%;
-        transform: translateX(-50%);
     }
 
     .shift-form {
@@ -1090,13 +1088,51 @@ body {
         font-size: 13px;
     }
 
+    /* 모바일에서 폼 요소 정렬 개선 */
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-group label {
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        font-size: 14px;
+        padding: 10px 12px;
+    }
+
+    /* 모바일에서 날짜 입력 필드 특별 처리 */
+    .form-group input[type="date"] {
+        font-size: 14px;
+        padding: 10px 12px;
+        min-height: 44px; /* 터치하기 쉽게 */
+    }
+
     .form-actions { 
         flex-direction: row; 
+        gap: 8px;
+        margin-top: 20px;
     }
 
     .form-actions .btn { 
         width: auto; 
         flex: 1; 
+        padding: 10px 16px;
+        font-size: 14px;
+        min-height: 44px; /* 터치하기 쉽게 */
+    }
+
+    /* 모바일에서 모달 내부 스크롤 개선 */
+    .modal-content {
+        margin: 10px;
+        width: calc(100% - 20px);
+    }
+
+    .shift-form {
+        padding: 16px;
     }
 
     .detail-actions {
@@ -1188,20 +1224,40 @@ body {
         font-size: 12px;
     }
 
+    /* 작은 모바일에서 토스트 크기 조정 */
     .notification {
-        right: 50%;
-        left: 50%;
-        transform: translateX(-50%) translateY(100%);
-        max-width: calc(100vw - 40px);
-        bottom: 30px;
+        right: 15px;
+        left: 15px;
+        max-width: none;
         font-size: 13px;
         padding: 12px 16px;
+    }
+
+    /* 작은 모바일에서 모달 크기 조정 */
+    .modal-content {
+        margin: 8px;
+        width: calc(100% - 16px);
+        max-height: 90vh;
+    }
+
+    .shift-form {
+        padding: 14px;
+    }
+
+    .notification {
+        right: 20px;
+        left: auto;
+        transform: translateY(100%);
+        max-width: calc(100vw - 40px);
+        bottom: 30px;
+        font-size: 14px;
+        padding: 14px 18px;
         width: auto;
-        text-align: center;
+        text-align: left;
     }
 
     .notification.show {
-        transform: translateX(-50%) translateY(0);
+        transform: translateY(0);
     }
 
     .connection-status {
