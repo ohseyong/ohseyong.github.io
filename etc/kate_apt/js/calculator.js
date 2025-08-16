@@ -1,5 +1,50 @@
 // ---------- 메인 계산기 로직 ----------
 
+// localStorage 키
+const STORAGE_KEY = 'kate_apt_calculator_data';
+
+// 저장된 데이터 불러오기
+function loadSavedData() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const data = JSON.parse(saved);
+      Object.keys(data).forEach(key => {
+        const element = document.getElementById(key);
+        if (element) {
+          element.value = data[key];
+        }
+      });
+      return true;
+    }
+  } catch (e) {
+    console.warn('저장된 데이터 불러오기 실패:', e);
+  }
+  return false;
+}
+
+// 현재 데이터 저장하기
+function saveCurrentData() {
+  try {
+    const data = {};
+    const ids = [
+      'price','cash','annualIncome','loanYears','annualRate',
+      'dsrLimitPct','existingMonthlyDebt','creditLoanRate','assessedRatioPct','holdingYears','annualAppreciationPct','targetSellPrice','ltvManualPct'
+    ];
+    
+    ids.forEach(id => {
+      const element = document.getElementById(id);
+      if (element && element.value !== '') {
+        data[id] = element.value;
+      }
+    });
+    
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (e) {
+    console.warn('데이터 저장 실패:', e);
+  }
+}
+
 // 기본값 설정
 function setDefaults() {
   // 번동주공 60.33㎡ 예시 기본값
@@ -14,6 +59,7 @@ function setDefaults() {
   document.getElementById('assessedRatioPct').value = '70';
   document.getElementById('holdingYears').value = '10';
   document.getElementById('annualAppreciationPct').value = '4';
+  document.getElementById('creditLoanRate').value = '5.0';
   // 목표 매도가: 기본값 제거(빈 값 유지)
   document.getElementById('targetSellPrice').value = '';
 }
@@ -22,20 +68,35 @@ function setDefaults() {
 function bindAutoCompute() {
   const ids = [
     'price','cash','annualIncome','loanYears','annualRate',
-    'dsrLimitPct','existingMonthlyDebt','assessedRatioPct','holdingYears','annualAppreciationPct','targetSellPrice'
+    'dsrLimitPct','existingMonthlyDebt','creditLoanRate','assessedRatioPct','holdingYears','annualAppreciationPct','targetSellPrice','ltvManualPct'
   ];
   
   ids.forEach(id => {
     const element = document.getElementById(id);
     if (element) {
-      element.addEventListener('input', compute);
-      element.addEventListener('change', compute);
+      element.addEventListener('input', () => {
+        compute();
+        saveCurrentData(); // 입력값 변경 시 자동 저장
+      });
+      element.addEventListener('change', () => {
+        compute();
+        saveCurrentData(); // 값 변경 시 자동 저장
+      });
     }
   });
   
   const calcBtn = document.getElementById('btnCalc');
   if (calcBtn) {
     calcBtn.addEventListener('click', compute);
+  }
+  
+  const resetBtn = document.getElementById('btnReset');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      localStorage.removeItem(STORAGE_KEY);
+      setDefaults();
+      compute();
+    });
   }
 }
 
@@ -55,6 +116,7 @@ function compute() {
   const holdingYears = parseInt(document.getElementById('holdingYears').value || '0', 10) || 0;
   const annualAppreciationPct = parseFloat(document.getElementById('annualAppreciationPct').value || '0') || 0;
   const targetSellPrice = valManToWon('targetSellPrice');
+  const creditLoanRate = parseFloat(document.getElementById('creditLoanRate').value || '0') || 0;
   const sellCostPct = 0; // 매도 부대비용율 제외
 
   // LTV 수동 입력 처리
@@ -75,6 +137,10 @@ function compute() {
 
   // 최종 대출 가능액
   const maxLoanAllowed = calculateMaxLoanAllowed(toNum(neededLoan), toNum(ltvMax), toNum(dsrMax));
+
+  // 부족 자본금 및 신용대출 이자 계산
+  const shortCapital = Math.max(0, toNum(neededLoan) - toNum(maxLoanAllowed));
+  const creditLoanMonthlyInterest = toNum(shortCapital) * (toNum(creditLoanRate) / 100) / 12;
 
   // 월납부액
   const monthlyPayment = annuityMonthlyPayment(toNum(maxLoanAllowed), toNum(rate), toNum(years));
@@ -113,7 +179,7 @@ function compute() {
     neededLoan, ltvPct, dsrCapMonthly, maxLoanAllowed, monthlyPayment,
     avgPrincipal, avgInterest, acqTax, brokerFee, stampTax, buyCostGrandTotal,
     annualPropTax, interestPaid, pnl, simpleGain, monthsConsidered,
-    ltvMax, dsrMax, neededLoan
+    ltvMax, dsrMax, neededLoan, shortCapital, creditLoanMonthlyInterest
   });
 }
 
@@ -123,7 +189,7 @@ function updateDisplay(results) {
     neededLoan, ltvPct, dsrCapMonthly, maxLoanAllowed, monthlyPayment,
     avgPrincipal, avgInterest, acqTax, brokerFee, stampTax, buyCostGrandTotal,
     annualPropTax, interestPaid, pnl, simpleGain, monthsConsidered,
-    ltvMax, dsrMax, neededLoan: neededLoanVal
+    ltvMax, dsrMax, neededLoan: neededLoanVal, shortCapital, creditLoanMonthlyInterest
   } = results;
 
   setText('neededLoan', eokManWonFmt(neededLoan));
@@ -150,8 +216,8 @@ function updateDisplay(results) {
   setText('ltvMax', eokManWonFmt(ltvMax));
   setText('dsrMax', eokManWonFmt(dsrMax));
   
-  const shortDiff = neededLoanVal - maxLoanAllowed;
-  setText('shortCapital', signedEokManWon(-shortDiff, false));
+  setText('shortCapital', signedEokManWon(-shortCapital, false));
+  setText('creditLoanMonthlyInterest', eokManWonFmt(creditLoanMonthlyInterest));
   
   const gapLoan = maxLoanAllowed - neededLoanVal;
   setText('gap', signedEokManWon(gapLoan, true));
@@ -159,7 +225,10 @@ function updateDisplay(results) {
 
 // 초기화
 function init() {
-  setDefaults();
+  // 저장된 데이터가 있으면 불러오고, 없으면 기본값 설정
+  if (!loadSavedData()) {
+    setDefaults();
+  }
   bindAutoCompute();
   compute();
 }

@@ -53,6 +53,10 @@
           <label>다른 대출 월 상환액 (만원, DSR계산을 위함)</label>
           <input type="text" id="existingMonthlyDebt" inputmode="numeric" placeholder="예: 0" />
         </div>
+        <div>
+          <label>신용대출(필요시) 금리 (%)</label>
+          <input type="number" id="creditLoanRate" min="0" max="20" step="0.1" placeholder="5.0" value="5.0" />
+        </div>
 
         <div>
           <label>공시가/시세 비율 (재산세 간이 계산용)</label>
@@ -77,6 +81,7 @@
 
       <div class="flex" style="margin-top:12px;">
         <button class="btn" id="btnCalc">계산하기</button>
+        <button class="btn" id="btnReset" style="background: linear-gradient(135deg, #6c757d, #495057);">저장 초기화</button>
         <span class="note">입력값 변경 시 자동으로 갱신돼</span>
       </div>
     </section>
@@ -110,6 +115,11 @@
           <div class="muted">최대 대출 대비 부족 자본금 <span class="tooltip">ⓘ<span class="tip">아파트 대출 가능 금액은 실거래가 아닌 시세 기준이므로 실제 대출 가능 금액은 더 높을 수 있음</span></span></div>
           <div class="value" id="shortCapital">-</div>
           <div class="kicker">= 필요대출 − 한도내 대출</div>
+        </div>
+        <div>
+          <div class="muted">부족분 신용대출 월 이자액</div>
+          <div class="value" id="creditLoanMonthlyInterest">-</div>
+          <div class="kicker">= 부족자본금 × 신용대출금리 ÷ 12</div>
         </div>
 
         <div style="grid-column: 1 / -1;">

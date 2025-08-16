@@ -184,6 +184,12 @@ hr.sep {
   padding:10px 12px; 
   cursor:pointer; 
   box-shadow: 0 6px 20px rgba(10,132,255,0.25); 
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(10,132,255,0.35);
 }
 
 .btn:active { 
