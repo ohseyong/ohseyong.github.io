@@ -8,6 +8,8 @@ class ShiftSwapApp {
         this.currentRoleFilter = 'all';
         this.currentTypeFilter = 'all';
         this.isLocalMode = false;
+        this.toastQueue = [];
+        this.isToastVisible = false;
         
         this.init();
     }
@@ -27,16 +29,18 @@ class ShiftSwapApp {
         }, 200);
         
         // 캘린더 서비스 초기화 및 자동 동기화
-        setTimeout(() => {
+        setTimeout(async () => {
             this.calendarService.init();
             // 페이지 로딩 시마다 캘린더 동기화 실행
-            this.calendarService.autoSync();
-        }, 100);
-        
-        // 통합 토스트 메시지 표시 (캘린더 동기화 후)
-        setTimeout(() => {
+            try {
+                await this.calendarService.autoSync();
+            } catch (error) {
+                console.error('자동 캘린더 동기화 실패:', error);
+            }
+            
+            // 캘린더 동기화 완료 후 토스트 메시지 표시
             this.showInitialToasts();
-        }, 1000);
+        }, 100);
     }
 
     // 이벤트 바인딩
@@ -168,7 +172,21 @@ class ShiftSwapApp {
             }
             
             sellingItem = `${shiftDate} ${sellingTime}`;
-            buyingItem = `${shiftDate} ${buyingTime}`;
+            
+            // 구하는 시프트가 다중 선택인지 확인
+            try {
+                const buyingShifts = JSON.parse(buyingTime);
+                if (Array.isArray(buyingShifts) && buyingShifts.length > 0) {
+                    // 다중 선택된 경우, 하나의 거래에 모든 구하는 시프트를 JSON으로 저장
+                    buyingItem = JSON.stringify(buyingShifts);
+                } else {
+                    // 빈 배열인 경우 단일 시프트로 처리
+                    buyingItem = `${shiftDate} ${buyingTime}`;
+                }
+            } catch (e) {
+                // JSON 파싱 실패 시 단일 시프트로 처리
+                buyingItem = `${shiftDate} ${buyingTime}`;
+            }
         } else {
             const sellingDayoff = formData.get('sellingDayoff');
             const buyingDayoff = formData.get('buyingDayoff');
@@ -196,10 +214,37 @@ class ShiftSwapApp {
         // Firebase 서비스를 통해 거래 추가 (중복 방지)
         const success = await this.firebaseService.addShift(shift);
         if (success) {
+            // 다중 선택인지 확인하여 적절한 메시지 표시
+            try {
+                const buyingShifts = JSON.parse(buyingItem);
+                if (Array.isArray(buyingShifts) && buyingShifts.length > 1) {
+                    this.showNotification(`${buyingShifts.length}개의 시프트를 구하는 거래가 등록되었습니다!`, 'success');
+                } else {
+                    this.showNotification('거래가 등록되었습니다!', 'success');
+                }
+            } catch (e) {
+                this.showNotification('거래가 등록되었습니다!', 'success');
+            }
             this.saveUserPreferences(name, role);
             this.hideModal('addShiftModal');
             this.resetForm();
         }
+    }
+
+    // 개별 시프트 생성 헬퍼 함수
+    async createShift(name, role, sellingItem, buyingItem, reason, type = null) {
+        const shift = {
+            name: name,
+            role: role,
+            type: type || this.currentSwapType,
+            sellingItem: sellingItem,
+            buyingItem: buyingItem,
+            reason: reason,
+            status: 'selling',
+            createdAt: new Date().toISOString()
+        };
+
+        return await this.firebaseService.addShift(shift);
     }
 
     // 사용자 선호도 저장
@@ -237,6 +282,12 @@ class ShiftSwapApp {
         document.querySelectorAll('.role-btn').forEach(btn => {
             btn.classList.remove('active');
         });
+        
+        // 다중 선택 표시 초기화
+        const selectedDisplay = document.getElementById('selectedShiftsDisplay');
+        if (selectedDisplay) {
+            selectedDisplay.style.display = 'none';
+        }
         
         this.switchSwapType('shift');
     }
@@ -294,17 +345,34 @@ class ShiftSwapApp {
         document.body.style.overflow = '';
     }
 
-    // 알림 표시
-    showNotification(message, type = 'info') {
+    // 알림 표시 (큐 시스템 적용)
+    showNotification(message, type = 'info', duration = 3000) {
+        this.toastQueue.push({ message, type, duration });
+        if (!this.isToastVisible) {
+            this.showNextToast();
+        }
+    }
+
+    // 다음 토스트 메시지 표시
+    showNextToast() {
+        if (this.toastQueue.length === 0) {
+            this.isToastVisible = false;
+            return;
+        }
+
+        this.isToastVisible = true;
+        const { message, type, duration } = this.toastQueue.shift();
+
         const notification = document.getElementById('notification');
         notification.textContent = message;
         notification.className = `notification ${type} show`;
-        
-        // 알림 설정 관련 메시지는 더 짧게 표시
-        const duration = message.includes('알림 설정') ? 2000 : 3000;
-        
+
         setTimeout(() => {
             notification.classList.remove('show');
+            // 애니메이션 시간을 기다린 후 다음 토스트 표시
+            setTimeout(() => {
+                this.showNextToast();
+            }, 500); // .notification의 transition 시간과 일치
         }, duration);
     }
 
@@ -345,45 +413,40 @@ class ShiftSwapApp {
         this.firebaseService.sendTestNotification();
     }
 
-    // 초기 토스트 메시지 표시
+    // 초기 토스트 메시지 표시 (큐 사용)
     showInitialToasts() {
         console.log('초기 토스트 메시지 표시 시작');
+        const toastDuration = 1000; // 모든 초기 토스트는 1초간 표시
+
+        // 1. 알림 설정 (연결됨 메시지는 연결 상태 변경 시 자동으로 표시되므로 제거)
+        const permission = Notification.permission;
+        console.log('알림 권한 상태:', permission);
+        const isIOSSafari = this.firebaseService.detectIOSSafari();
+        const isStandalone = window.navigator.standalone === true;
+
+        if (permission !== 'granted') {
+            this.showNotification('알림 설정 시 새 매물 등록 시 알림을 받을 수 있습니다', 'info', toastDuration);
+        } else if (isIOSSafari && !isStandalone) {
+            this.showNotification('iOS Safari에서는 홈 화면에 추가하면 알림을 받을 수 있습니다', 'info', toastDuration);
+        } else {
+            this.showNotification('알림이 설정되어 있습니다', 'success', toastDuration);
+        }
+
+        // 3. 캘린더 설정
+        const hasCalendarUrl = this.calendarService.calendarUrl;
+        const hasCalendarEvents = this.calendarService.calendarEvents.length > 0;
+        const hasLastCheck = this.calendarService.lastCheck;
+        console.log('캘린더 상태:', { hasCalendarUrl, hasCalendarEvents, hasLastCheck });
         
-        // 1. 연결됨 - 즉시 표시
-        this.ui.showNotification('연결됨', 'info');
-
-        // 2. 알림 설정 - 1.5초 후 표시
-        setTimeout(() => {
-            const permission = Notification.permission;
-            console.log('알림 권한 상태:', permission);
-            
-            // iOS Safari 감지
-            const isIOSSafari = this.firebaseService.detectIOSSafari();
-            const isStandalone = window.navigator.standalone === true;
-            
-            if (permission !== 'granted') {
-                this.ui.showNotification('알림 설정 시 새 매물 등록 시 알림을 받을 수 있습니다', 'info');
-            } else if (isIOSSafari && !isStandalone) {
-                this.ui.showNotification('iOS Safari에서는 홈 화면에 추가하면 알림을 받을 수 있습니다', 'info');
-            } else {
-                this.ui.showNotification('알림이 설정되어 있습니다', 'success');
-            }
-        }, 1500);
-
-        // 3. 캘린더 설정 - 2.5초 후 표시
-        setTimeout(() => {
-            const hasCalendarUrl = this.calendarService.calendarUrl;
-            const hasCalendarEvents = this.calendarService.calendarEvents.length > 0;
-            console.log('캘린더 상태:', { hasCalendarUrl, hasCalendarEvents });
-            
-            if (hasCalendarUrl && hasCalendarEvents) {
-                this.ui.showNotification('캘린더가 동기화된 상태입니다', 'success');
-            } else if (hasCalendarUrl) {
-                this.ui.showNotification('캘린더 설정은 되어 있지만 동기화가 필요합니다', 'info');
-            } else {
-                this.ui.showNotification('캘린더 설정 시 내가 가진 스케줄과 일치하는 매물이 강조 표시됩니다', 'info');
-            }
-        }, 2500);
+        if (hasCalendarUrl && hasCalendarEvents && hasLastCheck) {
+            this.showNotification('캘린더가 동기화된 상태입니다', 'success', toastDuration);
+        } else if (hasCalendarUrl && hasLastCheck) {
+            this.showNotification('캘린더 설정은 되어 있지만 동기화가 필요합니다', 'info', toastDuration);
+        } else if (hasCalendarUrl) {
+            this.showNotification('캘린더 설정은 되어 있지만 동기화가 필요합니다', 'info', toastDuration);
+        } else {
+            this.showNotification('캘린더 설정 시 내가 가진 스케줄과 일치하는 매물이 강조 표시됩니다', 'info', toastDuration);
+        }
     }
 }
 

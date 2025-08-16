@@ -4,6 +4,7 @@ class FirebaseService {
         this.app = app;
         this.isLocalMode = false;
         this.messaging = null;
+        this.hasShownConnectionToast = false;
         this.init();
     }
 
@@ -242,7 +243,10 @@ class FirebaseService {
 
             // 연결 상태 감지
             database.ref('.info/connected').on('value', (snapshot) => {
-                this.app.ui.updateConnectionStatus(snapshot.val());
+                // 초기 연결 시에는 토스트를 표시하지 않음
+                const isInitialConnection = !this.hasShownConnectionToast;
+                this.app.ui.updateConnectionStatus(snapshot.val(), !isInitialConnection);
+                this.hasShownConnectionToast = true;
             });
         } catch (error) {
             console.log('Firebase 연결 실패, 로컬 스토리지 모드로 전환:', error);
@@ -256,7 +260,8 @@ class FirebaseService {
         this.isLocalMode = true;
         this.app.isLocalMode = true;
         this.loadFromLocalStorage();
-        this.app.showNotification('로컬 모드로 실행 중입니다. (Firebase 연결 실패)', 'info');
+        // 로컬 모드 메시지는 다른 토스트들과 겹치지 않도록 제거
+        // this.app.showNotification('로컬 모드로 실행 중입니다. (Firebase 연결 실패)', 'info');
     }
 
     // 로컬 스토리지에서 데이터 로드

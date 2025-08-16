@@ -80,6 +80,15 @@
                 </button>
             </nav>
 
+            <!-- 캘린더 연동 안내 메시지 -->
+            <div class="calendar-info" id="calendarInfo" style="display: none;">
+                <div class="calendar-info-content">
+                    <span class="calendar-icon">📅</span>
+                    <span class="calendar-text">캘린더 연동 시 내 일정과 맞는 매물들을 강조해서 보여드려요</span>
+                    <button class="calendar-link-btn" id="openCalendarSync">연동하기</button>
+                </div>
+            </div>
+
             <!-- 필터 섹션 -->
             <div class="filter-section">
                 <div class="role-filter">
@@ -181,14 +190,18 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="buyingShift">사는 시프트 *</label>
-                        <div class="shift-buttons">
+                        <label for="buyingShift">사는 시프트 * (여러 개 선택 가능)</label>
+                        <div class="shift-buttons buying-shift-buttons">
                             <button type="button" class="shift-btn" data-shift="945">945</button>
                             <button type="button" class="shift-btn" data-shift="118">118</button>
                             <button type="button" class="shift-btn" data-shift="129">129</button>
                             <button type="button" class="shift-btn" data-shift="마감">마감</button>
                         </div>
                         <input type="hidden" id="buyingShiftTime" name="buyingShiftTime" required>
+                        <div class="selected-shifts-display" id="selectedShiftsDisplay" style="display: none;">
+                            <span class="selected-label">선택된 시프트:</span>
+                            <div class="selected-shifts-list" id="selectedShiftsList"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -311,7 +324,7 @@
                     <div class="detail-label">ICS 캘린더 링크</div>
                     <div class="detail-value">
                         <input type="url" id="calendarUrl" placeholder="https://sm-cal.apple.com/cal/..." class="form-input" style="width:100%;">
-                        <p style="font-size:12px; color:#64748b; margin-top:4px;">Apple 캘린더 공유 링크를 입력하세요</p>
+                        <p style="font-size:12px; color:#64748b; margin-top:4px;">회사에서 제공받은 캘린더 공유 링크를 입력하세요</p>
                     </div>
                 </div>
                 <div class="detail-item">
@@ -345,7 +358,6 @@
                 <div class="form-actions">
                     <button class="btn btn-secondary" id="closeCalendarSyncFooter">닫기</button>
                     <button class="btn btn-primary" id="saveCalendarSync">저장</button>
-                    <button class="btn btn-secondary" id="testCalendarSync">테스트</button>
                 </div>
             </div>
         </div>
