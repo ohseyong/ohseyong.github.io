@@ -12,13 +12,41 @@
     <p class="lead">현재 상황에 맞춰서 주담대 LTV/DSR 한도, 상환액, 유지비, 세금, 보유기간 손익을 계산해줄게. 하 만들기 힘들다</p>
   </header>
 
+  <section class="card" style="margin-bottom:16px;">
+    <h2>저장된 아파트 비교</h2>
+    <div id="savedApartmentsTable" style="overflow-x: auto;">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>아파트명</th>
+            <th>정보</th>
+            <th>액션</th>
+          </tr>
+        </thead>
+        <tbody id="savedApartmentsBody">
+          <!-- 저장된 데이터가 여기에 동적으로 추가됩니다 -->
+        </tbody>
+      </table>
+    </div>
+    <div id="savedApartmentsCards" class="apartment-cards">
+      <!-- 모바일용 카드가 여기에 동적으로 추가됩니다 -->
+    </div>
+    <div id="noSavedData" style="text-align: center; color: var(--muted); padding: 20px;">
+      저장된 아파트가 없습니다. 아래에서 계산 후 저장해보세요.
+    </div>
+  </section>
+
   <div class="container">
     <section class="card">
       <h2>입력란</h2>
       <div class="grid">
         <div>
-          <label>아파트 매매가 (만원)</label>
-          <input type="text" id="price" inputmode="numeric" placeholder="예: 62,000" />
+          <label>실제 거래가 (만원)</label>
+          <input type="text" id="price" inputmode="numeric" placeholder="예: 65,000" />
+        </div>
+        <div>
+          <label>KB부동산 시세 (만원)</label>
+          <input type="text" id="kbPrice" inputmode="numeric" placeholder="예: 62,000" />
         </div>
         <div>
           <label>박지은 보유 자본 (만원)</label>
@@ -42,7 +70,7 @@
 
         <div>
           <label>LTV 입력 (%)</label>
-          <input type="number" id="ltvManualPct" min="0" max="100" step="1" placeholder="70" value="80" />
+          <input type="number" id="ltvManualPct" min="0" max="100" step="1" placeholder="70" value="70" />
         </div>
 
         <div>
@@ -81,6 +109,7 @@
 
       <div class="flex" style="margin-top:12px;">
         <button class="btn" id="btnCalc">계산하기</button>
+        <button class="btn" id="btnSave" style="background: linear-gradient(135deg, #28a745, #20c997);">저장하기</button>
         <button class="btn" id="btnReset" style="background: linear-gradient(135deg, #6c757d, #495057);">저장 초기화</button>
         <span class="note">입력값 변경 시 자동으로 갱신돼</span>
       </div>
@@ -201,6 +230,111 @@
       가정 : (1) 원리금균등, 고정금리 (2) 취득세 좀 정확하지 않음. (3) 보유세: 공시가≈시세×입력비율 (4) DSR: (연소득×한도/12 − 기존 월 대출상환금)로 산정한 월상환 상한 기준. 오세용이 만듬.
     </div>
   </section>
+
+
+
+  <!-- 저장 모달 -->
+  <div id="saveModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <h3>아파트 저장</h3>
+      <p>저장할 아파트의 이름을 입력해주세요.</p>
+      <input type="text" id="saveName" placeholder="예: 번동주공 60.33㎡" />
+      <div class="modal-buttons">
+        <button class="btn" id="btnSaveConfirm" style="background: linear-gradient(135deg, #28a745, #20c997);">저장</button>
+        <button class="btn" id="btnSaveCancel" style="background: linear-gradient(135deg, #6c757d, #495057);">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 수정 모달 -->
+  <div id="editModal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 600px; max-height: 90vh; overflow-y: auto;">
+      <h3>아파트 정보 수정</h3>
+      <p>수정할 정보를 입력해주세요.</p>
+      
+      <div class="edit-form-grid">
+        <div>
+          <label>아파트 이름</label>
+          <input type="text" id="editName" placeholder="예: 번동주공 60.33㎡" />
+        </div>
+        
+        <div>
+          <label>실제 거래가 (만원)</label>
+          <input type="text" id="editPrice" inputmode="numeric" placeholder="예: 65,000" />
+        </div>
+        
+        <div>
+          <label>KB부동산 시세 (만원)</label>
+          <input type="text" id="editKbPrice" inputmode="numeric" placeholder="예: 62,000" />
+        </div>
+        
+        <div>
+          <label>보유 자본 (만원)</label>
+          <input type="text" id="editCash" inputmode="numeric" placeholder="예: 10,000" />
+        </div>
+        
+        <div>
+          <label>연봉 (만원)</label>
+          <input type="text" id="editAnnualIncome" inputmode="numeric" placeholder="예: 4,500" />
+        </div>
+        
+        <div>
+          <label>대출기간 (년)</label>
+          <input type="number" id="editLoanYears" min="1" max="40" step="1" placeholder="30" />
+        </div>
+        
+        <div>
+          <label>연 이자율 (%)</label>
+          <input type="number" id="editAnnualRate" min="0" max="20" step="0.01" placeholder="3.9" />
+        </div>
+        
+        <div>
+          <label>LTV 입력 (%)</label>
+          <input type="number" id="editLtvManualPct" min="0" max="100" step="1" placeholder="70" />
+        </div>
+        
+        <div>
+          <label>DSR 한도 (%)</label>
+          <input type="number" id="editDsrLimitPct" min="0" max="100" step="1" placeholder="40" />
+        </div>
+        
+        <div>
+          <label>다른 대출 월 상환액 (만원)</label>
+          <input type="text" id="editExistingMonthlyDebt" inputmode="numeric" placeholder="예: 0" />
+        </div>
+        
+        <div>
+          <label>신용대출 금리 (%)</label>
+          <input type="number" id="editCreditLoanRate" min="0" max="20" step="0.1" placeholder="5.0" />
+        </div>
+        
+        <div>
+          <label>공시가/시세 비율 (%)</label>
+          <input type="number" id="editAssessedRatioPct" min="0" max="100" step="1" placeholder="70" />
+        </div>
+        
+        <div>
+          <label>목표 보유 기간 (년)</label>
+          <input type="number" id="editHoldingYears" min="1" max="40" step="1" placeholder="10" />
+        </div>
+        
+        <div>
+          <label>연 시세상승률 (%)</label>
+          <input type="number" id="editAnnualAppreciationPct" min="-50" max="50" step="0.1" placeholder="2.5" />
+        </div>
+        
+        <div>
+          <label>목표 매도가 (만원)</label>
+          <input type="text" id="editTargetSellPrice" inputmode="numeric" placeholder="예: 70,000" />
+        </div>
+      </div>
+      
+      <div class="modal-buttons">
+        <button class="btn" id="btnEditConfirm" style="background: linear-gradient(135deg, #007bff, #0056b3);">수정</button>
+        <button class="btn" id="btnEditCancel" style="background: linear-gradient(135deg, #6c757d, #495057);">취소</button>
+      </div>
+    </div>
+  </div>
 
   <!-- JavaScript 모듈 로드 -->
   <script src="js/formatters.js"></script>

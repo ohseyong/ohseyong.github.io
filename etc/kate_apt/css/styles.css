@@ -28,6 +28,11 @@ body {
   -webkit-font-smoothing: antialiased; 
   -moz-osx-font-smoothing: grayscale; 
   line-height: 1.65;
+  /* Safari에서 렌더링 안정성 개선 */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  /* Safari에서 스크롤 성능 개선 */
+  -webkit-overflow-scrolling: touch;
 }
 
 h1 { 
@@ -53,8 +58,12 @@ p.lead {
   border: 1px solid rgba(11,15,21,0.06); 
   border-radius: 16px; 
   padding: 18px 16px 14px; 
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
   backdrop-filter: blur(14px) saturate(150%);
   box-shadow: 0 10px 30px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.35);
+  /* Safari에서 렌더링 안정성 개선 */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .card h2 { 
@@ -202,15 +211,22 @@ hr.sep {
 }
 
 .hero { 
-  display:flex; 
-  align-items:center; 
-  justify-content:space-between; 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
   padding: 12px 14px; 
-  border:1px solid rgba(11,15,21,0.08); 
+  border: 1px solid rgba(11,15,21,0.08); 
   border-radius: 14px; 
   background: linear-gradient(180deg, rgba(10,132,255,0.10), rgba(100,210,255,0.10)); 
   margin-bottom: 12px; 
-  backdrop-filter: blur(8px) saturate(120%); 
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  backdrop-filter: blur(8px) saturate(120%);
+  /* Safari 호환성을 위한 추가 속성 */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  /* Safari에서 flexbox 렌더링 개선 */
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .subhead { 
@@ -256,11 +272,23 @@ hr.sep {
 .hero .title { 
   font-size: 13px; 
   color: var(--muted); 
+  /* Safari에서 텍스트 렌더링 개선 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Safari에서 flexbox 아이템 안정성 */
+  flex-shrink: 0;
 }
 
 .hero .amount { 
   font-size: 24px; 
   font-weight: 800; 
+  /* Safari에서 텍스트 렌더링 개선 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Safari에서 flexbox 아이템 안정성 */
+  flex-shrink: 0;
+  /* Safari에서 숫자 렌더링 개선 */
+  font-variant-numeric: tabular-nums;
 }
 
 .subitems { 
@@ -291,4 +319,349 @@ hr.sep {
   h1 { 
     font-size: 22px; 
   }
+  
+  /* 모바일에서 테이블 최적화 */
+  .comparison-table {
+    font-size: 12px;
+    table-layout: auto;
+  }
+  
+  .comparison-table th,
+  .comparison-table td {
+    padding: 8px;
+  }
+  
+  .comparison-table th:first-child,
+  .comparison-table td:first-child {
+    width: 20%;
+  }
+  
+  .comparison-table th:nth-child(2),
+  .comparison-table td:nth-child(2) {
+    width: 65%;
+  }
+  
+  .comparison-table th:last-child,
+  .comparison-table td:last-child {
+    width: 15%;
+  }
+  
+  .apartment-info {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .edit-btn,
+  .delete-btn {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 12px;
+  }
+  
+  .card {
+    padding: 12px;
+  }
+  
+  .apartment-card {
+    padding: 12px;
+  }
+  
+  .apartment-card-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .apartment-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .apartment-name {
+    font-size: 13px;
+  }
+  
+  .apartment-card-label {
+    font-size: 10px;
+  }
+  
+  .apartment-card-value {
+    font-size: 11px;
+  }
+}
+
+/* 비교 테이블 스타일 */
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 13px;
+  table-layout: fixed;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(11,15,21,0.08);
+  vertical-align: top;
+}
+
+.comparison-table th:first-child,
+.comparison-table td:first-child {
+  width: 15%;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.comparison-table th:nth-child(2),
+.comparison-table td:nth-child(2) {
+  width: 70%;
+}
+
+.comparison-table th:last-child,
+.comparison-table td:last-child {
+  width: 15%;
+}
+
+.comparison-table th {
+  background: rgba(10,132,255,0.08);
+  font-weight: 600;
+  color: var(--fg);
+  position: sticky;
+  top: 0;
+}
+
+.comparison-table tr:hover {
+  background: rgba(10,132,255,0.03);
+}
+
+.apartment-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  font-size: 12px;
+}
+
+.apartment-info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.apartment-info-label {
+  color: var(--muted);
+  font-size: 11px;
+  margin-bottom: 2px;
+}
+
+.apartment-info-value {
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.edit-btn {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.edit-btn:hover {
+  background: linear-gradient(135deg, #0056b3, #004085);
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.delete-btn:hover {
+  background: linear-gradient(135deg, #c82333, #bd2130);
+}
+
+/* 모바일용 아파트 카드 스타일 */
+.apartment-cards {
+  display: none;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.apartment-card {
+  background: var(--panel);
+  border: 1px solid rgba(11,15,21,0.06);
+  border-radius: 12px;
+  padding: 16px;
+  backdrop-filter: blur(14px) saturate(150%);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.apartment-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  border-color: rgba(10,132,255,0.2);
+}
+
+.apartment-card:nth-child(even) {
+  background: linear-gradient(135deg, var(--panel), rgba(10,132,255,0.02));
+}
+
+.apartment-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(11,15,21,0.08);
+}
+
+.apartment-name {
+  font-weight: 600;
+  color: var(--fg);
+  font-size: 14px;
+}
+
+.apartment-delete-btn {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.apartment-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.apartment-card-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.apartment-card-label {
+  color: var(--muted);
+  font-size: 11px;
+  margin-bottom: 2px;
+}
+
+.apartment-card-value {
+  font-weight: 600;
+  color: var(--fg);
+}
+
+/* 모달 스타일 */
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: var(--panel);
+  margin: 15% auto;
+  padding: 24px;
+  border: 1px solid rgba(11,15,21,0.06);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  backdrop-filter: blur(14px) saturate(150%);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+.modal-content h3 {
+  margin: 0 0 12px 0;
+  color: var(--fg);
+}
+
+.modal-content p {
+  margin: 0 0 16px 0;
+  color: var(--muted);
+}
+
+.modal-content input {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.modal-buttons .btn {
+  min-width: 80px;
+}
+
+/* 수정 모달 폼 스타일 */
+.edit-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.edit-form-grid label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 2px 0 6px;
+  font-weight: 500;
+}
+
+.edit-form-grid input {
+  width: 100%;
+  padding: 8px 10px;
+  background: rgba(255,255,255,0.75);
+  color: var(--fg);
+  border: 1px solid rgba(11,15,21,0.12);
+  border-radius: 8px;
+  outline: none;
+  line-height: 1.4;
+  font-size: 13px;
+  backdrop-filter: blur(6px);
+}
+
+.edit-form-grid input::placeholder {
+  color: #7a8896;
+  font-size: 12px;
+}
+
+.edit-form-grid input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(10,132,255,0.1);
 }

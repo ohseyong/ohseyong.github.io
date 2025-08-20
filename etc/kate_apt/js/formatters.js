@@ -65,3 +65,9 @@ const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
 // 만원을 원으로 변환
 const manToWon = (nMan) => nMan * MANWON;
 const valManToWon = (id) => manToWon(valNum(id));
+
+// 원을 만원으로 변환 (포맷팅 포함)
+const wonToManFmt = (nWon) => {
+  if (nWon == null || isNaN(nWon)) return '';
+  return nf.format(Math.round(nWon / MANWON));
+};
