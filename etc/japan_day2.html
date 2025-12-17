@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오사카 2일차: 상세 가이드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #F3F4F6;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .timeline-line {
+            position: absolute;
+            left: 28px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #E5E7EB;
+            z-index: 0;
+        }
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        .check-circle {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        /* 체크 완료 스타일 */
+        .completed .check-circle {
+            background-color: #10B981;
+            border-color: #10B981;
+            color: white;
+        }
+        .completed .card-content {
+            opacity: 0.6;
+        }
+        /* 옵션 버튼 활성화 스타일 */
+        .option-btn.active {
+            background-color: #3B82F6;
+            color: white;
+            border-color: #3B82F6;
+        }
+        .option-btn.active .emoji-icon {
+            filter: grayscale(0);
+        }
+        .option-btn {
+            transition: all 0.2s;
+        }
+        /* 숨김 클래스 */
+        .hidden-option {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 pb-20">
+
+    <!-- Header -->
+    <div class="relative h-56 bg-gray-900 overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1590559899731-a382839e5549?q=80&w=800&auto=format&fit=crop" alt="Osaka" class="absolute w-full h-full object-cover opacity-60">
+        <div class="absolute bottom-0 left-0 p-6 text-white w-full bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent">
+            <div class="inline-block bg-yellow-400 text-black text-xs font-bold px-2 py-0.5 rounded mb-2">12월 17일 (수)</div>
+            <h1 class="text-3xl font-bold leading-tight">오사카 2일차<br>과거와 현재 여행</h1>
+            <p class="text-sm text-gray-200 mt-2 flex items-center gap-1">
+                <i class="fa-solid fa-shirt"></i> 드레스코드: 사진 잘 나오는 편한 복장
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="max-w-md mx-auto px-4 mt-8 relative">
+        <div class="timeline-line"></div>
+
+        <!-- ================= MORNING ================= -->
+        <div class="relative z-10 mb-10">
+            <div class="flex items-center gap-2 mb-6 ml-10">
+                <span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-3 py-1 rounded-full border border-yellow-200">☀️ 오전: 활기와 역사</span>
+            </div>
+
+            <!-- Item 1: Kuromon Market -->
+            <div class="flex gap-4 mb-8 group item-container">
+                <div class="flex-shrink-0 w-14 flex flex-col items-center pt-1">
+                    <div class="check-circle w-7 h-7 rounded-full border-2 border-gray-400 bg-white flex items-center justify-center text-sm text-transparent" onclick="toggleCheck(this)">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <span class="text-xs font-bold text-gray-500 mt-1">11:00</span>
+                </div>
+                <div class="flex-grow bg-white rounded-xl card-shadow overflow-hidden card-content">
+                    <div class="bg-orange-50 p-3 border-l-4 border-orange-400 flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-gray-800">쿠로몬 시장</h3>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Kuromon+Market+Osaka" target="_blank" class="text-gray-400 hover:text-blue-500 p-1">
+                            <i class="fa-solid fa-map-location-dot fa-lg"></i>
+                        </a>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm font-semibold text-gray-700 mb-2">"오사카의 부엌에서 즐기는 아점"</p>
+                        <p class="text-sm text-gray-600 mb-3 leading-relaxed">신선한 해산물과 길거리 음식이 가득한 재래시장입니다. 현지 분위기가 물씬 풍겨 구경하는 재미가 있습니다.</p>
+                        <div class="bg-gray-50 rounded p-3 text-sm space-y-1">
+                            <p>🍽️ <span class="font-bold text-gray-700">추천 메뉴:</span> 가리비 버터구이, 와규 꼬치, 참치회, 딸기 모찌</p>
+                            <p>💡 <span class="font-bold text-gray-700">Tip:</span> 입구부터 천천히 걸으며 맛있는 냄새가 나는 곳에서 멈추세요!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transit -->
+            <div class="flex gap-4 mb-8">
+                <div class="flex-shrink-0 w-14 flex justify-center">
+                    <div class="w-2 h-2 rounded-full bg-gray-300 mt-2"></div>
+                </div>
+                <div class="flex-grow py-1 px-3 bg-gray-100 rounded-lg text-xs text-gray-600 border border-gray-200">
+                    <div class="font-bold mb-1"><i class="fa-solid fa-train mr-1"></i>이동 (약 25분)</div>
+                    닛폰바시역 → (사카이스지/중앙선) → 모리노미야역
+                </div>
+            </div>
+
+            <!-- Item 2: Osaka Castle -->
+            <div class="flex gap-4 mb-8 group item-container">
+                <div class="flex-shrink-0 w-14 flex flex-col items-center pt-1">
+                    <div class="check-circle w-7 h-7 rounded-full border-2 border-gray-400 bg-white flex items-center justify-center text-sm text-transparent" onclick="toggleCheck(this)">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <span class="text-xs font-bold text-gray-500 mt-1">12:50</span>
+                </div>
+                <div class="flex-grow bg-white rounded-xl card-shadow overflow-hidden card-content">
+                    <div class="bg-green-50 p-3 border-l-4 border-green-500 flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-gray-800">오사카 성</h3>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Osaka+Castle" target="_blank" class="text-gray-400 hover:text-blue-500 p-1">
+                            <i class="fa-solid fa-map-location-dot fa-lg"></i>
+                        </a>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm font-semibold text-gray-700 mb-2">"걷지 않고 즐기는 웅장한 랜드마크"</p>
+                        <p class="text-sm text-gray-600 mb-3">오사카의 상징입니다. 공원이 매우 넓으므로 체력 안배가 중요합니다.</p>
+                        <div class="bg-green-50/50 rounded p-3 text-sm space-y-2 border border-green-100">
+                            <div class="flex gap-2 items-start">
+                                <span class="bg-green-200 text-green-800 text-xs px-1.5 rounded font-bold shrink-0 mt-0.5">필수</span>
+                                <span><strong>로드 트레인(꼬마 기차)</strong> 탑승 (편도 400엔). 걷지 말고 기차 타세요!</span>
+                            </div>
+                            <div class="flex gap-2 items-start">
+                                <span class="bg-yellow-200 text-yellow-800 text-xs px-1.5 rounded font-bold shrink-0 mt-0.5">사진</span>
+                                <span><strong>고자부네 놀잇배</strong> 탑승 추천. 황금색 배라 사진이 정말 잘 나옵니다.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= AFTERNOON (SELECTION) ================= -->
+        <div class="relative z-10 mb-10">
+            <div class="flex items-center gap-2 mb-4 ml-10">
+                <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full border border-blue-200">🌤️ 오후: 컨디션 체크</span>
+            </div>
+
+            <!-- Option Buttons -->
+            <div class="ml-14 mb-6 grid grid-cols-2 gap-3">
+                <button onclick="switchOption('A')" id="btn-option-a" class="option-btn bg-white border border-gray-200 p-3 rounded-xl shadow-sm flex flex-col items-center gap-1 active">
+                    <span class="text-2xl emoji-icon">💪</span>
+                    <span class="font-bold text-sm">체력 좋음</span>
+                    <span class="text-xs text-gray-500">주택박물관 코스</span>
+                </button>
+                <button onclick="switchOption('B')" id="btn-option-b" class="option-btn bg-white border border-gray-200 p-3 rounded-xl shadow-sm flex flex-col items-center gap-1">
+                    <span class="text-2xl emoji-icon grayscale opacity-70">☕️</span>
+                    <span class="font-bold text-sm">조금 쉼</span>
+                    <span class="text-xs text-gray-500">카페거리 직행</span>
+                </button>
+            </div>
+
+            <!-- OPTION A: Museum -->
+            <div id="option-a-content">
+                <div class="flex gap-4 mb-6 group item-container">
+                    <div class="flex-shrink-0 w-14 flex flex-col items-center pt-1">
+                        <div class="check-circle w-7 h-7 rounded-full border-2 border-gray-400 bg-white flex items-center justify-center text-sm text-transparent" onclick="toggleCheck(this)">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <span class="text-xs font-bold text-gray-500 mt-1">14:50</span>
+                    </div>
+                    <div class="flex-grow bg-white rounded-xl card-shadow overflow-hidden card-content">
+                        <div class="bg-indigo-50 p-3 border-l-4 border-indigo-500 flex justify-between items-center">
+                            <h3 class="font-bold text-lg text-gray-800">오사카 주택박물관</h3>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Osaka+Housing+Museum" target="_blank" class="text-gray-400 hover:text-blue-500 p-1">
+                                <i class="fa-solid fa-map-location-dot fa-lg"></i>
+                            </a>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-sm font-semibold text-gray-700 mb-2">"에도 시대 오사카로 타임슬립"</p>
+                            <p class="text-sm text-gray-600 mb-3">실내에 옛날 오사카 거리를 실물 크기로 재현했습니다. 날씨 상관없이 사진 찍기 좋습니다.</p>
+                            <div class="bg-indigo-50/50 p-2 rounded text-sm text-indigo-900">
+                                👘 <strong>Tip:</strong> 기모노 대여(500엔~)로 인생샷 남기기
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPTION B: Cafe Street (Hidden by default) -->
+            <div id="option-b-content" class="hidden-option">
+                 <div class="flex gap-4 mb-4">
+                    <div class="flex-shrink-0 w-14 flex justify-center"></div>
+                    <div class="flex-grow py-2 px-3 bg-pink-50 text-pink-700 rounded-lg text-sm border border-pink-100 text-center">
+                        🏃‍♂️ 바로 <strong>나카자키초역</strong>으로 이동하세요!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Common Destination: Nakazakicho -->
+            <div class="flex gap-4 mb-8 group item-container">
+                <div class="flex-shrink-0 w-14 flex flex-col items-center pt-1">
+                    <div class="check-circle w-7 h-7 rounded-full border-2 border-gray-400 bg-white flex items-center justify-center text-sm text-transparent" onclick="toggleCheck(this)">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <span class="text-xs font-bold text-gray-500 mt-1">16:00</span>
+                </div>
+                <div class="flex-grow bg-white rounded-xl card-shadow overflow-hidden card-content">
+                    <div class="bg-pink-50 p-3 border-l-4 border-pink-400 flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-gray-800">나카자키초 & 네코노지칸</h3>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Nakazakicho+Cafe+Street" target="_blank" class="text-gray-400 hover:text-blue-500 p-1">
+                            <i class="fa-solid fa-map-location-dot fa-lg"></i>
+                        </a>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm font-semibold text-gray-700 mb-2">"감성 카페 거리와 고양이 힐링"</p>
+                        <ul class="text-sm text-gray-600 space-y-3">
+                            <li class="flex gap-2">
+                                <span class="shrink-0 text-pink-500">☕️</span>
+                                <span><strong>카페 거리:</strong> 100년 넘은 목조 건물을 개조한 골목. 걷기만 해도 화보입니다.</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <span class="shrink-0 text-pink-500">🐈</span>
+                                <span><strong>네코노지칸:</strong> 일본 최초의 고양이 카페. 다다미방에서 편하게 쉴 수 있습니다.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= EVENING ================= -->
+        <div class="relative z-10 mb-10">
+            <div class="flex items-center gap-2 mb-6 ml-10">
+                <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full border border-purple-200">🌙 저녁: 테크 & 캐릭터</span>
+            </div>
+
+            <!-- Umeda Daimaru -->
+            <div class="flex gap-4 mb-8 group item-container">
+                <div class="flex-shrink-0 w-14 flex flex-col items-center pt-1">
+                    <div class="check-circle w-7 h-7 rounded-full border-2 border-gray-400 bg-white flex items-center justify-center text-sm text-transparent" onclick="toggleCheck(this)">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <span class="text-xs font-bold text-gray-500 mt-1">17:50</span>
+                </div>
+                <div class="flex-grow bg-white rounded-xl card-shadow overflow-hidden card-content">
+                    <div class="bg-red-50 p-3 border-l-4 border-red-500 flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-gray-800">우메다 다이마루 & 요도바시</h3>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Daimaru+Umeda+Nintendo" target="_blank" class="text-gray-400 hover:text-blue-500 p-1">
+                            <i class="fa-solid fa-map-location-dot fa-lg"></i>
+                        </a>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm font-semibold text-gray-700 mb-2">"귀여움과 기술의 만남"</p>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li>📍 <strong>다이마루 13층:</strong> 닌텐도 오사카(동숲/피크민), 포켓몬 센터. 굿즈 천국!</li>
+                            <li>📍 <strong>요도바시 카메라:</strong> 키보드 타건 및 가전 구경, 젤다 굿즈 득템 기회.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Apple & Parco -->
+            <div class="flex gap-4 mb-8 group item-container">
+                <div class="flex-shrink-0 w-14 flex flex-col items-center pt-1">
+                    <div class="check-circle w-7 h-7 rounded-full border-2 border-gray-400 bg-white flex items-center justify-center text-sm text-transparent" onclick="toggleCheck(this)">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <span class="text-xs font-bold text-gray-500 mt-1">19:30</span>
+                </div>
+                <div class="flex-grow bg-white rounded-xl card-shadow overflow-hidden card-content">
+                    <div class="bg-gray-100 p-3 border-l-4 border-gray-600 flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-gray-800">애플 & 파르코(PARCO)</h3>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Shinsaibashi+PARCO" target="_blank" class="text-gray-400 hover:text-blue-500 p-1">
+                            <i class="fa-solid fa-map-location-dot fa-lg"></i>
+                        </a>
+                    </div>
+                    <div class="p-4">
+                        <div class="mb-3">
+                            <p class="text-sm font-bold text-gray-700">🍎 애플 신사이바시</p>
+                            <p class="text-xs text-gray-500">통유리 계단이 시그니처, 인증샷 찍기 좋습니다.</p>
+                        </div>
+                        <div class="border-t pt-3">
+                            <div class="flex justify-between">
+                                <p class="text-sm font-bold text-gray-700">🛍️ 신사이바시 파르코 6층</p>
+                                <span class="text-xs text-red-500 font-bold">20:00 마감!</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-1">지브리(토토로, 센과 치히로) 샵. 고양이 버스 포토존 필수!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dinner -->
+            <div class="flex gap-4 mb-8 group item-container">
+                <div class="flex-shrink-0 w-14 flex flex-col items-center pt-1">
+                    <div class="check-circle w-7 h-7 rounded-full border-2 border-gray-400 bg-white flex items-center justify-center text-sm text-transparent" onclick="toggleCheck(this)">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <span class="text-xs font-bold text-gray-500 mt-1">20:30</span>
+                </div>
+                <div class="flex-grow bg-white rounded-xl card-shadow overflow-hidden card-content">
+                    <div class="bg-yellow-100 p-3 border-l-4 border-yellow-600 flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-gray-800">저녁: 야키니쿠</h3>
+                        <i class="fa-solid fa-utensils text-yellow-600"></i>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm font-semibold text-gray-700 mb-2">"피로를 녹이는 와규"</p>
+                        <p class="text-sm text-gray-600">부드러운 소고기에 생맥주 한 잔으로 마무리하세요.</p>
+                        <div class="mt-3 bg-gray-50 p-2 rounded text-sm text-gray-500">
+                             📍 추천: 난바/신사이바시 근처 '야키니쿠 이치(一)' 등
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Navigation Tips Footer -->
+    <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-3 z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+        <details class="group">
+            <summary class="flex justify-between items-center font-bold text-gray-800 cursor-pointer list-none px-2">
+                <span class="flex items-center gap-2"><i class="fa-solid fa-lightbulb text-yellow-500"></i> 이동 & 귀가 꿀팁</span>
+                <span class="transition group-open:rotate-180">
+                    <i class="fa-solid fa-chevron-up"></i>
+                </span>
+            </summary>
+            <div class="text-sm text-gray-600 mt-3 space-y-2 bg-gray-50 p-3 rounded-lg">
+                <p>🚇 <strong>지하철:</strong> 다니마치선(보라), 미도스지선(빨강) 위주</p>
+                <p>🚕 <strong>귀가:</strong> 저녁 후 숙소(시모데라)까지는 짐이 있거나 피곤하면 택시 추천 (기본요금 거리)</p>
+                <p>🚂 <strong>오사카성:</strong> 모리노미야 역 3-B 출구 공원 입구에서 기차 탑승</p>
+            </div>
+        </details>
+    </div>
+
+    <script>
+        // Checkmark Toggle Function
+        function toggleCheck(element) {
+            const container = element.closest('.item-container');
+            container.classList.toggle('completed');
+            
+            // Haptic feedback
+            if (navigator.vibrate) {
+                navigator.vibrate(40);
+            }
+        }
+
+        // Option Switch Function
+        function switchOption(option) {
+            const btnA = document.getElementById('btn-option-a');
+            const btnB = document.getElementById('btn-option-b');
+            const contentA = document.getElementById('option-a-content');
+            const contentB = document.getElementById('option-b-content');
+
+            if (option === 'A') {
+                // Activate A
+                btnA.classList.add('active');
+                btnA.classList.remove('text-gray-500');
+                btnA.querySelector('.emoji-icon').classList.remove('grayscale', 'opacity-70');
+                
+                // Deactivate B
+                btnB.classList.remove('active');
+                btnB.querySelector('.emoji-icon').classList.add('grayscale', 'opacity-70');
+
+                // Show Content A, Hide B
+                contentA.classList.remove('hidden-option');
+                contentB.classList.add('hidden-option');
+                
+            } else {
+                // Activate B
+                btnB.classList.add('active');
+                btnB.classList.remove('text-gray-500');
+                btnB.querySelector('.emoji-icon').classList.remove('grayscale', 'opacity-70');
+
+                // Deactivate A
+                btnA.classList.remove('active');
+                btnA.querySelector('.emoji-icon').classList.add('grayscale', 'opacity-70');
+
+                // Show Content B, Hide A
+                contentB.classList.remove('hidden-option');
+                contentA.classList.add('hidden-option');
+            }
+        }
+    </script>
+</body>
+</html>
+
