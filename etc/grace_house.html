@@ -183,7 +183,7 @@
         </div>
         <div class="top-inputs">
             <label class="field">
-                <span>초기 투자금 (자기자본)</span>
+                <span>나(그레이스)의 자기자본</span>
                 <div class="inp"><input type="number" id="initialInvestment" inputmode="decimal" value="9000"><em>만원</em></div>
             </label>
             <label class="field">
@@ -223,7 +223,7 @@
                 <div class="grp">
                     <p class="grp-title">집값 · 보증금</p>
                     <div class="grp-grid">
-                        <div class="gfield"><div class="glabel"><label for="jeonseDeposit">전세 보증금</label><button type="button" class="info-btn" data-tip-text="시나리오 1(전세)에서 가정하는 전세 보증금이에요. 자기자본으로 부족한 부분은 전세자금대출(최대 1.5억)로 충당한다고 계산해요.">i</button></div><div class="inp"><input type="number" id="jeonseDeposit" inputmode="decimal" value="20000"><em>만원</em></div></div>
+                        <div class="gfield"><div class="glabel"><label for="jeonseDeposit">전세 보증금</label><button type="button" class="info-btn" data-tip-text="시나리오 1(전세)에서 가정하는 전세 보증금이에요. 자기자본으로 부족한 부분은 전세자금대출(최대 2억)로 충당한다고 계산해요.">i</button></div><div class="inp"><input type="number" id="jeonseDeposit" inputmode="decimal" value="20000"><em>만원</em></div></div>
                         <div class="gfield"><div class="glabel"><label for="housePriceVilla">빌라/오피스텔 가격</label><button type="button" class="info-btn" data-tip-text="빌라·오피스텔 매수 시나리오(3·4·5번)에서 쓰는 매매가예요. 이 값으로 LTV 한도와 필요한 자기자본을 계산해요.">i</button></div><div class="inp"><input type="number" id="housePriceVilla" inputmode="decimal" value="30000"><em>만원</em></div></div>
                         <div class="gfield"><div class="glabel"><label for="banjeonseDeposit">반전세 보증금</label><button type="button" class="info-btn" data-tip-text="시나리오 2(반전세)의 보증금이에요. 전세보다 낮게 잡고 나머지는 월세로 냅니다. 보증금은 만기에 돌려받는 자산으로 계산해요.">i</button></div><div class="inp"><input type="number" id="banjeonseDeposit" inputmode="decimal" value="10000"><em>만원</em></div></div>
                         <div class="gfield"><div class="glabel"><label for="banjeonseMonthly">반전세 월세</label><button type="button" class="info-btn" data-tip-text="반전세에서 매달 내는 월세예요. 돌려받지 못하는 순수 비용이라 자산에 포함되지 않고, 월 저축액에서 차감돼요.">i</button></div><div class="inp"><input type="number" id="banjeonseMonthly" inputmode="decimal" value="50"><em>만원</em></div></div>
@@ -408,7 +408,7 @@
                 const rentDeposit = vars.jeonseDeposit;
                 subtitleText = `전세금 ${toEok(rentDeposit)} 기준`;
 
-                const maxRentLoan = 150000000;
+                const maxRentLoan = 200000000;
                 const minRequiredCapital = rentDeposit - maxRentLoan;
                 let minusLoanAmount = 0;
                 let rentLoan = 0;
@@ -441,7 +441,7 @@
                     return fv_of_savings + initialInvestment - minusLoanAmount;
                 };
                 results = { netAsset5: calcNetAsset(5), netAsset10: calcNetAsset(10) };
-                netAsset5Tooltip = `초기 투자금(${toEok(initialInvestment)})과 월 저축액(${toWonMonthly(savingsPerMonth)} = 실수령액 40% - 이자)을 연 ${(vars.investmentReturn * 100).toFixed(1)}% 수익률로 복리 계산한 결과임. (25년 6월 정책으로 전세대출 한도 1.5억 축소)`;
+                netAsset5Tooltip = `초기 투자금(${toEok(initialInvestment)})과 월 저축액(${toWonMonthly(savingsPerMonth)} = 실수령액 40% - 이자)을 연 ${(vars.investmentReturn * 100).toFixed(1)}% 수익률로 복리 계산한 결과임. (전세대출 최대 한도 2억 가정)`;
                 netAsset10Tooltip = netAsset5Tooltip;
 
             } else if (s.type === 'banjeonse') {
@@ -449,7 +449,7 @@
                 const monthlyRent = vars.banjeonseMonthly;
                 subtitleText = `보증금 ${toEok(deposit)} + 월세 ${toWonMonthly(monthlyRent)}`;
 
-                const maxRentLoan = 150000000;
+                const maxRentLoan = 200000000;
                 let depositLoan = 0, minusLoanAmount = 0, investedCapital = 0;
 
                 if (initialInvestment >= deposit) {
