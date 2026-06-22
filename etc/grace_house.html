@@ -771,9 +771,27 @@
     // 두 손가락 터치 확대 차단
     document.addEventListener('touchmove', e => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
 
+    // --- 입력값 브라우저 저장 (새로고침해도 유지) ---
+    const STORAGE_KEY = 'grace_house_inputs';
+    function saveInputs() {
+        const data = {};
+        Object.entries(inputs).forEach(([k, el]) => { data[k] = el.value; });
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+    }
+    function loadInputs() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return;
+            const data = JSON.parse(raw);
+            Object.entries(inputs).forEach(([k, el]) => {
+                if (data[k] !== undefined && data[k] !== '') el.value = data[k];
+            });
+        } catch (e) {}
+    }
+
     // --- Event Listeners ---
-    Object.values(inputs).forEach(el => el.addEventListener('input', calculateAndRender));
-    window.addEventListener('load', calculateAndRender);
+    Object.values(inputs).forEach(el => el.addEventListener('input', () => { saveInputs(); calculateAndRender(); }));
+    loadInputs();
     calculateAndRender();
     </script>
 </body>
