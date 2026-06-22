@@ -25,6 +25,7 @@
             color: var(--ink);
             overflow-x: hidden;
             line-height: 1.5;
+            word-break: keep-all; /* 한글 어절 단위 줄바꿈 (단어 중간에서 안 끊김) */
         }
 
         /* ---------- Sticky top bar with primary inputs ---------- */
@@ -166,7 +167,9 @@
         .grp:last-child { margin-bottom: 0; }
         .grp-title { font-size: 0.74rem; font-weight: 700; color: var(--faint); text-transform: uppercase; letter-spacing: .04em; margin: 0 0 10px; }
         .grp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .gfield > label { display: block; font-size: 0.76rem; color: var(--muted); font-weight: 500; margin-bottom: 4px; }
+        .glabel { display: flex; align-items: center; gap: 5px; margin-bottom: 4px; }
+        .gfield label { font-size: 0.76rem; color: var(--muted); font-weight: 500; }
+        .gfield .info-btn { width: 16px; height: 16px; font-size: 0.6rem; }
         .gfield .inp input { font-size: 16px; font-weight: 600; padding: 9px 36px 9px 11px; border-radius: 10px; }
     </style>
 </head>
@@ -181,7 +184,7 @@
         <div class="top-inputs">
             <label class="field">
                 <span>초기 투자금 (자기자본)</span>
-                <div class="inp"><input type="number" id="initialInvestment" inputmode="decimal" value="5500"><em>만원</em></div>
+                <div class="inp"><input type="number" id="initialInvestment" inputmode="decimal" value="9000"><em>만원</em></div>
             </label>
             <label class="field">
                 <span>내 연봉</span>
@@ -220,37 +223,37 @@
                 <div class="grp">
                     <p class="grp-title">집값 · 보증금</p>
                     <div class="grp-grid">
-                        <div class="gfield"><label for="jeonseDeposit">전세 보증금</label><div class="inp"><input type="number" id="jeonseDeposit" inputmode="decimal" value="20000"><em>만원</em></div></div>
-                        <div class="gfield"><label for="housePriceVilla">빌라/오피스텔 가격</label><div class="inp"><input type="number" id="housePriceVilla" inputmode="decimal" value="35000"><em>만원</em></div></div>
-                        <div class="gfield"><label for="banjeonseDeposit">반전세 보증금</label><div class="inp"><input type="number" id="banjeonseDeposit" inputmode="decimal" value="10000"><em>만원</em></div></div>
-                        <div class="gfield"><label for="banjeonseMonthly">반전세 월세</label><div class="inp"><input type="number" id="banjeonseMonthly" inputmode="decimal" value="50"><em>만원</em></div></div>
-                        <div class="gfield"><label for="housePriceApt">아파트 가격</label><div class="inp"><input type="number" id="housePriceApt" inputmode="decimal" value="45000"><em>만원</em></div></div>
-                        <div class="gfield"><label for="loanTerm">대출 만기</label><div class="inp"><input type="number" id="loanTerm" inputmode="decimal" value="30"><em>년</em></div></div>
+                        <div class="gfield"><div class="glabel"><label for="jeonseDeposit">전세 보증금</label><button type="button" class="info-btn" data-tip-text="시나리오 1(전세)에서 가정하는 전세 보증금이에요. 자기자본으로 부족한 부분은 전세자금대출(최대 1.5억)로 충당한다고 계산해요.">i</button></div><div class="inp"><input type="number" id="jeonseDeposit" inputmode="decimal" value="20000"><em>만원</em></div></div>
+                        <div class="gfield"><div class="glabel"><label for="housePriceVilla">빌라/오피스텔 가격</label><button type="button" class="info-btn" data-tip-text="빌라·오피스텔 매수 시나리오(3·4·5번)에서 쓰는 매매가예요. 이 값으로 LTV 한도와 필요한 자기자본을 계산해요.">i</button></div><div class="inp"><input type="number" id="housePriceVilla" inputmode="decimal" value="30000"><em>만원</em></div></div>
+                        <div class="gfield"><div class="glabel"><label for="banjeonseDeposit">반전세 보증금</label><button type="button" class="info-btn" data-tip-text="시나리오 2(반전세)의 보증금이에요. 전세보다 낮게 잡고 나머지는 월세로 냅니다. 보증금은 만기에 돌려받는 자산으로 계산해요.">i</button></div><div class="inp"><input type="number" id="banjeonseDeposit" inputmode="decimal" value="10000"><em>만원</em></div></div>
+                        <div class="gfield"><div class="glabel"><label for="banjeonseMonthly">반전세 월세</label><button type="button" class="info-btn" data-tip-text="반전세에서 매달 내는 월세예요. 돌려받지 못하는 순수 비용이라 자산에 포함되지 않고, 월 저축액에서 차감돼요.">i</button></div><div class="inp"><input type="number" id="banjeonseMonthly" inputmode="decimal" value="50"><em>만원</em></div></div>
+                        <div class="gfield"><div class="glabel"><label for="housePriceApt">아파트 가격</label><button type="button" class="info-btn" data-tip-text="아파트 매수 시나리오(6·7번)의 매매가예요. 디딤돌·생애최초·신혼부부 한도를 적용해 대출과 필요 자본을 계산해요.">i</button></div><div class="inp"><input type="number" id="housePriceApt" inputmode="decimal" value="45000"><em>만원</em></div></div>
+                        <div class="gfield"><div class="glabel"><label for="loanTerm">대출 만기</label><button type="button" class="info-btn" data-tip-text="주택담보대출(원리금균등)의 상환 기간이에요. 길수록 매달 갚는 돈은 줄지만 총 이자는 늘어나요.">i</button></div><div class="inp"><input type="number" id="loanTerm" inputmode="decimal" value="30"><em>년</em></div></div>
                     </div>
                 </div>
                 <div class="grp">
                     <p class="grp-title">대출 금리</p>
                     <div class="grp-grid">
-                        <div class="gfield"><label for="rateBank">시중은행</label><div class="inp"><input type="number" id="rateBank" inputmode="decimal" value="4.1" step="0.1"><em>%</em></div></div>
-                        <div class="gfield"><label for="rateDidimdolSingle">디딤돌(단독)</label><div class="inp"><input type="number" id="rateDidimdolSingle" inputmode="decimal" value="3.8" step="0.1"><em>%</em></div></div>
-                        <div class="gfield"><label for="rateDidimdolMarried">디딤돌(신혼)</label><div class="inp"><input type="number" id="rateDidimdolMarried" inputmode="decimal" value="3.1" step="0.1"><em>%</em></div></div>
-                        <div class="gfield"><label for="rateRent">전세자금대출</label><div class="inp"><input type="number" id="rateRent" inputmode="decimal" value="2.8" step="0.1"><em>%</em></div></div>
-                        <div class="gfield"><label for="rateMinus">마이너스통장</label><div class="inp"><input type="number" id="rateMinus" inputmode="decimal" value="5.2" step="0.1"><em>%</em></div></div>
+                        <div class="gfield"><div class="glabel"><label for="rateBank">시중은행</label><button type="button" class="info-btn" data-tip-text="일반 시중은행 주택담보대출 금리예요. 디딤돌 한도를 넘는 금액이나 생애최초가 적용되지 않을 때 이 금리가 쓰여요.">i</button></div><div class="inp"><input type="number" id="rateBank" inputmode="decimal" value="4.1" step="0.1"><em>%</em></div></div>
+                        <div class="gfield"><div class="glabel"><label for="rateDidimdolSingle">디딤돌(단독)</label><button type="button" class="info-btn" data-tip-text="혼자(단독) 생애최초로 받는 디딤돌 대출 금리예요. 한도 2.4억까지 이 저금리가 적용돼요.">i</button></div><div class="inp"><input type="number" id="rateDidimdolSingle" inputmode="decimal" value="3.8" step="0.1"><em>%</em></div></div>
+                        <div class="gfield"><div class="glabel"><label for="rateDidimdolMarried">디딤돌(신혼)</label><button type="button" class="info-btn" data-tip-text="신혼부부 디딤돌 대출 금리예요. 단독보다 금리가 낮고 한도도 3.2억으로 더 높아요.">i</button></div><div class="inp"><input type="number" id="rateDidimdolMarried" inputmode="decimal" value="3.1" step="0.1"><em>%</em></div></div>
+                        <div class="gfield"><div class="glabel"><label for="rateRent">전세자금대출</label><button type="button" class="info-btn" data-tip-text="전세·반전세 보증금 대출에 적용되는 금리예요.">i</button></div><div class="inp"><input type="number" id="rateRent" inputmode="decimal" value="2.8" step="0.1"><em>%</em></div></div>
+                        <div class="gfield"><div class="glabel"><label for="rateMinus">마이너스통장</label><button type="button" class="info-btn" data-tip-text="자기자본과 주택담보대출로도 부족할 때 메우는 신용대출 금리예요. 보통 가장 높아요.">i</button></div><div class="inp"><input type="number" id="rateMinus" inputmode="decimal" value="5.2" step="0.1"><em>%</em></div></div>
                     </div>
                 </div>
                 <div class="grp">
                     <p class="grp-title">상승률 · 수익률</p>
                     <div class="grp-grid">
-                        <div class="gfield"><label for="appreciationVilla">빌라/오피스텔 연 상승률</label><div class="inp"><input type="number" id="appreciationVilla" inputmode="decimal" value="1.5" step="0.1"><em>%</em></div></div>
-                        <div class="gfield"><label for="appreciationApt">아파트 연 상승률</label><div class="inp"><input type="number" id="appreciationApt" inputmode="decimal" value="5.0" step="0.1"><em>%</em></div></div>
-                        <div class="gfield"><label for="investmentReturn">전세 시 투자수익률</label><div class="inp"><input type="number" id="investmentReturn" inputmode="decimal" value="4.0" step="0.1"><em>%</em></div></div>
+                        <div class="gfield"><div class="glabel"><label for="appreciationVilla">빌라/오피스텔 연 상승률</label><button type="button" class="info-btn" data-tip-text="빌라 가격이 매년 오르는 비율이에요. 오피스텔은 이 값의 50%로 가정해 계산해요.">i</button></div><div class="inp"><input type="number" id="appreciationVilla" inputmode="decimal" value="1.5" step="0.1"><em>%</em></div></div>
+                        <div class="gfield"><div class="glabel"><label for="appreciationApt">아파트 연 상승률</label><button type="button" class="info-btn" data-tip-text="아파트 가격이 매년 오르는 비율이에요. 보통 빌라보다 높게 잡아요.">i</button></div><div class="inp"><input type="number" id="appreciationApt" inputmode="decimal" value="5.0" step="0.1"><em>%</em></div></div>
+                        <div class="gfield"><div class="glabel"><label for="investmentReturn">전세 시 투자수익률</label><button type="button" class="info-btn" data-tip-text="전세·반전세에서 집에 묶이지 않은 여유 자금을 굴렸을 때 기대하는 연 수익률이에요. 순자산 계산의 핵심 변수예요.">i</button></div><div class="inp"><input type="number" id="investmentReturn" inputmode="decimal" value="4.0" step="0.1"><em>%</em></div></div>
                     </div>
                 </div>
                 <div class="grp">
                     <p class="grp-title">배우자 (신혼부부용)</p>
                     <div class="grp-grid">
-                        <div class="gfield"><label for="spouseInvestment">배우자 초기 자본</label><div class="inp"><input type="number" id="spouseInvestment" inputmode="decimal" value="10000"><em>만원</em></div></div>
-                        <div class="gfield"><label for="spouseIncome">배우자 연봉</label><div class="inp"><input type="number" id="spouseIncome" inputmode="decimal" value="4000"><em>만원</em></div></div>
+                        <div class="gfield"><div class="glabel"><label for="spouseInvestment">배우자 초기 자본</label><button type="button" class="info-btn" data-tip-text="시나리오 7(신혼)에서 배우자가 보태는 자기자본이에요. 내 자본과 합쳐 아파트 매수에 사용해요.">i</button></div><div class="inp"><input type="number" id="spouseInvestment" inputmode="decimal" value="5000"><em>만원</em></div></div>
+                        <div class="gfield"><div class="glabel"><label for="spouseIncome">배우자 연봉</label><button type="button" class="info-btn" data-tip-text="시나리오 7(신혼)의 배우자 연봉이에요. 합산 소득으로 월 저축 여력을 계산해요.">i</button></div><div class="inp"><input type="number" id="spouseIncome" inputmode="decimal" value="5000"><em>만원</em></div></div>
                     </div>
                 </div>
             </div>
@@ -726,7 +729,11 @@
     const tipBody = document.getElementById('tipBody');
 
     function openSheet(el) { el.classList.add('open'); document.documentElement.style.overflow = 'hidden'; }
-    function closeSheet(el) { el.classList.remove('open'); document.documentElement.style.overflow = ''; }
+    function closeSheet(el) {
+        el.classList.remove('open');
+        // 다른 시트(예: 설정 위에 뜬 설명 시트)가 아직 열려 있으면 스크롤 잠금 유지
+        if (!document.querySelector('.sheet-back.open')) document.documentElement.style.overflow = '';
+    }
 
     document.getElementById('openSettings').addEventListener('click', () => openSheet(settingsSheet));
     document.querySelectorAll('.sheet-back').forEach(back => {
@@ -748,6 +755,14 @@
         tipBody.textContent = (window.__tips && window.__tips[idx]) || '';
         openSheet(tipSheet);
     }
+
+    // 고급 설정 항목별 설명: 정적 data-tip-text -> 설명 시트 (설정 시트 위에 표시)
+    settingsSheet.addEventListener('click', (e) => {
+        const btn = e.target.closest('.info-btn');
+        if (!btn || !btn.hasAttribute('data-tip-text')) return;
+        tipBody.textContent = btn.getAttribute('data-tip-text');
+        openSheet(tipSheet);
+    });
 
     // --- Event Listeners ---
     Object.values(inputs).forEach(el => el.addEventListener('input', calculateAndRender));
