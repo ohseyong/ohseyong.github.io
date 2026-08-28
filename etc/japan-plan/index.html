@@ -1,282 +1,200 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0f172a" />
-  <meta name="description" content="2026 홋카이도 4박 5일 렌터카 여행 플래너" />
-  <title>Hokkaido Road Trip · 2026</title>
-  <link rel="preconnect" href="https://unpkg.com" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <style>
-    :root{--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--paper:#f8fafc;--card:#fff;--blue:#2563eb;--sky:#e0f2fe;--green:#059669;--orange:#ea580c;--purple:#7c3aed}
-    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Noto Sans KR","Segoe UI",sans-serif;-webkit-font-smoothing:antialiased} a{color:inherit;text-decoration:none} button{font:inherit}
-    .wrap{max-width:760px;margin:0 auto;padding:0 16px 92px}
-    .hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 48%,#0369a1 100%);color:#fff;padding:calc(28px + env(safe-area-inset-top)) 20px 28px;border-radius:0 0 28px 28px;box-shadow:0 16px 40px rgba(15,23,42,.18)}
-    .eyebrow{font-size:12px;letter-spacing:.16em;font-weight:800;opacity:.8}.hero h1{font-size:31px;line-height:1.08;margin:10px 0 8px;letter-spacing:-.04em}.hero .route{font-size:14px;line-height:1.6;opacity:.9;max-width:650px}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.chip{padding:8px 10px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);border-radius:999px;font-size:12px;font-weight:700;backdrop-filter:blur(8px)}
-    .quick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0}.quick a,.quick button{appearance:none;border:1px solid var(--line);background:#fff;border-radius:14px;padding:11px 6px;text-align:center;font-size:11px;font-weight:800;box-shadow:0 3px 10px rgba(15,23,42,.04);cursor:pointer}.quick .icon{display:block;font-size:19px;margin-bottom:5px}
-    .now-card{position:relative;overflow:hidden;background:linear-gradient(135deg,#111827,#0f3b64);color:#fff;border-radius:21px;padding:17px 17px 16px;box-shadow:0 12px 28px rgba(15,23,42,.18);margin:10px 0 18px}.now-card:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(56,189,248,.16);right:-58px;top:-70px}.now-top{display:flex;justify-content:space-between;gap:12px;align-items:center;position:relative;z-index:1}.now-label{font-size:10px;font-weight:900;letter-spacing:.13em;color:#7dd3fc}.now-time{font-size:11px;color:#cbd5e1;font-weight:700}.now-title{position:relative;z-index:1;font-size:21px;font-weight:900;letter-spacing:-.035em;margin-top:8px}.now-desc{position:relative;z-index:1;font-size:12px;line-height:1.55;color:#dbeafe;margin-top:5px}.now-actions{position:relative;z-index:1;display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.now-actions button,.now-actions a{appearance:none;border:0;border-radius:11px;padding:9px 11px;font-size:11px;font-weight:900;cursor:pointer}.now-primary{background:#fff;color:#0f172a}.now-secondary{background:rgba(255,255,255,.11);color:#fff;border:1px solid rgba(255,255,255,.15)!important}.gps-note{font-size:10px;color:#bae6fd;margin-top:8px;position:relative;z-index:1;min-height:15px}
-    .flight{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px 16px;margin-bottom:19px;box-shadow:0 4px 14px rgba(15,23,42,.05)}.flight-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.flight-brand{font-size:11px;font-weight:900;color:#475569}.flight-no{font-size:12px;font-weight:900;background:#eff6ff;color:#1d4ed8;border-radius:999px;padding:6px 9px}.flight-route{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin-top:12px}.airport:last-child{text-align:right}.airport b{font-size:23px;letter-spacing:-.03em}.airport span{display:block;color:#64748b;font-size:11px;margin-top:2px}.flight-arrow{text-align:center;color:#94a3b8;font-size:18px}.flight-meta{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:11px;color:#64748b;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
-    .section{margin-top:24px}.section-head{display:flex;justify-content:space-between;align-items:end;margin:0 2px 10px}.section-head h2{margin:0;font-size:20px;letter-spacing:-.03em}.section-head p{margin:0;color:var(--muted);font-size:12px}
-    .weather-grid{display:grid;grid-template-columns:repeat(5,minmax(128px,1fr));gap:10px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:none}.weather-grid::-webkit-scrollbar{display:none}.weather{min-width:128px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px;box-shadow:0 4px 12px rgba(15,23,42,.04)}.weather.today{border:2px solid #38bdf8;padding:12px;background:#f0f9ff}.weather .day{font-size:11px;font-weight:900;color:var(--blue)}.weather .place{font-size:13px;font-weight:800;margin-top:2px}.weather .wx{font-size:25px;margin:9px 0 3px}.weather .temp{font-size:13px;font-weight:800}.weather .rain{font-size:11px;color:var(--muted);margin-top:3px}.weather .loading{font-size:11px;color:var(--muted);margin-top:12px}
-    #map{height:350px;border-radius:20px;border:1px solid var(--line);box-shadow:0 5px 16px rgba(15,23,42,.06);z-index:1}.num-marker{width:28px;height:28px;border-radius:50%;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;border:2px solid #fff;box-shadow:0 3px 7px rgba(15,23,42,.35)}
-    .day-card{background:#fff;border:1px solid var(--line);border-radius:22px;margin:14px 0;overflow:hidden;box-shadow:0 5px 16px rgba(15,23,42,.05)}.day-card.current{border:2px solid #38bdf8}.day-top{padding:18px 18px 14px;background:linear-gradient(180deg,#fff,#f8fafc);border-bottom:1px solid var(--line)}.day-meta{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.day-label{font-size:11px;font-weight:900;color:var(--blue);letter-spacing:.04em}.day-title{font-size:20px;font-weight:900;letter-spacing:-.035em;margin-top:4px}.day-sub{font-size:12px;color:var(--muted);margin-top:6px}.drive{white-space:nowrap;font-size:11px;font-weight:800;background:#eff6ff;color:#1d4ed8;padding:7px 9px;border-radius:999px}.day-actions{display:flex;gap:8px;margin-top:13px}.pill{display:inline-flex;align-items:center;justify-content:center;gap:5px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:8px 10px;font-size:11px;font-weight:800}.pill.primary{background:#0f172a;color:#fff;border-color:#0f172a}
-    .stops{padding:2px 18px 12px}.stop{display:grid;grid-template-columns:54px 1fr;gap:12px;position:relative;padding:17px 0}.stop:not(:last-child){border-bottom:1px dashed #e2e8f0}.time{font-size:12px;font-weight:900;color:#475569;padding-top:2px}.stop-title{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}.stop-title h3{font-size:15px;line-height:1.35;margin:0;font-weight:900;letter-spacing:-.02em}.done-btn{flex:0 0 25px;width:25px;height:25px;border:1.5px solid #cbd5e1;border-radius:50%;background:#fff;color:transparent;cursor:pointer}.stop.done .done-btn{background:#10b981;border-color:#10b981;color:#fff}.stop.done .stop-main{opacity:.55}.desc{font-size:12px;line-height:1.55;color:#64748b;margin:5px 0 9px}.mini{font-size:11px;line-height:1.5;color:#334155;background:#f8fafc;border-radius:9px;padding:8px 9px;margin-bottom:9px}.map-links{display:flex;gap:7px;flex-wrap:wrap}.map-links a{font-size:11px;font-weight:800;padding:7px 9px;border-radius:9px;border:1px solid var(--line);background:#fff}.map-links .google{color:#1d4ed8}.map-links .apple{color:#111827}
-    .apple-note{background:#f5f5f7;border:1px solid #e5e5e7;border-radius:11px;padding:9px 10px;font-size:11px;line-height:1.55;color:#424245;margin-bottom:9px}.apple-note b{color:#111}
-    .alert{border-radius:16px;padding:14px 15px;font-size:12px;line-height:1.6;border:1px solid}.alert strong{display:block;font-size:13px;margin-bottom:3px}.alert.blue{background:#eff6ff;border-color:#bfdbfe}.alert.orange{background:#fff7ed;border-color:#fed7aa}.alert.green{background:#ecfdf5;border-color:#a7f3d0}
-    .planb{display:grid;gap:10px}.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.info{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px}.info h3{font-size:13px;margin:0 0 8px}.info p,.info li{font-size:11px;line-height:1.55;color:#64748b}.info ul{padding-left:17px;margin:0}.info p{margin:0}
-    .footer{margin-top:28px;text-align:center;color:#94a3b8;font-size:11px;line-height:1.7}.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));width:min(724px,calc(100% - 24px));background:rgba(15,23,42,.94);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:7px;display:grid;grid-template-columns:repeat(6,1fr);z-index:999;box-shadow:0 12px 35px rgba(15,23,42,.28)}.bottom-nav a{color:#cbd5e1;text-align:center;font-size:10px;font-weight:800;padding:8px 2px;border-radius:11px}.bottom-nav a span{display:block;font-size:14px;margin-bottom:2px}.bottom-nav a:active{background:rgba(255,255,255,.1)}
-    @media(max-width:520px){.wrap{padding-left:12px;padding-right:12px}.hero{margin:0 -12px;padding-left:18px;padding-right:18px}.hero h1{font-size:28px}.quick{gap:6px}.quick a,.quick button{font-size:10px;padding:10px 4px}.weather-grid{margin-right:-12px}.info-grid{grid-template-columns:1fr}#map{height:300px}.day-top,.stops{padding-left:14px;padding-right:14px}.stop{grid-template-columns:48px 1fr}.flight-route{gap:7px}.airport b{font-size:21px}}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0f172a" />
+<meta name="description" content="2026 홋카이도 4박 5일 렌터카 여행 플래너" />
+<title>Hokkaido Road Trip · 2026</title>
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="icon" href="./icon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://unpkg.com" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+<link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <header class="hero">
-    <div class="wrap" style="padding-bottom:0">
-      <div class="eyebrow">HOKKAIDO · ROAD TRIP</div>
-      <h1>삿포로에서 시작하는<br>4박 5일 렌터카 여행</h1>
-      <div class="route">신치토세 → 삿포로 → 후라노·비에이 → 샤코탄 → 오타루 → 니세코·도야호 → 노보리베츠 → 신치토세</div>
-      <div class="chips">
-        <span class="chip">📅 2026. 8. 28 — 9. 1</span>
-        <span class="chip">✈️ PARATA AIR WE531</span>
-        <span class="chip">🚙 렌터카 루프</span>
-        <span class="chip">💑 Couple Trip</span>
-        <span class="chip">🛣️ 약 750–800 km</span>
-      </div>
+<header class="hero">
+  <div class="wrap" style="padding-bottom:0">
+    <div class="eyebrow">HOKKAIDO · ROAD TRIP</div>
+    <h1>삿포로에서 시작하는<br>4박 5일 렌터카 여행</h1>
+    <div class="route">신치토세 → 삿포로 → 후라노·비에이 → 샤코탄 → 오타루 → 니세코·도야호 → 노보리베츠 → 신치토세</div>
+    <div class="chips">
+      <span class="chip">📅 2026. 8. 28 — 9. 1</span><span class="chip">✈️ WE531 / WE532</span><span class="chip">🚙 렌터카 루프</span><span class="chip">💑 Couple Trip</span><span class="chip">🛣️ 약 750–800 km</span>
     </div>
-  </header>
+    <div class="statusbar"><span class="dot" id="onlineDot"></span><span id="onlineText">온라인 확인 중</span></div>
+  </div>
+</header>
 
-  <main class="wrap">
-    <div class="quick">
-      <a href="#today" onclick="jumpToday(event)"><span class="icon">📍</span>오늘 일정</a>
-      <button onclick="navigateNext()"><span class="icon">🧭</span>다음 목적지</button>
-      <a href="#route-map"><span class="icon">🗺️</span>전체 지도</a>
-      <button onclick="refreshWeather()"><span class="icon">🌦️</span>날씨 갱신</button>
+<main class="wrap">
+  <div class="quick">
+    <a href="#itinerary" onclick="jumpToday(event)"><span class="icon">📅</span>오늘 일정</a>
+    <button onclick="navigateNext()"><span class="icon">🧭</span>다음 목적지</button>
+    <button onclick="showMyWeather()"><span class="icon">📍</span>내 날씨</button>
+    <a href="#route-map"><span class="icon">🗺️</span>전체 지도</a>
+    <button onclick="sharePlan()"><span class="icon">↗️</span>공유</button>
+  </div>
+
+  <section class="now-card" id="nowCard">
+    <div class="now-top"><div class="now-label">LIVE TRIP GUIDE · JAPAN TIME</div><div class="now-time" id="nowClock">--:--</div></div>
+    <div class="now-title" id="nowTitle">현재 일정 계산 중…</div>
+    <div class="now-desc" id="nowDesc">여행 날짜와 현재 시간을 기준으로 다음 일정을 자동으로 표시합니다.</div>
+    <div class="now-actions"><button class="now-primary" id="nowNavBtn" onclick="navigateNext()">📍 현재 위치에서 길찾기</button><button class="now-secondary" id="nowJumpBtn" onclick="jumpToCurrentStop()">일정에서 보기</button></div>
+    <div class="gps-note" id="gpsNote">GPS는 버튼을 누를 때만 사용하며 서버에 저장하지 않습니다.</div>
+    <div class="progress-wrap"><div class="progress-line"><div class="progress-fill" id="progressFill"></div></div><div class="progress-text" id="progressText">일정 진행률 계산 중</div></div>
+  </section>
+
+  <div class="flight-grid">
+    <section class="flight">
+      <div class="flight-top"><div class="flight-brand">✈️ PARATA AIR · 출국</div><div class="flight-no">WE531</div></div>
+      <div class="flight-route"><div class="airport"><b>11:10</b><span>ICN · 인천 T1</span></div><div class="flight-arrow">→</div><div class="airport"><b>13:45</b><span>CTS · 신치토세</span></div></div>
+      <div class="flight-meta">8/28 금 · 약 2시간 35분<br><a target="_blank" href="https://www.google.com/search?q=WE531+flight+status">실시간 운항상태 확인 ↗</a></div>
+    </section>
+    <section class="flight">
+      <div class="flight-top"><div class="flight-brand">✈️ PARATA AIR · 귀국</div><div class="flight-no">WE532</div></div>
+      <div class="flight-route"><div class="airport"><b>14:10</b><span>CTS · 신치토세</span></div><div class="flight-arrow">→</div><div class="airport"><b>17:10</b><span>ICN · 인천</span></div></div>
+      <div class="flight-meta">9/1 화 · 약 3시간<br><span class="countdown" id="returnCountdown">귀국편 계산 중</span></div>
+    </section>
+  </div>
+
+  <section class="section" id="utilities">
+    <div class="section-head"><h2>여행 중 바로 쓰기</h2><p>현재 위치 기준</p></div>
+    <div class="tool-grid">
+      <button class="tool" onclick="openNearby('gas station')"><span>⛽</span>주유소</button>
+      <button class="tool" onclick="openNearby('parking')"><span>🅿️</span>주차장</button>
+      <button class="tool" onclick="openNearby('convenience store')"><span>🏪</span>편의점</button>
+      <button class="tool" onclick="openNearby('public restroom')"><span>🚻</span>화장실</button>
+      <a class="tool" target="_blank" href="https://www.road-info-prvs.mlit.go.jp/roadinfo/pcen/pcTop_00_0.html"><span>🚧</span>도로 통제</a>
+      <a class="tool" target="_blank" href="https://www.jma.go.jp/bosai/nowc/"><span>🌧️</span>비구름 레이더</a>
+      <a class="tool" target="_blank" href="https://www.kanko-shakotan.jp/"><span>🌊</span>샤코탄 현황</a>
+      <a class="tool" target="_blank" href="https://translate.google.com/?sl=ja&tl=ko"><span>あ</span>번역</a>
+      <button class="tool" id="wakeBtn" onclick="toggleWakeLock()"><span>☀️</span>화면 유지</button>
+      <button class="tool" onclick="refreshWeather()"><span>🔄</span>날씨 갱신</button>
+      <button class="tool" id="installBtn" style="display:none" onclick="installApp()"><span>📲</span>앱 설치</button>
+      <button class="tool" onclick="sharePlan()"><span>🔗</span>링크 공유</button>
     </div>
+    <div class="live-weather" id="liveWeather"></div>
+  </section>
 
-    <div class="now-card" id="nowCard">
-      <div class="now-top"><div class="now-label">LIVE TRIP GUIDE · JAPAN TIME</div><div class="now-time" id="nowClock">--:--</div></div>
-      <div class="now-title" id="nowTitle">현재 일정 계산 중…</div>
-      <div class="now-desc" id="nowDesc">여행 날짜와 현재 시각을 기준으로 다음 일정을 자동으로 표시합니다.</div>
-      <div class="now-actions">
-        <button class="now-primary" id="nowNavBtn" onclick="navigateNext()">📍 내 위치에서 길찾기</button>
-        <button class="now-secondary" id="nowJumpBtn" onclick="jumpToCurrentStop()">일정에서 보기</button>
-      </div>
-      <div class="gps-note" id="gpsNote">GPS는 길찾기 버튼을 누를 때만 사용합니다.</div>
+  <section class="section" id="weather">
+    <div class="section-head"><h2>여행지 날씨</h2><p>강수 · 바람 · 일몰까지</p></div>
+    <div class="weather-grid" id="weatherGrid"></div>
+    <div class="alert blue" style="margin-top:9px"><strong>날씨 운영 원칙</strong>샤코탄은 햇빛과 바람이 체감에 가장 큰 영향을 줍니다. 예보 카드의 바람 수치는 참고용이며, 신카무이곶 실제 개방 여부는 반드시 당일 관광협회 공지를 따르세요.</div>
+  </section>
+
+  <section class="section" id="route-map">
+    <div class="section-head"><h2>전체 루트 지도</h2><p>주요 거점을 한눈에</p></div>
+    <div id="map"></div>
+    <div class="map-tools"><button class="pill primary" onclick="locateOnMap()">📍 지도에 내 위치</button><button class="pill" onclick="navigateNext()">🧭 다음 목적지 내비</button><a class="pill" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=New+Chitose+Airport&destination=New+Chitose+Airport&waypoints=Sapporo%7CFarm+Tomita%7CShirogane+Blue+Pond%7CCape+Kamui%7COtaru%7CLake+Toya%7CNoboribetsu&travelmode=driving">Google 전체 루트</a></div>
+  </section>
+
+  <section class="section" id="itinerary">
+    <div class="section-head"><h2>Day by Day</h2><p>기존 일정 전체 + Apple 추가</p></div>
+
+    <article class="day-card" id="day1" data-date="2026-08-28">
+      <div class="day-top"><div class="day-meta"><div><div class="day-label">DAY 1 · 8/28 FRI</div><div class="day-title">인천 → 신치토세 → 삿포로</div><div class="day-sub">도착일은 무리하지 않고 삿포로. Apple Shop과 도심 저녁.</div></div><span class="drive">🚙 약 1시간</span></div><div class="day-actions"><a class="pill primary" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=New+Chitose+Airport&destination=Chateau+Hiragishi+Sapporo&travelmode=driving">공항 → 숙소</a><a class="pill" target="_blank" href="https://maps.apple.com/?saddr=New+Chitose+Airport&daddr=Sapporo&dirflg=d">Apple 지도</a></div></div>
+      <div class="stops">
+        <div class="stop" data-key="d1-flight" id="stop-d1-flight"><div class="time">11:10</div><div class="stop-main"><div class="stop-title"><h3>✈️ PARATA AIR WE531 출발</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">인천공항 T1 → 신치토세공항. 예정 도착 13:45.</div><div class="mini">🇰🇷 11:10 ICN → 🇯🇵 13:45 CTS · 한국/일본 시차 없음.</div></div></div>
+        <div class="stop" data-key="d1-arrive" id="stop-d1-arrive"><div class="time">13:45</div><div class="stop-main"><div class="stop-title"><h3>🛬 신치토세공항 도착</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">입국·수하물 수령 후 렌터카 셔틀. 실제 수속 상황에 따라 15시 전후 출발 목표.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=New+Chitose+Airport">Google Maps</a><a class="apple" target="_blank" href="https://maps.apple.com/?q=New+Chitose+Airport">Apple Maps</a></div></div></div>
+        <div class="stop" data-key="d1-rental" id="stop-d1-rental"><div class="time">15:00</div><div class="stop-main"><div class="stop-title"><h3>🚙 렌터카 수령 · 삿포로 출발</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">ETC 카드, NOC/CDW 보상, 기존 흠집을 확인하고 출발.</div><div class="mini">필수: 국제운전면허증 + 한국 면허증 + 여권.</div></div></div>
+        <div class="stop" data-key="d1-hotel" id="stop-d1-hotel"><div class="time">16:30</div><div class="stop-main"><div class="stop-title"><h3>🏨 삿포로 숙소 체크인</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">현재 후보: シャトーひらぎし. 무료 주차 후 지하철로 중심가 이동하면 도심 운전·주차 스트레스가 줄어듭니다.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Chateau+Hiragishi+Sapporo">숙소 지도</a><button onclick="copyText('シャトーひらぎし')">이름 복사</button></div></div></div>
+        <div class="stop" data-key="d1-bic" id="stop-d1-bic"><div class="time">17:30</div><div class="stop-main"><div class="stop-title"><h3> 비ック카메라 삿포로점 Apple Shop</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">현재 실제로 운영 중인 Apple Shop. さっぽろ東急百貨店 5층, Apple 제품 판매 및 공인 서비스 카운터. 영업 10:00–20:00.</div><div class="apple-note"><b>직영 Apple Store는 아니지만 현재 삿포로에서 방문 가능한 공식 Apple Shop.</b> 삿포로역에 붙어 있어 이후 오도리 방향으로 걸어 내려오기 좋습니다.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Bic+Camera+Sapporo+Apple+Shop">Google Maps</a><a class="apple" target="_blank" href="https://maps.apple.com/?q=Bic+Camera+Sapporo">Apple Maps</a></div></div></div>
+        <div class="stop" data-key="d1-oldapple" id="stop-d1-oldapple"><div class="time">18:10</div><div class="stop-main"><div class="stop-title"><h3> 구 Apple Store Sapporo 자리 <span class="optional">선택</span></h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">2006년 오픈해 2016년 폐점한 옛 직영점 자리. 오도리 산책 중 5~10분 성지순례.</div><div class="mini">당시 주소: 札幌市中央区南1条西3丁目8-20</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=3-8-20+Minami+1+Jonishi+Sapporo">옛 매장 위치</a></div></div></div>
+        <div class="stop" data-key="d1-city" id="stop-d1-city"><div class="time">18:30</div><div class="stop-main"><div class="stop-title"><h3>🍜 오도리 → 다누키코지 → 스스키노</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">징기스칸·스프카레·스시 중 선택하고 첫날 밤 산책. 비가 와도 상점가 위주라 대응하기 좋음.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Tanukikoji+Shopping+Street+Sapporo">다누키코지</a><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Susukino+Sapporo">스스키노</a></div></div></div>
+        <div class="stop" data-key="d1-moiwa" id="stop-d1-moiwa"><div class="time">21:00</div><div class="stop-main"><div class="stop-title"><h3>🌃 모이와산 야경 <span class="optional">날씨 좋으면</span></h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">시야가 맑고 체력이 남을 때만. 흐리면 과감히 생략하고 일찍 취침해 다음날 06:30 출발에 집중.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Mt+Moiwa+Ropeway">Google Maps</a></div></div></div>
+      </div><div class="memo"><textarea data-note="day1" placeholder="Day 1 메모 · 식당, 주차 위치, 체크인 정보 등을 적어두세요. 이 기기에만 저장됩니다."></textarea></div>
+    </article>
+
+    <article class="day-card" id="day2" data-date="2026-08-29">
+      <div class="day-top"><div class="day-meta"><div><div class="day-label">DAY 2 · 8/29 SAT</div><div class="day-title">후라노 · 비에이 절경 데이</div><div class="day-sub">꽃밭 → 언덕 드라이브 → 청의 호수 → 숲속 야경.</div></div><span class="drive">🚙 약 250 km</span></div><div class="day-actions"><a class="pill primary" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=Sapporo&destination=Ningle+Terrace+Furano&waypoints=Farm+Tomita%7CShikisai+no+Oka%7CPatchwork+Road+Biei%7CShirogane+Blue+Pond%7CShirahige+Falls&travelmode=driving">오늘 전체 경로</a></div></div>
+      <div class="stops">
+        <div class="stop" data-key="d2-depart" id="stop-d2-depart"><div class="time">06:30</div><div class="stop-main"><div class="stop-title"><h3>🌅 삿포로 출발</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">아침 교통량 전에 동쪽으로 빠져나가 관광 시간을 확보.</div></div></div>
+        <div class="stop" data-key="d2-tomita" id="stop-d2-tomita"><div class="time">09:00</div><div class="stop-main"><div class="stop-title"><h3>🌼 Farm Tomita</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">라벤더 절정은 지났지만 계절 꽃과 후라노 풍경을 가볍게 감상. 45~60분 정도.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Farm+Tomita+Hokkaido">Google Maps</a><a class="apple" target="_blank" href="https://maps.apple.com/?q=Farm+Tomita+Hokkaido">Apple Maps</a></div></div></div>
+        <div class="stop" data-key="d2-shikisai" id="stop-d2-shikisai"><div class="time">10:30</div><div class="stop-main"><div class="stop-title"><h3>🌈 Shikisai-no-Oka</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">8월 말 꽃밭은 이곳에 시간을 더 배분. 넓은 구릉과 색띠 풍경을 사진으로 남기기.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Shikisai-no-Oka">Google Maps</a></div></div></div>
+        <div class="stop" data-key="d2-lunch" id="stop-d2-lunch"><div class="time">12:00</div><div class="stop-main"><div class="stop-title"><h3>🍛 비에이 점심</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">비에이 시내에서 점심. 이후 언덕 구간을 천천히 드라이브.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=restaurants+Biei+Hokkaido">근처 식당</a></div></div></div>
+        <div class="stop" data-key="d2-patchwork" id="stop-d2-patchwork"><div class="time">13:00</div><div class="stop-main"><div class="stop-title"><h3>🌾 패치워크 로드</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">세븐스타 나무·켄과 메리 나무 같은 점보다 언덕길 자체를 즐기는 구간. 마음에 드는 곳에서 멈추기.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Patchwork+Road+Biei">Google Maps</a></div></div></div>
+        <div class="stop" data-key="d2-bluepond" id="stop-d2-bluepond"><div class="time">15:00</div><div class="stop-main"><div class="stop-title"><h3>💎 청의 호수</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">빛과 날씨에 따라 색이 달라지는 비에이 대표 풍경.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Shirogane+Blue+Pond+Biei">Google Maps</a></div></div></div>
+        <div class="stop" data-key="d2-falls" id="stop-d2-falls"><div class="time">15:45</div><div class="stop-main"><div class="stop-title"><h3>💦 시라히게 폭포</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">청의 호수에서 가까워 같이 묶는 짧은 포인트. 다리 위에서 보고 후라노로.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Shirahige+Falls+Biei">Google Maps</a></div></div></div>
+        <div class="stop" data-key="d2-checkin" id="stop-d2-checkin"><div class="time">17:30</div><div class="stop-main"><div class="stop-title"><h3>🏨 후라노 숙소 체크인</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">잠깐 쉬고 저녁 닝구르테라스 준비. 숙소는 확정 후 아래 예약정보에 기록.</div></div></div>
+        <div class="stop" data-key="d2-ningle" id="stop-d2-ningle"><div class="time">18:30</div><div class="stop-main"><div class="stop-title"><h3>🌲 Ningle Terrace</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">해가 지고 숲속 오두막 조명이 켜지는 시간이 커플 여행 분위기에 가장 좋음.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Ningle+Terrace+Furano">Google Maps</a></div></div></div>
+      </div><div class="memo"><textarea data-note="day2" placeholder="Day 2 메모"></textarea></div>
+    </article>
+
+    <article class="day-card" id="day3" data-date="2026-08-30">
+      <div class="day-top"><div class="day-meta"><div><div class="day-label">DAY 3 · 8/30 SUN</div><div class="day-title">샤코탄 블루 → 오타루</div><div class="day-sub">가장 긴 드라이브. 바람과 햇빛을 가장 많이 타는 날.</div></div><span class="drive">🚙 약 300 km</span></div><div class="day-actions"><a class="pill primary" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=Furano&destination=Otaru+Canal&waypoints=Cape+Kamui%7CShimamui+Coast%7CSakaimachi+Street+Otaru&travelmode=driving">오늘 전체 경로</a><a class="pill" target="_blank" href="https://www.kanko-shakotan.jp/">곶 개방 확인</a></div></div>
+      <div class="stops">
+        <div class="stop" data-key="d3-depart" id="stop-d3-depart"><div class="time">06:30</div><div class="stop-main"><div class="stop-title"><h3>☕ 후라노 출발</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">중간 휴식 포함 4시간 전후. 오늘은 일찍 출발할수록 유리.</div></div></div>
+        <div class="stop" data-key="d3-kamui" id="stop-d3-kamui"><div class="time">11:00</div><div class="stop-main"><div class="stop-title"><h3>🌊 신카무이곶</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">이번 여행의 핵심 풍경. 산책 왕복은 약 40~60분 이상 여유를 잡기.</div><div class="mini">⚠️ 강풍 시 산책로가 갑자기 닫힐 수 있으므로 공식 관광협회 공지를 먼저 확인.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Cape+Kamui+Hokkaido">Google Maps</a><a target="_blank" href="https://www.kanko-shakotan.jp/">당일 현황</a></div></div></div>
+        <div class="stop" data-key="d3-uni" id="stop-d3-uni"><div class="time">12:45</div><div class="stop-main"><div class="stop-title"><h3>🟠 샤코탄 생우니 점심</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">8월 말은 성게 시즌 막바지. 바다 상태와 재고에 따라 품절될 수 있어 너무 늦지 않게 먹기.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=%E7%A9%8D%E4%B8%B9+%E3%82%A6%E3%83%8B%E4%B8%BC">우니동 검색</a></div></div></div>
+        <div class="stop" data-key="d3-shimamui" id="stop-d3-shimamui"><div class="time">14:15</div><div class="stop-main"><div class="stop-title"><h3>🪨 시마무이 해안 전망대</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">전망 위주로 20~30분. 이후 오타루까지 해안도로 드라이브.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Shimamui+Coast+Hokkaido">Google Maps</a></div></div></div>
+        <div class="stop" data-key="d3-sakaimachi" id="stop-d3-sakaimachi"><div class="time">16:10</div><div class="stop-main"><div class="stop-title"><h3>🛍️ 오타루 사카이마치</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">상점들이 닫기 전에 먼저 둘러보기. 디저트·유리·오르골 구경.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Sakaimachi+Street+Otaru">Google Maps</a></div></div></div>
+        <div class="stop" data-key="d3-canal" id="stop-d3-canal"><div class="time">17:20</div><div class="stop-main"><div class="stop-title"><h3>🌆 오타루 운하 · 석양</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">해질 무렵부터 조명이 켜지는 시간까지. 날씨 카드의 일몰 시간을 참고.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Otaru+Canal">Google Maps</a></div></div></div>
+        <div class="stop" data-key="d3-dinner" id="stop-d3-dinner"><div class="time">18:30</div><div class="stop-main"><div class="stop-title"><h3>🍣 오타루 스시 · 숙박</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">저녁 스시 후 운하 도보권 숙박. 가장 운전량이 많은 날이므로 늦게까지 무리하지 않기.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=sushi+Otaru">스시 검색</a></div></div></div>
+      </div><div class="memo"><textarea data-note="day3" placeholder="Day 3 메모 · 우니 식당 후보 등을 적어두세요"></textarea></div>
+    </article>
+
+    <article class="day-card" id="day4" data-date="2026-08-31">
+      <div class="day-top"><div class="day-meta"><div><div class="day-label">DAY 4 · 8/31 MON</div><div class="day-title">요테이산 · 도야호 · 노보리베츠</div><div class="day-sub">드라이브 풍경을 즐기고 마지막 밤은 온천 료칸.</div></div><span class="drive">🚙 약 190 km</span></div><div class="day-actions"><a class="pill primary" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=Otaru&destination=Noboribetsu+Onsen&waypoints=Fukidashi+Park%7CNiseko%7CLake+Toya%7CNoboribetsu+Jigokudani&travelmode=driving">오늘 전체 경로</a></div></div>
+      <div class="stops">
+        <div class="stop" data-key="d4-depart" id="stop-d4-depart"><div class="time">08:30</div><div class="stop-main"><div class="stop-title"><h3>🚙 오타루 출발</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">국도 393호 쪽으로 니세코·요테이산 방향 남하.</div></div></div>
+        <div class="stop" data-key="d4-fukidashi" id="stop-d4-fukidashi"><div class="time">10:15</div><div class="stop-main"><div class="stop-title"><h3>🏔️ 쿄고쿠 후키다시 공원</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">요테이산 자락에서 쉬어가는 포인트. 날씨가 좋으면 산 풍경이 훌륭함.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Fukidashi+Park+Hokkaido">Google Maps</a></div></div></div>
+        <div class="stop" data-key="d4-niseko" id="stop-d4-niseko"><div class="time">11:30</div><div class="stop-main"><div class="stop-title"><h3>🥪 니세코 · 요테이산 드라이브</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">전망 좋은 구간을 달리고 점심. 비가 심하면 체류시간을 줄여도 됨.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Niseko+Hokkaido">Google Maps</a></div></div></div>
+        <div class="stop" data-key="d4-toya" id="stop-d4-toya"><div class="time">13:30</div><div class="stop-main"><div class="stop-title"><h3>💙 도야호</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">호숫가와 전망 포인트를 컨디션 따라 선택. 비가 강하면 30~60분 정도만.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Lake+Toya+Hokkaido">Google Maps</a></div></div></div>
+        <div class="stop" data-key="d4-jigoku" id="stop-d4-jigoku"><div class="time">16:30</div><div class="stop-main"><div class="stop-title"><h3>🌋 노보리베츠 지옥계곡</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">빛과 체력이 괜찮으면 체크인 전 핵심 전망을 먼저 보고, 길게 걷는 코스는 다음날 아침으로 넘기기.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Noboribetsu+Jigokudani">Google Maps</a></div></div></div>
+        <div class="stop" data-key="d4-ryokan" id="stop-d4-ryokan"><div class="time">17:30</div><div class="stop-main"><div class="stop-title"><h3>♨️ 노보리베츠 온천 료칸</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">이번 여행에서 숙박비를 쓸 곳. 가이세키 저녁 + 노천탕으로 마지막 밤 마무리.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Noboribetsu+Onsen">Google Maps</a></div></div></div>
+      </div><div class="memo"><textarea data-note="day4" placeholder="Day 4 메모"></textarea></div>
+    </article>
+
+    <article class="day-card" id="day5" data-date="2026-09-01">
+      <div class="day-top"><div class="day-meta"><div><div class="day-label">DAY 5 · 9/1 TUE</div><div class="day-title">노보리베츠 → 신치토세 → 인천</div><div class="day-sub">WE532 14:10 출발에 맞춰 반납·셔틀 시간을 역산.</div></div><span class="drive">🚙 약 1시간</span></div><div class="day-actions"><a class="pill primary" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=Noboribetsu+Onsen&destination=New+Chitose+Airport&travelmode=driving">공항 경로</a></div></div>
+      <div class="stops">
+        <div class="stop" data-key="d5-breakfast" id="stop-d5-breakfast"><div class="time">07:30</div><div class="stop-main"><div class="stop-title"><h3>🍚 료칸 조식 · 마지막 온천</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">체크아웃 준비. 귀국일이라 시간을 과하게 늘리지 않기.</div></div></div>
+        <div class="stop" data-key="d5-morning" id="stop-d5-morning"><div class="time">08:30</div><div class="stop-main"><div class="stop-title"><h3>🌋 지옥계곡 · 오유누마 <span class="optional">전날 못 봤다면</span></h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">전날 충분히 봤다면 생략. 09:45 출발을 절대 밀지 않는 범위에서 짧게.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Oyunuma+Pond+Noboribetsu">Google Maps</a></div></div></div>
+        <div class="stop" data-key="d5-depart" id="stop-d5-depart"><div class="time">09:45</div><div class="stop-main"><div class="stop-title"><h3>🚙 노보리베츠 출발</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">신치토세 렌터카 영업소까지 약 1시간. 주유와 반납 절차까지 감안.</div></div></div>
+        <div class="stop" data-key="d5-returncar" id="stop-d5-returncar"><div class="time">10:50</div><div class="stop-main"><div class="stop-title"><h3>⛽ 마지막 주유 · 렌터카 반납</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">주유 영수증을 보관하고 차량 확인 후 공항 셔틀. 업체별 반납 장소가 다르므로 예약서를 우선.</div><div class="map-links"><button onclick="openNearby('gas station')">근처 주유소</button><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=New+Chitose+Airport+rental+car">렌터카 영업소</a></div></div></div>
+        <div class="stop" data-key="d5-airport" id="stop-d5-airport"><div class="time">11:20</div><div class="stop-main"><div class="stop-title"><h3>🧳 신치토세공항 · 체크인 · 점심</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">출발 약 2시간 50분 전 공항 도착 목표. 체크인 후 점심과 마지막 쇼핑.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=New+Chitose+Airport">공항 지도</a></div></div></div>
+        <div class="stop" data-key="d5-flight" id="stop-d5-flight"><div class="time">14:10</div><div class="stop-main"><div class="stop-title"><h3>✈️ PARATA AIR WE532 출발</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">신치토세 CTS 14:10 → 인천 ICN 17:10. 8/31 이후 적용되는 시간표 기준.</div><div class="mini">🇯🇵 14:10 CTS → 🇰🇷 17:10 ICN</div></div></div>
+        <div class="stop" data-key="d5-arrive" id="stop-d5-arrive"><div class="time">17:10</div><div class="stop-main"><div class="stop-title"><h3>🇰🇷 인천 도착</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">4박 5일 홋카이도 로드트립 종료.</div></div></div>
+      </div><div class="memo"><textarea data-note="day5" placeholder="Day 5 메모"></textarea></div>
+    </article>
+  </section>
+
+  <section class="section" id="planb">
+    <div class="section-head"><h2>날씨가 틀어지면</h2><p>렌터카 여행의 장점</p></div>
+    <div class="planb">
+      <div class="alert orange"><strong>🌬️ 신카무이곶 강풍 통제</strong>기다리며 시간을 버리지 말고 시마무이 → 요이치 → 오타루로 일찍 이동. 오타루 사카이마치와 운하에 시간을 더 배분.</div>
+      <div class="alert blue"><strong>🌧️ 비에이·후라노 비</strong>꽃밭 체류를 줄이고 청의 호수·시라히게 폭포 위주. 닝구르테라스는 약한 비라면 오히려 분위기가 좋을 수 있음.</div>
+      <div class="alert green"><strong>☀️ 샤코탄만 맑음</strong>샤코탄의 햇빛 좋은 시간을 최대한 활용. 곶과 해안 체류를 늘리고 오타루 도착을 조금 늦춰도 됨.</div>
     </div>
+  </section>
 
-    <div class="flight" id="flight">
-      <div class="flight-top"><div class="flight-brand">✈️ PARATA AIR · 오늘 출국편</div><div class="flight-no">WE531</div></div>
-      <div class="flight-route">
-        <div class="airport"><b>11:10</b><span>ICN · 인천 T1</span></div>
-        <div class="flight-arrow">→</div>
-        <div class="airport"><b>13:45</b><span>CTS · 신치토세</span></div>
-      </div>
-      <div class="flight-meta"><span>비행시간 약 2시간 35분</span><span>현지시간 기준 · 한국/일본 시차 없음</span></div>
+  <section class="section" id="booking">
+    <div class="section-head"><h2>예약 정보 보관</h2><p>입력값은 이 기기 localStorage에만 저장</p></div>
+    <div class="info-grid">
+      <div class="info"><h3>🏨 8/28 삿포로</h3><div class="field"><label>숙소</label><input data-field="hotel1" value="シャトーひらぎし (후보)" /></div><div class="field"><label>메모</label><input data-field="hotel1memo" placeholder="주차/체크인 등" /></div></div>
+      <div class="info"><h3>🏨 8/29 후라노</h3><div class="field"><label>숙소</label><input data-field="hotel2" placeholder="확정 후 입력" /></div><div class="field"><label>메모</label><input data-field="hotel2memo" placeholder="주차/체크인 등" /></div></div>
+      <div class="info"><h3>🏨 8/30 오타루</h3><div class="field"><label>숙소</label><input data-field="hotel3" placeholder="확정 후 입력" /></div><div class="field"><label>메모</label><input data-field="hotel3memo" placeholder="주차/체크인 등" /></div></div>
+      <div class="info"><h3>♨️ 8/31 노보리베츠</h3><div class="field"><label>료칸</label><input data-field="hotel4" placeholder="확정 후 입력" /></div><div class="field"><label>석식 시간</label><input data-field="hotel4memo" placeholder="예: 18:30" /></div></div>
+      <div class="info"><h3>🚙 렌터카</h3><div class="field"><label>업체/지점</label><input data-field="rental" placeholder="업체명" /></div><div class="field"><label>반납 주의사항</label><input data-field="rentalmemo" placeholder="주유/셔틀/연락처" /></div></div>
+      <div class="info"><h3>🔒 저장 방식</h3><p>이 칸에 입력한 내용은 seyong.me 서버로 전송하지 않고 현재 브라우저에만 저장합니다. 그래도 카드번호·비밀번호 같은 민감정보는 입력하지 마세요.</p><button class="pill" style="margin-top:8px" onclick="resetTrip()">체크·메모 전체 초기화</button></div>
     </div>
+  </section>
 
-    <section class="section" id="weather">
-      <div class="section-head"><h2>여행지 날씨</h2><p>페이지를 열 때 자동 갱신</p></div>
-      <div class="weather-grid" id="weatherGrid"></div>
-      <div class="alert blue" style="margin-top:10px"><strong>날씨 판단 포인트</strong>샤코탄은 햇빛과 바람의 영향이 가장 큽니다. 비에이보다 샤코탄의 맑은 날을 우선하고, 신카무이곶은 강풍 시 산책로가 당일 통제될 수 있으니 출발 직전 공식 공지를 확인하세요.</div>
-    </section>
+  <section class="section" id="checklist">
+    <div class="section-head"><h2>출발·운전 체크</h2><p>렌터카 기준</p></div>
+    <div class="info-grid">
+      <div class="info"><h3>🪪 운전 필수</h3><ul><li>국제운전면허증</li><li>한국 운전면허증</li><li>여권</li><li>ETC 카드</li><li>NOC/CDW 보상 범위 확인</li></ul></div>
+      <div class="info"><h3>🚙 차 안에</h3><ul><li>충전 케이블 / 차량용 충전기</li><li>우산·얇은 바람막이</li><li>생수와 간식</li><li>주차·톨게이트 결제수단</li><li>렌터카 긴급연락처</li></ul></div>
+      <div class="info"><h3>📱 폰 준비</h3><ul><li>Google Maps 오프라인 지도</li><li>eSIM 데이터 확인</li><li>숙소 주소 일본어 캡처</li><li>이 페이지 홈 화면 추가</li><li>운전 중 화면 유지 기능 활용</li></ul></div>
+      <div class="info"><h3>🆘 일본 긴급번호</h3><p><b>110</b> 경찰<br><b>119</b> 구급·소방<br><br>사고 시 안전 확보 → 경찰 → 렌터카 업체 지침을 따르세요.</p></div>
+    </div>
+  </section>
 
-    <section class="section" id="route-map">
-      <div class="section-head"><h2>전체 루트</h2><p>핀을 누르면 장소 확인</p></div>
-      <div id="map"></div>
-    </section>
+  <div class="footer">Weather: Open‑Meteo · Map: OpenStreetMap / Leaflet<br>도로 통제: 일본 국토교통성 · 비구름: 일본 기상청<br>오프라인 시 일정·메모는 계속 열 수 있지만 실시간 날씨·지도 타일은 제한될 수 있습니다.</div>
+</main>
 
-    <section class="section" id="itinerary">
-      <div class="section-head"><h2>Day by Day</h2><p>체크는 이 기기에 저장됩니다</p></div>
-
-      <article class="day-card" id="day1" data-date="2026-08-28">
-        <div class="day-top">
-          <div class="day-meta"><div><div class="day-label">DAY 1 · 8/28 FRI</div><div class="day-title">인천 → 신치토세 → 삿포로</div><div class="day-sub">WE531 도착 후 렌터카, 삿포로 첫날 저녁</div></div><span class="drive">🚙 약 1시간</span></div>
-          <div class="day-actions"><a class="pill primary" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&origin=New+Chitose+Airport&destination=Sapporo&travelmode=driving">Google 경로</a><a class="pill" target="_blank" rel="noopener" href="https://maps.apple.com/?saddr=New+Chitose+Airport&daddr=Sapporo&dirflg=d">Apple 지도</a></div>
-        </div>
-        <div class="stops">
-          <div class="stop" data-key="d1-flight" id="stop-d1-flight"><div class="time">11:10</div><div class="stop-main"><div class="stop-title"><h3>✈️ PARATA AIR WE531 출발</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">인천공항 T1 → 신치토세공항. 예정 도착 13:45, 비행시간 약 2시간 35분.</div><div class="mini">🇰🇷 11:10 ICN → 🇯🇵 13:45 CTS · 한국과 일본은 시차가 없습니다.</div></div></div>
-          <div class="stop" data-key="d1-1" id="stop-d1-1"><div class="time">13:45</div><div class="stop-main"><div class="stop-title"><h3>🛬 신치토세공항 도착</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">입국·수하물 수령 후 렌터카 셔틀 이동.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=New+Chitose+Airport">Google Maps</a><a class="apple" target="_blank" href="https://maps.apple.com/?q=New+Chitose+Airport">Apple Maps</a></div></div></div>
-          <div class="stop" data-key="d1-2" id="stop-d1-2"><div class="time">15:00</div><div class="stop-main"><div class="stop-title"><h3>🚙 렌터카 수령 · 삿포로 출발</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">ETC 카드, NOC/CDW 보상 범위, 기존 흠집을 확인하고 출발.</div><div class="mini">💡 국제운전면허증 + 한국 면허증 + 여권 3종을 바로 꺼낼 수 있게 준비.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=New+Chitose+Airport&destination=Sapporo&travelmode=driving">삿포로로 출발</a></div></div></div>
-          <div class="stop" data-key="d1-3" id="stop-d1-3"><div class="time">16:30</div><div class="stop-main"><div class="stop-title"><h3>🏨 삿포로 숙소 체크인</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">첫날 숙소는 삿포로 1박. 현재 후보: シャトーひらぎし — 무료 주차를 활용하고 지하철로 중심가 이동하기 좋은 타입.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Chateau+Hiragishi+Sapporo">숙소 지도</a></div></div></div>
-          <div class="stop" data-key="d1-apple" id="stop-d1-apple"><div class="time">17:45</div><div class="stop-main"><div class="stop-title"><h3> 구 Apple Store 삿포로 자리</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">오도리·스스키노로 나가는 길에 짧게 들르는 Apple 성지순례 포인트. Apple Store Sapporo는 2006년 문을 열어 2016년 폐점했습니다.</div><div class="apple-note"><b>현재 홋카이도에는 Apple 직영 Apple Store가 없습니다.</b><br>그래서 실제 존재하지 않는 매장을 넣는 대신, 예전 삿포로 직영점 주소를 일정에 넣었습니다. 당시 주소: 南1条西3丁目8-20.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=3-8-20+Minami+1+Jonishi+Chuo+Ward+Sapporo">옛 매장 위치</a><a class="apple" target="_blank" href="https://maps.apple.com/?q=3-8-20+Minami+1+Jonishi+Sapporo">Apple Maps</a></div></div></div>
-          <div class="stop" data-key="d1-4" id="stop-d1-4"><div class="time">18:30</div><div class="stop-main"><div class="stop-title"><h3>🍜 스스키노 · 오도리 저녁</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">징기스칸, 스프카레, 스시 중 컨디션 따라 선택. 차는 숙소에 두고 움직이는 편이 편함.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Susukino+Sapporo">스스키노</a><a class="apple" target="_blank" href="https://maps.apple.com/?q=Susukino+Sapporo">Apple Maps</a></div></div></div>
-        </div>
-      </article>
-
-      <article class="day-card" id="day2" data-date="2026-08-29">
-        <div class="day-top">
-          <div class="day-meta"><div><div class="day-label">DAY 2 · 8/29 SAT</div><div class="day-title">후라노 · 비에이 절경 데이</div><div class="day-sub">꽃밭, 언덕, 청의 호수, 숲속 야경까지</div></div><span class="drive">🚙 약 250 km</span></div>
-          <div class="day-actions"><a class="pill primary" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=Sapporo&destination=Ningle+Terrace+Furano&waypoints=Farm+Tomita%7CShikisai+no+Oka%7CShirogane+Blue+Pond&travelmode=driving">오늘 경로</a><a class="pill" target="_blank" href="https://maps.apple.com/?daddr=Farm+Tomita&dirflg=d">첫 목적지</a></div>
-        </div>
-        <div class="stops">
-          <div class="stop" data-key="d2-1" id="stop-d2-1"><div class="time">06:30</div><div class="stop-main"><div class="stop-title"><h3>🌅 삿포로 출발</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">아침 교통량 전에 동쪽으로 빠져나가 관광 시간을 확보.</div></div></div>
-          <div class="stop" data-key="d2-2" id="stop-d2-2"><div class="time">09:00</div><div class="stop-main"><div class="stop-title"><h3>🌼 Farm Tomita</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">라벤더 절정은 지났지만 계절 꽃과 후라노 풍경을 가볍게 보기 좋음. 45–60분.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Farm+Tomita+Hokkaido">Google Maps</a><a class="apple" target="_blank" href="https://maps.apple.com/?q=Farm+Tomita+Hokkaido">Apple Maps</a></div></div></div>
-          <div class="stop" data-key="d2-3" id="stop-d2-3"><div class="time">10:30</div><div class="stop-main"><div class="stop-title"><h3>🌈 Shikisai-no-Oka</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">8월 말 꽃밭 사진은 이쪽을 더 중요하게. 넓은 구릉과 색띠 풍경.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Shikisai-no-Oka">Google Maps</a><a class="apple" target="_blank" href="https://maps.apple.com/?q=Shikisai-no-Oka">Apple Maps</a></div></div></div>
-          <div class="stop" data-key="d2-4" id="stop-d2-4"><div class="time">12:00</div><div class="stop-main"><div class="stop-title"><h3>🍛 비에이 점심 · 패치워크 로드</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">점심 후 목적지만 찍기보다 언덕길 자체를 천천히 드라이브. 세븐스타 나무·켄과 메리 나무 등은 상황 따라 선택.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Patchwork+Road+Biei">패치워크 로드</a></div></div></div>
-          <div class="stop" data-key="d2-5" id="stop-d2-5"><div class="time">15:00</div><div class="stop-main"><div class="stop-title"><h3>💎 청의 호수</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">빛과 날씨에 따라 물빛이 달라지는 비에이 대표 풍경. 주차장에서 가볍게 접근 가능.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Shirogane+Blue+Pond+Biei">Google Maps</a><a class="apple" target="_blank" href="https://maps.apple.com/?q=Shirogane+Blue+Pond+Biei">Apple Maps</a></div></div></div>
-          <div class="stop" data-key="d2-6" id="stop-d2-6"><div class="time">15:45</div><div class="stop-main"><div class="stop-title"><h3>💦 시라히게 폭포</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">청의 호수와 가까워 함께 묶기 좋음. 다리 위에서 짧게 보고 후라노로 이동.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Shirahige+Falls+Biei">Google Maps</a></div></div></div>
-          <div class="stop" data-key="d2-7" id="stop-d2-7"><div class="time">18:30</div><div class="stop-main"><div class="stop-title"><h3>🌲 Ningle Terrace</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">해가 진 뒤 숲속 오두막에 불이 들어오면 분위기가 좋아 커플 여행 마무리로 추천.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Ningle+Terrace+Furano">Google Maps</a><a class="apple" target="_blank" href="https://maps.apple.com/?q=Ningle+Terrace+Furano">Apple Maps</a></div></div></div>
-        </div>
-      </article>
-
-      <article class="day-card" id="day3" data-date="2026-08-30">
-        <div class="day-top">
-          <div class="day-meta"><div><div class="day-label">DAY 3 · 8/30 SUN</div><div class="day-title">샤코탄 블루 → 오타루</div><div class="day-sub">가장 긴 드라이브, 가장 날씨를 많이 타는 하루</div></div><span class="drive">🚙 약 300 km</span></div>
-          <div class="day-actions"><a class="pill primary" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=Furano&destination=Otaru+Canal&waypoints=Cape+Kamui%7CShimamui+Coast&travelmode=driving">오늘 경로</a><a class="pill" target="_blank" href="https://www.kanko-shakotan.jp/">신카무이곶 확인</a></div>
-        </div>
-        <div class="stops">
-          <div class="stop" data-key="d3-1" id="stop-d3-1"><div class="time">06:30</div><div class="stop-main"><div class="stop-title"><h3>☕ 후라노 출발</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">중간 휴식 포함 샤코탄까지 4시간 전후를 잡는 장거리 구간.</div></div></div>
-          <div class="stop" data-key="d3-2" id="stop-d3-2"><div class="time">11:00</div><div class="stop-main"><div class="stop-title"><h3>🌊 신카무이곶</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">이번 여행의 핵심 풍경. 산책로 왕복은 여유 있게 60분 이상. 강풍이면 통제될 수 있음.</div><div class="mini">⚠️ 주차장 도착 전 공식 관광협회 공지에서 당일 개방 여부를 다시 확인.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Cape+Kamui+Hokkaido">Google Maps</a><a class="apple" target="_blank" href="https://maps.apple.com/?q=Cape+Kamui+Hokkaido">Apple Maps</a></div></div></div>
-          <div class="stop" data-key="d3-3" id="stop-d3-3"><div class="time">12:45</div><div class="stop-main"><div class="stop-title"><h3>🟠 샤코탄 생우니 점심</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">8월 말은 성게 시즌 막바지. 어획·재고에 따라 품절 가능하므로 보이는 곳에서 너무 늦지 않게 먹기.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=%E7%A9%8D%E4%B8%B9+%E3%82%A6%E3%83%8B%E4%B8%BC">우니동 검색</a></div></div></div>
-          <div class="stop" data-key="d3-4" id="stop-d3-4"><div class="time">14:15</div><div class="stop-main"><div class="stop-title"><h3>🪨 시마무이 해안 전망대</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">짧게 전망 위주로 보고 오타루 방향 해안도로 드라이브.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Shimamui+Coast+Hokkaido">Google Maps</a></div></div></div>
-          <div class="stop" data-key="d3-5" id="stop-d3-5"><div class="time">17:30</div><div class="stop-main"><div class="stop-title"><h3>🌆 오타루 운하 · 스시</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">해질 무렵부터 조명이 켜지는 시간을 노리고 운하 산책. 이후 스시로 저녁.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Otaru+Canal">Google Maps</a><a class="apple" target="_blank" href="https://maps.apple.com/?q=Otaru+Canal">Apple Maps</a></div></div></div>
-        </div>
-      </article>
-
-      <article class="day-card" id="day4" data-date="2026-08-31">
-        <div class="day-top">
-          <div class="day-meta"><div><div class="day-label">DAY 4 · 8/31 MON</div><div class="day-title">요테이산 · 도야호 · 온천</div><div class="day-sub">드라이브 풍경을 즐기고 노보리베츠 료칸으로</div></div><span class="drive">🚙 약 190 km</span></div>
-          <div class="day-actions"><a class="pill primary" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=Otaru&destination=Noboribetsu+Onsen&waypoints=Fukidashi+Park%7CLake+Toya&travelmode=driving">오늘 경로</a><a class="pill" target="_blank" href="https://maps.apple.com/?daddr=Fukidashi+Park+Hokkaido&dirflg=d">첫 목적지</a></div>
-        </div>
-        <div class="stops">
-          <div class="stop" data-key="d4-1" id="stop-d4-1"><div class="time">08:30</div><div class="stop-main"><div class="stop-title"><h3>🚙 오타루 출발</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">국도 393호 쪽으로 니세코·요테이산 방향 드라이브.</div></div></div>
-          <div class="stop" data-key="d4-2" id="stop-d4-2"><div class="time">10:15</div><div class="stop-main"><div class="stop-title"><h3>🏔️ 쿄고쿠 후키다시 공원</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">요테이산 자락에서 쉬어가는 포인트. 날씨가 좋으면 산 풍경을 즐기기 좋음.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Fukidashi+Park+Hokkaido">Google Maps</a></div></div></div>
-          <div class="stop" data-key="d4-3" id="stop-d4-3"><div class="time">11:30</div><div class="stop-main"><div class="stop-title"><h3>🥪 니세코 · 요테이산 드라이브</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">전망 좋은 구간 위주로 달리고 점심. 비가 심하면 체류 시간을 줄여도 됨.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Niseko+Hokkaido">Niseko</a></div></div></div>
-          <div class="stop" data-key="d4-4" id="stop-d4-4"><div class="time">13:30</div><div class="stop-main"><div class="stop-title"><h3>💙 도야호</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">호숫가와 전망 포인트를 컨디션 따라 선택. 날씨가 나쁘면 30–60분만 보고 이동.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Lake+Toya+Hokkaido">Google Maps</a><a class="apple" target="_blank" href="https://maps.apple.com/?q=Lake+Toya+Hokkaido">Apple Maps</a></div></div></div>
-          <div class="stop" data-key="d4-5" id="stop-d4-5"><div class="time">16:30</div><div class="stop-main"><div class="stop-title"><h3>♨️ 노보리베츠 온천 료칸</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">이번 여행에서 숙박비를 쓸 곳. 가이세키 + 노천탕 좋은 료칸에서 마지막 밤을 여유롭게.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Noboribetsu+Onsen">Google Maps</a></div></div></div>
-        </div>
-      </article>
-
-      <article class="day-card" id="day5" data-date="2026-09-01">
-        <div class="day-top">
-          <div class="day-meta"><div><div class="day-label">DAY 5 · 9/1 TUE</div><div class="day-title">지옥계곡 → 신치토세</div><div class="day-sub">아침 온천 후 여유 있게 렌터카 반납</div></div><span class="drive">🚙 약 1시간</span></div>
-          <div class="day-actions"><a class="pill primary" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=Noboribetsu+Onsen&destination=New+Chitose+Airport&travelmode=driving">공항 경로</a><a class="pill" target="_blank" href="https://maps.apple.com/?saddr=Noboribetsu+Onsen&daddr=New+Chitose+Airport&dirflg=d">Apple 지도</a></div>
-        </div>
-        <div class="stops">
-          <div class="stop" data-key="d5-1" id="stop-d5-1"><div class="time">08:00</div><div class="stop-main"><div class="stop-title"><h3>🍚 료칸 조식 · 마지막 온천</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">전날 저녁에 지옥계곡을 못 봤다면 체크아웃 전 산책.</div></div></div>
-          <div class="stop" data-key="d5-2" id="stop-d5-2"><div class="time">09:00</div><div class="stop-main"><div class="stop-title"><h3>🌋 노보리베츠 지옥계곡</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">비행시간에 여유가 있으면 오유누마 방향까지, 아니면 지옥계곡 전망만 짧게.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Noboribetsu+Jigokudani">Google Maps</a><a class="apple" target="_blank" href="https://maps.apple.com/?q=Noboribetsu+Jigokudani">Apple Maps</a></div></div></div>
-          <div class="stop" data-key="d5-3" id="stop-d5-3"><div class="time">D-3h</div><div class="stop-main"><div class="stop-title"><h3>⛽ 렌터카 주유 · 반납</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">비행기 출발 약 3시간 전 렌터카 영업소 도착 목표. 외부 영업소 → 공항 셔틀 시간을 감안.</div><div class="mini">💡 반납 전 마지막 주유 영수증을 요구하는 업체가 있으므로 보관.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/dir/?api=1&destination=New+Chitose+Airport&travelmode=driving">신치토세공항</a></div></div></div>
-        </div>
-      </article>
-    </section>
-
-    <section class="section" id="planb">
-      <div class="section-head"><h2>날씨가 틀어지면</h2><p>렌터카 여행의 장점</p></div>
-      <div class="planb">
-        <div class="alert orange"><strong>🌬️ 신카무이곶 강풍 통제</strong>무리해서 기다리지 말고 시마무이 전망 → 요이치 → 오타루로 일찍 이동. 오타루 카페·시장·운하에 시간을 더 쓰는 쪽이 낫습니다.</div>
-        <div class="alert blue"><strong>🌧️ 비에이·후라노 비</strong>꽃밭은 짧게 보고 청의 호수·시라히게 폭포 위주로 이동. 저녁 닝구르테라스는 비가 약하면 오히려 분위기가 좋을 수 있습니다.</div>
-        <div class="alert green"><strong>☀️ 샤코탄만 유독 맑음</strong>샤코탄은 햇빛이 바다색에 미치는 영향이 커서 좋은 날씨를 최대한 활용. 곶 산책과 해안 전망에 시간을 더 배분하세요.</div>
-      </div>
-    </section>
-
-    <section class="section" id="checklist">
-      <div class="section-head"><h2>출발 체크</h2><p>렌터카 기준</p></div>
-      <div class="info-grid">
-        <div class="info"><h3>🪪 운전 필수</h3><ul><li>국제운전면허증</li><li>한국 운전면허증</li><li>여권</li><li>ETC 카드 신청 여부</li><li>NOC/CDW 보상 확인</li></ul></div>
-        <div class="info"><h3>🚙 차 안에 두기</h3><ul><li>충전 케이블 / 차량용 충전기</li><li>우산·얇은 바람막이</li><li>생수와 간식</li><li>주차·톨게이트용 결제수단</li><li>렌터카 긴급연락처</li></ul></div>
-        <div class="info"><h3>📱 폰 준비</h3><ul><li>Google Maps 오프라인 지도</li><li>Apple Maps / Google Maps 병행</li><li>eSIM 데이터 확인</li><li>호텔 주소 일본어 캡처</li></ul></div>
-        <div class="info"><h3>🆘 일본 긴급번호</h3><p><b>110</b> 경찰<br><b>119</b> 구급·소방<br><br>사고 시 안전 확보 → 렌터카 업체 → 경찰 순으로 연락.</p></div>
-      </div>
-    </section>
-
-    <div class="footer">Weather: Open‑Meteo · Map: OpenStreetMap / Leaflet<br>GPS는 기기에서 길찾기 실행 시에만 사용되며 서버에 저장하지 않습니다.</div>
-  </main>
-
-  <nav class="bottom-nav">
-    <a href="#weather"><span>🌦️</span>날씨</a><a href="#day1"><span>1</span>금</a><a href="#day2"><span>2</span>토</a><a href="#day3"><span>3</span>일</a><a href="#day4"><span>4</span>월</a><a href="#day5"><span>5</span>화</a>
-  </nav>
-
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script>
-    const tripDays=[
-      {date:'2026-08-28',day:'D1 · 금',place:'삿포로',lat:43.0618,lon:141.3545},
-      {date:'2026-08-29',day:'D2 · 토',place:'비에이',lat:43.5883,lon:142.4669},
-      {date:'2026-08-30',day:'D3 · 일',place:'샤코탄',lat:43.3000,lon:140.6000},
-      {date:'2026-08-31',day:'D4 · 월',place:'도야호',lat:42.6036,lon:140.8650},
-      {date:'2026-09-01',day:'D5 · 화',place:'노보리베츠',lat:42.4923,lon:141.1445}
-    ];
-
-    const schedule=[
-      {key:'d1-flight',date:'2026-08-28',time:'11:10',title:'✈️ WE531 탑승 · 신치토세로 출발',desc:'PARATA AIR WE531 · ICN 11:10 → CTS 13:45',nav:false},
-      {key:'d1-1',date:'2026-08-28',time:'13:45',title:'🛬 신치토세공항 도착',desc:'입국·수하물 수령 후 렌터카 셔틀로 이동',nav:false},
-      {key:'d1-2',date:'2026-08-28',time:'15:00',title:'🚙 렌터카 수령 · 삿포로 출발',desc:'렌터카 체크 후 삿포로로 이동',dest:'Sapporo, Hokkaido, Japan',lat:43.0618,lon:141.3545,nav:true},
-      {key:'d1-3',date:'2026-08-28',time:'16:30',title:'🏨 삿포로 숙소 체크인',desc:'차를 세우고 짐을 내려놓기',dest:'Chateau Hiragishi Sapporo',lat:43.0324,lon:141.3740,nav:true},
-      {key:'d1-apple',date:'2026-08-28',time:'17:45',title:' 구 Apple Store 삿포로 자리',desc:'2006–2016 Apple 직영점이 있던 자리 잠깐 보기',dest:'3-8-20 Minami 1 Jonishi, Chuo Ward, Sapporo, Hokkaido',lat:43.0589,lon:141.3519,nav:true},
-      {key:'d1-4',date:'2026-08-28',time:'18:30',title:'🍜 스스키노 · 오도리 저녁',desc:'첫날 저녁과 삿포로 산책',dest:'Susukino, Sapporo, Hokkaido',lat:43.0554,lon:141.3534,nav:true},
-      {key:'d2-1',date:'2026-08-29',time:'06:30',title:'🌅 삿포로 출발',desc:'후라노·비에이로 출발',dest:'Farm Tomita, Hokkaido',lat:43.4173,lon:142.4253,nav:true},
-      {key:'d2-2',date:'2026-08-29',time:'09:00',title:'🌼 Farm Tomita',desc:'계절 꽃과 후라노 풍경',dest:'Farm Tomita, Hokkaido',lat:43.4173,lon:142.4253,nav:true},
-      {key:'d2-3',date:'2026-08-29',time:'10:30',title:'🌈 Shikisai-no-Oka',desc:'8월 말 꽃밭 핵심 포인트',dest:'Shikisai-no-Oka, Hokkaido',lat:43.5290,lon:142.4650,nav:true},
-      {key:'d2-4',date:'2026-08-29',time:'12:00',title:'🍛 비에이 · 패치워크 로드',desc:'점심 후 구릉 드라이브',dest:'Patchwork Road Biei, Hokkaido',lat:43.6044,lon:142.4446,nav:true},
-      {key:'d2-5',date:'2026-08-29',time:'15:00',title:'💎 청의 호수',desc:'비에이 대표 풍경',dest:'Shirogane Blue Pond, Biei, Hokkaido',lat:43.4935,lon:142.6140,nav:true},
-      {key:'d2-6',date:'2026-08-29',time:'15:45',title:'💦 시라히게 폭포',desc:'청의 호수와 함께 묶기',dest:'Shirahige Falls, Biei, Hokkaido',lat:43.4743,lon:142.6391,nav:true},
-      {key:'d2-7',date:'2026-08-29',time:'18:30',title:'🌲 Ningle Terrace',desc:'불 켜진 숲속 오두막 산책',dest:'Ningle Terrace, Furano, Hokkaido',lat:43.3235,lon:142.3573,nav:true},
-      {key:'d3-1',date:'2026-08-30',time:'06:30',title:'☕ 후라노 출발',desc:'샤코탄으로 장거리 이동',dest:'Cape Kamui, Hokkaido',lat:43.3340,lon:140.3470,nav:true},
-      {key:'d3-2',date:'2026-08-30',time:'11:00',title:'🌊 신카무이곶',desc:'강풍 통제 여부를 먼저 확인',dest:'Cape Kamui, Hokkaido',lat:43.3340,lon:140.3470,nav:true},
-      {key:'d3-3',date:'2026-08-30',time:'12:45',title:'🟠 샤코탄 생우니 점심',desc:'성게 시즌 막바지',dest:'Shakotan, Hokkaido',lat:43.2985,lon:140.5988,nav:true},
-      {key:'d3-4',date:'2026-08-30',time:'14:15',title:'🪨 시마무이 해안',desc:'전망대 위주로 짧게',dest:'Shimamui Coast, Hokkaido',lat:43.2760,lon:140.4640,nav:true},
-      {key:'d3-5',date:'2026-08-30',time:'17:30',title:'🌆 오타루 운하 · 스시',desc:'해질 무렵 운하 산책',dest:'Otaru Canal, Hokkaido',lat:43.1987,lon:140.9947,nav:true},
-      {key:'d4-1',date:'2026-08-31',time:'08:30',title:'🚙 오타루 출발',desc:'요테이산 방향으로 남하',dest:'Fukidashi Park, Hokkaido',lat:42.8582,lon:140.8707,nav:true},
-      {key:'d4-2',date:'2026-08-31',time:'10:15',title:'🏔️ 후키다시 공원',desc:'요테이산 자락 휴식',dest:'Fukidashi Park, Hokkaido',lat:42.8582,lon:140.8707,nav:true},
-      {key:'d4-3',date:'2026-08-31',time:'11:30',title:'🥪 니세코 · 요테이산 드라이브',desc:'풍경 좋은 구간과 점심',dest:'Niseko, Hokkaido',lat:42.8048,lon:140.6874,nav:true},
-      {key:'d4-4',date:'2026-08-31',time:'13:30',title:'💙 도야호',desc:'호숫가와 전망 포인트',dest:'Lake Toya, Hokkaido',lat:42.6036,lon:140.8650,nav:true},
-      {key:'d4-5',date:'2026-08-31',time:'16:30',title:'♨️ 노보리베츠 온천',desc:'마지막 밤 료칸과 온천',dest:'Noboribetsu Onsen, Hokkaido',lat:42.4923,lon:141.1445,nav:true},
-      {key:'d5-1',date:'2026-09-01',time:'08:00',title:'🍚 료칸 조식 · 마지막 온천',desc:'여유 있게 체크아웃 준비',nav:false},
-      {key:'d5-2',date:'2026-09-01',time:'09:00',title:'🌋 노보리베츠 지옥계곡',desc:'마지막 관광 포인트',dest:'Noboribetsu Jigokudani, Hokkaido',lat:42.4970,lon:141.1435,nav:true},
-      {key:'d5-3',date:'2026-09-01',time:'11:30',title:'⛽ 주유 · 렌터카 반납',desc:'비행시간에 맞춰 충분히 일찍 공항으로',dest:'New Chitose Airport, Hokkaido',lat:42.7752,lon:141.6923,nav:true}
-    ];
-
-    const todayISO=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-    const japanTime=()=>new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Tokyo',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date());
-    const wx=(c)=>{if(c===0)return['☀️','맑음'];if([1,2].includes(c))return['🌤️','대체로 맑음'];if(c===3)return['☁️','흐림'];if([45,48].includes(c))return['🌫️','안개'];if([51,53,55,56,57].includes(c))return['🌦️','이슬비'];if([61,63,65,66,67,80,81,82].includes(c))return['🌧️','비'];if([71,73,75,77,85,86].includes(c))return['🌨️','눈'];if([95,96,99].includes(c))return['⛈️','뇌우'];return['🌥️','변동'];};
-    function renderWeatherLoading(){const now=todayISO();document.getElementById('weatherGrid').innerHTML=tripDays.map((d,i)=>`<div class="weather ${d.date===now?'today':''}"><div class="day">${d.day}</div><div class="place">${d.place}</div><div class="loading" id="w${i}">불러오는 중…</div></div>`).join('')}
-    async function loadOne(d,i){const url=`https://api.open-meteo.com/v1/forecast?latitude=${d.lat}&longitude=${d.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo&forecast_days=16`;try{const r=await fetch(url);if(!r.ok)throw 0;const j=await r.json();const idx=j.daily.time.indexOf(d.date);if(idx<0)throw 0;const [icon,label]=wx(j.daily.weather_code[idx]);document.getElementById('w'+i).outerHTML=`<div id="w${i}"><div class="wx" title="${label}">${icon}</div><div class="temp">${Math.round(j.daily.temperature_2m_max[idx])}° / ${Math.round(j.daily.temperature_2m_min[idx])}°</div><div class="rain">☔ 강수 ${j.daily.precipitation_probability_max[idx]}% · ${label}</div></div>`}catch(e){document.getElementById('w'+i).innerHTML='날씨 조회 실패<br><small>잠시 후 새로고침</small>'}}
-    function refreshWeather(){renderWeatherLoading();tripDays.forEach(loadOne)}
-    function restoreDone(){document.querySelectorAll('.stop[data-key]').forEach(el=>{if(localStorage.getItem('hk-'+el.dataset.key)==='1')el.classList.add('done')})}
-    function toggleDone(btn){const el=btn.closest('.stop');el.classList.toggle('done');localStorage.setItem('hk-'+el.dataset.key,el.classList.contains('done')?'1':'0');updateNowCard()}
-    function markToday(){const now=todayISO();document.querySelectorAll('.day-card').forEach(c=>{if(c.dataset.date===now)c.classList.add('current')})}
-    function jumpToday(e){if(e)e.preventDefault();const now=todayISO();const card=[...document.querySelectorAll('.day-card')].find(c=>c.dataset.date===now);(card||document.getElementById('day1')).scrollIntoView({behavior:'smooth',block:'start'})}
-
-    function isDone(s){return localStorage.getItem('hk-'+s.key)==='1'}
-    function dateOf(s){return new Date(`${s.date}T${s.time}:00+09:00`)}
-    function getCurrentStop(){
-      const now=new Date(), today=todayISO();
-      const firstDate='2026-08-28', lastDate='2026-09-01';
-      if(today<firstDate)return schedule[0];
-      if(today>lastDate)return null;
-      const todays=schedule.filter(s=>s.date===today);
-      const incomplete=todays.filter(s=>!isDone(s));
-      if(!incomplete.length)return null;
-      const upcoming=incomplete.find(s=>dateOf(s)>=new Date(now.getTime()-20*60000));
-      return upcoming||incomplete[0];
-    }
-    function formatCountdown(s){const diff=dateOf(s)-new Date();if(diff<=-20*60000)return '예정 시간이 지났어요';if(diff<=0)return '지금 진행할 시간';const min=Math.round(diff/60000);if(min<60)return `${min}분 뒤`;const h=Math.floor(min/60),m=min%60;return `${h}시간${m?` ${m}분`:''} 뒤`}
-    function updateNowCard(){
-      document.getElementById('nowClock').textContent=japanTime();
-      const s=getCurrentStop(); window.currentStop=s;
-      const title=document.getElementById('nowTitle'), desc=document.getElementById('nowDesc'), nav=document.getElementById('nowNavBtn'), jump=document.getElementById('nowJumpBtn');
-      if(!s){title.textContent=todayISO()>'2026-09-01'?'🏁 여행 완료':'✅ 오늘 일정 완료';desc.textContent=todayISO()>'2026-09-01'?'홋카이도 로드트립 종료. 체크한 일정은 이 기기에 남아 있습니다.':'오늘 예정된 항목을 모두 체크했습니다. 이제 여유롭게 즐기세요.';nav.style.display='none';jump.style.display='none';return}
-      title.textContent=s.title;desc.textContent=`${s.time} 예정 · ${formatCountdown(s)} · ${s.desc}`;nav.style.display=s.nav?'inline-block':'none';jump.style.display='inline-block';
-    }
-    function jumpToCurrentStop(){const s=window.currentStop||getCurrentStop();if(!s)return;const el=document.getElementById('stop-'+s.key);if(el)el.scrollIntoView({behavior:'smooth',block:'center'})}
-    function haversine(a,b,c,d){const R=6371,toRad=x=>x*Math.PI/180;const dLat=toRad(c-a),dLon=toRad(d-b);const q=Math.sin(dLat/2)**2+Math.cos(toRad(a))*Math.cos(toRad(c))*Math.sin(dLon/2)**2;return 2*R*Math.asin(Math.sqrt(q))}
-    function navigateNext(){
-      const s=getCurrentStop(); window.currentStop=s;
-      if(!s){alert('현재 남아 있는 일정이 없습니다.');return}
-      if(!s.nav){jumpToCurrentStop();return}
-      const note=document.getElementById('gpsNote');note.textContent='현재 위치를 확인하는 중…';
-      const fallback=()=>{note.textContent='GPS 없이 목적지만 열었습니다.';window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(s.dest)}&travelmode=driving`,'_blank')};
-      if(!navigator.geolocation){fallback();return}
-      navigator.geolocation.getCurrentPosition(pos=>{
-        const lat=pos.coords.latitude,lon=pos.coords.longitude;const km=(s.lat&&s.lon)?haversine(lat,lon,s.lat,s.lon):null;note.textContent=km?`현재 위치에서 ${s.title.replace(/^\S+\s/,'')}까지 직선거리 약 ${km.toFixed(km<10?1:0)}km`:'현재 위치를 반영했습니다.';
-        const url=`https://www.google.com/maps/dir/?api=1&origin=${lat},${lon}&destination=${encodeURIComponent(s.dest)}&travelmode=driving`;window.open(url,'_blank')
-      },fallback,{enableHighAccuracy:true,timeout:7000,maximumAge:60000});
-    }
-
-    const points=[
-      ['신치토세공항',42.7752,141.6923],['삿포로',43.0618,141.3545],['구 Apple Store 삿포로',43.0589,141.3519],['Farm Tomita',43.4173,142.4253],['Shikisai-no-Oka',43.5290,142.4650],['청의 호수',43.4935,142.6140],['Ningle Terrace',43.3235,142.3573],['신카무이곶',43.3340,140.3470],['시마무이 해안',43.2760,140.4640],['오타루',43.1987,140.9947],['후키다시 공원',42.8582,140.8707],['도야호',42.6036,140.8650],['노보리베츠',42.4923,141.1445],['신치토세공항',42.7752,141.6923]
-    ];
-    function initMap(){const map=L.map('map',{scrollWheelZoom:false}).setView([43.05,141.4],7);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);const latlng=[];points.forEach((p,i)=>{latlng.push([p[1],p[2]]);const icon=L.divIcon({className:'',html:`<div class="num-marker">${i+1}</div>`,iconSize:[28,28],iconAnchor:[14,14]});L.marker([p[1],p[2]],{icon}).addTo(map).bindPopup(`<b>${p[0]}</b>`)});L.polyline(latlng,{color:'#2563eb',weight:4,opacity:.75,dashArray:'8 7'}).addTo(map);map.fitBounds(latlng,{padding:[24,24]})}
-    document.addEventListener('DOMContentLoaded',()=>{refreshWeather();restoreDone();markToday();initMap();updateNowCard();setInterval(updateNowCard,60000)});
-  </script>
+<nav class="bottom-nav"><a href="#weather"><span>🌦️</span>날씨</a><a href="#day1"><span>1</span>금</a><a href="#day2"><span>2</span>토</a><a href="#day3"><span>3</span>일</a><a href="#day4"><span>4</span>월</a><a href="#day5"><span>5</span>화</a></nav>
+<div class="toast" id="toast"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="./app.js"></script>
 </body>
 </html>
