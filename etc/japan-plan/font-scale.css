@@ -1,0 +1,35 @@
+/* Readability pass: preserve card layout, increase text sizes only */
+body{font-size:16px}
+.hero .route{font-size:13px}
+.chip{font-size:11px}
+.statusbar{font-size:10px}
+.quick a,.quick button{font-size:11px}
+.now-label{font-size:10px}
+.now-time{font-size:11px}
+.now-title{font-size:20px}
+.now-desc{font-size:12px;line-height:1.55}
+.now-actions button{font-size:11px}
+.gps-note,.progress-text{font-size:10px}
+.flight-brand{font-size:10px}.flight-no{font-size:11px}.airport span{font-size:10px}.flight-meta{font-size:10px}
+.section-head p{font-size:10px}
+.tool{font-size:10px}.weather .day{font-size:10px}.weather .place{font-size:13px}.weather .temp{font-size:12px}.weather .rain,.weather .wind,.weather .sun{font-size:10px}.weather .risk,.weather .loading{font-size:9px}
+.live-weather{font-size:11px}
+.pill{font-size:10px}
+.timing-note,.option-legend{font-size:10px!important}
+.day-label{font-size:10px}.day-sub{font-size:12px;line-height:1.55}.drive{font-size:10px}
+.time{font-size:12px}
+.stop-title h3{font-size:17px}
+.stop .option-strip .ob{font-size:9px!important}.stop .option-strip .oe,.stop .option-strip .od{font-size:10px!important}
+.timing-row span{font-size:11px!important}
+.stop .option-why{font-size:10px!important;line-height:1.5!important}
+.desc{font-size:12px;line-height:1.6}
+.mini,.apple-note{font-size:11px;line-height:1.55}
+.map-links a,.map-links button{font-size:11px;padding:8px 11px}
+.optional{font-size:9px}
+.day-card .day-option-summary{font-size:10px!important;line-height:1.55!important}
+.memo textarea{font-size:11px}
+.alert{font-size:11px;line-height:1.6}.alert strong{font-size:12px}
+.info h3{font-size:12px}.info p,.info li{font-size:11px;line-height:1.6}.field label{font-size:10px}.field input{font-size:11px}.small-note{font-size:10px}.footer{font-size:10px}.bottom-nav a{font-size:10px}.toast{font-size:11px}
+#stop-d2-shikisai .stop-main:before,#stop-d2-bluepond .stop-main:before,#stop-d2-falls .stop-main:before,#stop-d2-ningle .stop-main:before,#stop-d3-sakaimachi .stop-main:before,#stop-d3-canal .stop-main:before,#stop-d3-dinner .stop-main:before,#stop-d4-toya .stop-main:before,#stop-d4-jigoku .stop-main:before,#stop-d4-ryokan .stop-main:before,#stop-d5-morning .stop-main:before{font-size:9px!important}
+#stop-d1-city .desc:after,#stop-d1-oldapple .desc:after,#stop-d2-depart .desc:after,#stop-d3-sakaimachi .desc:after,#stop-d3-dinner .desc:after{font-size:10px!important;line-height:1.55!important}
+@media(max-width:560px){.hero .route{font-size:13px}.day-sub{font-size:12px}.time{font-size:12px}.stop-title h3{font-size:17px}.desc{font-size:12px}.timing-row span{font-size:11px!important}.map-links a,.map-links button{font-size:11px;padding:8px 11px}.bottom-nav a{font-size:10px}}
