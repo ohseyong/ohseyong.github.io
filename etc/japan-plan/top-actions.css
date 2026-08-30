@@ -1,0 +1,146 @@
+/* Top action redesign: keep itinerary cards intact. */
+.hero{
+  padding:calc(20px + env(safe-area-inset-top)) 18px 14px;
+}
+
+.hero h1{
+  margin:6px 0 7px;
+  font-size:28px;
+  line-height:1.12;
+}
+
+.hero .route{
+  max-width:620px;
+  font-size:13px;
+  line-height:1.5;
+  color:#696969;
+}
+
+.hero-actions{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:8px;
+  overflow:visible;
+  padding:14px 0 8px;
+}
+
+.hero-actions a,
+.hero-actions button{
+  min-width:0;
+  min-height:58px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  border:1px solid #d9d7d0;
+  border-radius:8px;
+  background:#fff;
+  color:#222;
+  box-shadow:0 1px 2px rgba(0,0,0,.04);
+  font-size:12px;
+  font-weight:760;
+  line-height:1.1;
+  padding:9px 6px;
+}
+
+.hero-actions a:first-child,
+.hero-actions button:nth-child(2){
+  background:#252525;
+  border-color:#252525;
+  color:#fff;
+}
+
+.hero-actions .icon{
+  display:block;
+  margin:0;
+  font-size:19px;
+  line-height:1;
+}
+
+.statusbar{
+  margin-top:3px;
+}
+
+.now-card{
+  margin-top:14px;
+  padding:16px;
+}
+
+.now-label{
+  letter-spacing:0;
+  font-size:11px;
+  color:#d6d6d6;
+}
+
+.now-desc{
+  color:#d7d7d7;
+}
+
+.now-actions button{
+  min-height:37px;
+  padding:9px 13px;
+  font-size:12px;
+}
+
+.gps-note:empty{
+  display:none;
+}
+
+.progress-wrap{
+  margin-top:12px;
+}
+
+.friend-candidate{
+  background:transparent!important;
+}
+
+.friend-candidate .stop-main:before{
+  content:"현욱 지인 추천";
+  order:0;
+  display:block;
+  color:var(--friend);
+  font-size:9px;
+  font-weight:700;
+  line-height:1;
+  margin-bottom:6px;
+  letter-spacing:.025em;
+}
+
+.friend-candidate .mini{
+  border-left:2px solid #d8c7ad;
+  background:#fbfaf7;
+}
+
+@media(max-width:560px){
+  .hero{
+    padding-left:14px;
+    padding-right:14px;
+  }
+
+  .hero h1{
+    font-size:27px;
+  }
+
+  .hero-actions{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:7px;
+    padding-top:13px;
+  }
+
+  .hero-actions a,
+  .hero-actions button{
+    min-height:54px;
+    flex-direction:row;
+    gap:7px;
+    font-size:13px;
+  }
+
+  .hero-actions a:first-child{
+    grid-column:span 1;
+  }
+
+  .hero-actions button:nth-child(2){
+    grid-column:span 1;
+  }
+}

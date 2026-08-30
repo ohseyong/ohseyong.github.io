@@ -11,36 +11,33 @@
 <link rel="preconnect" href="https://unpkg.com" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
 <link rel="stylesheet" href="./style.css" />
+<link rel="stylesheet" href="./top-actions.css" />
 </head>
 <body>
 <header class="hero">
   <div class="wrap" style="padding-bottom:0">
-    <div class="eyebrow">HOKKAIDO · ROAD TRIP</div>
-    <h1>삿포로에서 시작하는<br>4박 5일 렌터카 여행</h1>
-    <div class="route">신치토세 → 삿포로 → 후라노·비에이 → 샤코탄 → 오타루 → 니세코·도야호 → 노보리베츠 → 신치토세</div>
-    <div class="chips">
-      <span class="chip">📅 2026. 8. 28 — 9. 1</span><span class="chip">✈️ WE531 / WE532</span><span class="chip">🚙 렌터카 루프</span><span class="chip">💑 Couple Trip</span><span class="chip">🛣️ 약 750–800 km</span>
+    <div class="eyebrow">HOKKAIDO ROAD TRIP</div>
+    <h1>홋카이도 4박 5일<br>렌터카 여행</h1>
+    <div class="route">8/28–9/1 · 삿포로 → 비에이 → 샤코탄 → 오타루 → 도야호 → 노보리베츠</div>
+    <div class="quick hero-actions" aria-label="주요 기능">
+      <a href="#itinerary" onclick="jumpToday(event)"><span class="icon">📅</span>오늘 일정</a>
+      <button onclick="navigateNext()"><span class="icon">🧭</span>다음 목적지</button>
+      <button onclick="showMyWeather()"><span class="icon">📍</span>내 날씨</button>
+      <a href="#route-map"><span class="icon">🗺️</span>전체 지도</a>
+      <button onclick="sharePlan()"><span class="icon">↗️</span>공유</button>
     </div>
     <div class="statusbar"><span class="dot" id="onlineDot"></span><span id="onlineText">온라인 확인 중</span></div>
   </div>
 </header>
 
 <main class="wrap">
-  <div class="quick">
-    <a href="#itinerary" onclick="jumpToday(event)"><span class="icon">📅</span>오늘 일정</a>
-    <button onclick="navigateNext()"><span class="icon">🧭</span>다음 목적지</button>
-    <button onclick="showMyWeather()"><span class="icon">📍</span>내 날씨</button>
-    <a href="#route-map"><span class="icon">🗺️</span>전체 지도</a>
-    <button onclick="sharePlan()"><span class="icon">↗️</span>공유</button>
-  </div>
-
   <section class="now-card" id="nowCard">
-    <div class="now-top"><div class="now-label">LIVE TRIP GUIDE · JAPAN TIME</div><div class="now-time" id="nowClock">--:--</div></div>
-    <div class="now-title" id="nowTitle">현재 일정 계산 중…</div>
-    <div class="now-desc" id="nowDesc">여행 날짜와 현재 시간을 기준으로 다음 일정을 자동으로 표시합니다.</div>
-    <div class="now-actions"><button class="now-primary" id="nowNavBtn" onclick="navigateNext()">📍 현재 위치에서 길찾기</button><button class="now-secondary" id="nowJumpBtn" onclick="jumpToCurrentStop()">일정에서 보기</button></div>
-    <div class="gps-note" id="gpsNote">GPS는 버튼을 누를 때만 사용하며 서버에 저장하지 않습니다.</div>
-    <div class="progress-wrap"><div class="progress-line"><div class="progress-fill" id="progressFill"></div></div><div class="progress-text" id="progressText">일정 진행률 계산 중</div></div>
+    <div class="now-top"><div class="now-label">현재 일정</div><div class="now-time" id="nowClock">--:--</div></div>
+    <div class="now-title" id="nowTitle">다음 일정을 확인 중…</div>
+    <div class="now-desc" id="nowDesc">오늘 가장 가까운 핵심 일정을 보여줍니다.</div>
+    <div class="now-actions"><button class="now-primary" id="nowNavBtn" onclick="navigateNext()">길찾기</button><button class="now-secondary" id="nowJumpBtn" onclick="jumpToCurrentStop()">일정 위치</button></div>
+    <div class="gps-note" id="gpsNote" aria-live="polite"></div>
+    <div class="progress-wrap"><div class="progress-line"><div class="progress-fill" id="progressFill"></div></div><div class="progress-text" id="progressText">핵심 일정 진행률</div></div>
   </section>
 
   <div class="flight-grid">
@@ -129,6 +126,7 @@
         <div class="stop" data-key="d3-sakaimachi" id="stop-d3-sakaimachi"><div class="time">16:10</div><div class="stop-main"><div class="stop-title"><h3>🛍️ 오타루 사카이마치</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">상점들이 닫기 전에 먼저 둘러보기. 디저트·유리·오르골 구경.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Sakaimachi+Street+Otaru">Google Maps</a></div></div></div>
         <div class="stop" data-key="d3-canal" id="stop-d3-canal"><div class="time">17:20</div><div class="stop-main"><div class="stop-title"><h3>🌆 오타루 운하 · 석양</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">해질 무렵부터 조명이 켜지는 시간까지. 날씨 카드의 일몰 시간을 참고.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Otaru+Canal">Google Maps</a></div></div></div>
         <div class="stop" data-key="d3-dinner" id="stop-d3-dinner"><div class="time">18:30</div><div class="stop-main"><div class="stop-title"><h3>🍣 오타루 스시 · 숙박</h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">저녁 스시 후 운하 도보권 숙박. 가장 운전량이 많은 날이므로 늦게까지 무리하지 않기.</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=sushi+Otaru">스시 검색</a></div></div></div>
+        <div class="stop friend-candidate" data-key="d3-ootomi" id="stop-d3-ootomi"><div class="time">저녁 후보</div><div class="stop-main"><div class="stop-title"><h3>향토요리 오오토미 <span class="optional">현욱 추천</span></h3><button class="done-btn" onclick="toggleDone(this)">✓</button></div><div class="desc">오타루역·GRIDS 숙소에서 가까운 향토요리 식당. 스시, 카이센동, 텐동까지 한 번에 볼 수 있는 저녁 후보.</div><div class="mini">주소: 1 Chome-3-15 Hanazono, Otaru · 블로그 후보 장소</div><div class="map-links"><a class="google" target="_blank" href="https://www.google.com/maps/search/?api=1&query=%E9%83%B7%E5%9C%9F%E6%96%99%E7%90%86+%E5%A4%A7%E5%AF%8C+Otaru">지도</a><a target="_blank" href="https://blog.naver.com/gjthdud3603/223887398732?trackingCode=rss">블로그</a></div></div></div>
       </div><div class="memo"><textarea data-note="day3" placeholder="Day 3 메모 · 우니 식당 후보 등을 적어두세요"></textarea></div>
     </article>
 
