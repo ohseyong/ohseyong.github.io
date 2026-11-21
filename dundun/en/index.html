@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fix Galaxy Tethering Limits | DunDun</title>
+<meta name="description" content="A free open-source app that sets up your APN when your hotspot is blocked after you use up your data, or doesn't work on an MVNO plan. For Samsung Galaxy with One UI 7 or later. No PC, root, or Shizuku.">
+<link rel="canonical" href="https://seyong.me/dundun/en/">
+<link rel="alternate" hreflang="ko" href="https://seyong.me/dundun/">
+<link rel="alternate" hreflang="en" href="https://seyong.me/dundun/en/">
+<link rel="alternate" hreflang="x-default" href="https://seyong.me/dundun/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="DunDun">
+<meta property="og:title" content="Fix Galaxy Tethering Limits | DunDun">
+<meta property="og:description" content="Sets up your APN when your hotspot won't work. Free and open source. No PC, root, or Shizuku.">
+<meta property="og:url" content="https://seyong.me/dundun/en/">
+<meta property="og:image" content="https://seyong.me/dundun/img/og-en.png">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#f6f6f4">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%2316181d'/%3E%3Cpath fill='%23fff' transform='translate(3 2.5) scale(.75)' d='M12,11c-1.1,0 -2,0.9 -2,2s0.9,2 2,2 2,-0.9 2,-2 -0.9,-2 -2,-2zM18,13c0,-3.31 -2.69,-6 -6,-6s-6,2.69 -6,6c0,2.22 1.21,4.15 3,5.19l1,-1.74c-1.19,-0.7 -2,-1.97 -2,-3.45 0,-2.21 1.79,-4 4,-4s4,1.79 4,4c0,1.48 -0.81,2.75 -2,3.45l1,1.74c1.79,-1.04 3,-2.97 3,-5.19zM12,3C6.48,3 2,7.48 2,13c0,3.7 2.01,6.92 4.99,8.65l1,-1.73C5.61,18.53 4,15.96 4,13c0,-4.42 3.58,-8 8,-8s8,3.58 8,8c0,2.96 -1.61,5.53 -4,6.92l1,1.73c2.99,-1.73 5,-4.95 5,-8.65 0,-5.52 -4.48,-10 -10,-10z'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/dundun/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "SoftwareApplication",
+ "name": "DunDun",
+ "alternateName": "던던",
+ "description": "Free open-source Galaxy app that sets up your APN when your hotspot won't work",
+ "operatingSystem": "Android 13+",
+ "applicationCategory": "UtilitiesApplication",
+ "url": "https://seyong.me/dundun/en/",
+ "downloadUrl": "https://github.com/ohseyong/dundun/releases/latest",
+ "license": "https://www.apache.org/licenses/LICENSE-2.0",
+ "offers": {
+  "@type": "Offer",
+  "price": "0",
+  "priceCurrency": "USD"
+ }
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Does hotspot use still eat into my tethering/sharing allowance?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Probably not. Hotspot traffic goes out through the same APN as normal data instead of a tethering APN. It isn't guaranteed: if your carrier detects tethering another way, it may still count it or block it. It also uses your normal data instead, so it isn't free."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Which phones does it work on?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "It's made for Samsung Galaxy phones on Android 13 or later (One UI 7 or later). You need Wi-Fi during setup; Wi-Fi without internet works too."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Can I undo it?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Yes. Tap Restore original in the app to put the APN type and default APN back."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Do I need a PC or Shizuku?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "No. The app connects to the phone's wireless debugging itself. You enter a 6-digit pairing code in a notification once."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Is it safe?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "All source code is on GitHub. The only place the app connects to is GitHub, for update checks, and it sends no personal data. Updates only install if signed with the same key."
+   }
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/dundun/en/">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12,11c-1.1,0 -2,0.9 -2,2s0.9,2 2,2 2,-0.9 2,-2 -0.9,-2 -2,-2zM18,13c0,-3.31 -2.69,-6 -6,-6s-6,2.69 -6,6c0,2.22 1.21,4.15 3,5.19l1,-1.74c-1.19,-0.7 -2,-1.97 -2,-3.45 0,-2.21 1.79,-4 4,-4s4,1.79 4,4c0,1.48 -0.81,2.75 -2,3.45l1,1.74c1.79,-1.04 3,-2.97 3,-5.19zM12,3C6.48,3 2,7.48 2,13c0,3.7 2.01,6.92 4.99,8.65l1,-1.73C5.61,18.53 4,15.96 4,13c0,-4.42 3.58,-8 8,-8s8,3.58 8,8c0,2.96 -1.61,5.53 -4,6.92l1,1.73c2.99,-1.73 5,-4.95 5,-8.65 0,-5.52 -4.48,-10 -10,-10z"/></svg>
+      DunDun
+    </a>
+    <a class="lang" href="/dundun/" hreflang="ko">한국어</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <h1>Galaxy tethering limits,<br>fixed with one app</h1>
+    <p>A free open-source app that sets up your APN when your hotspot is blocked after you use up your data. No PC, root, or Shizuku. Just your phone.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/ohseyong/dundun/releases/latest">Download APK</a>
+      <a class="btn ghost" href="https://github.com/ohseyong/dundun">View on GitHub</a>
+    </div>
+    <p class="meta">Android 13+ · Galaxy One UI 7+ · Free · Apache 2.0</p>
+  </div>
+
+  <div class="shots">
+    <figure><img src="/dundun/img/en-steps.webp" width="480" height="720" alt="DunDun setup steps" loading="lazy"><figcaption>Four steps and done</figcaption></figure>
+    <figure><img src="/dundun/img/en-code.webp" width="480" height="686" alt="Code entry notification over the pairing dialog" loading="lazy"><figcaption>Enter the code from a notification</figcaption></figure>
+    <figure><img src="/dundun/img/en-done.webp" width="480" height="840" alt="Applied, with APN details" loading="lazy"><figcaption>See exactly what changed</figcaption></figure>
+  </div>
+
+  <section>
+    <h2>When to use it</h2>
+    <ul class="list card">
+      <li><b>Your hotspot is blocked after using up your data</b><span>Once you're throttled, laptops and tablets can't use your hotspot</span></li>
+      <li><b>Hotspot doesn't work on an MVNO plan</b><span>The hotspot turns on, but connected devices get no internet</span></li>
+      <li><b>The old way was too complicated</b><span>No more installing DunUnlocker and Shizuku and jumping between screens</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>How to use</h2>
+    <ol class="list card steps">
+      <li><div><b>Turn on Developer options</b><span>Tap [Open About phone], then tap Build number 7 times in Software information.</span></div></li>
+      <li><div><b>Turn on Wireless debugging</b><span>Tap [Open Wireless debugging] and turn it on. If asked, tap Allow.</span></div></li>
+      <li><div><b>Enter the 6-digit code</b><span>Tap [Start code entry], open "Pair device with pairing code", then type the number into the notification at the top.</span></div></li>
+      <li><div><b>Apply</b><span>The app adds dun to your current APN and turns wireless debugging off. When you see "Applied", turn on your hotspot.</span></div></li>
+    </ol>
+    <p class="note">You only do this once. To apply again or restore, just turn on wireless debugging and tap the button.</p>
+  </section>
+
+  <section>
+    <h2>Features</h2>
+    <ul class="list card">
+      <li><b>Works with any carrier</b><span>Copies the APN you use now and only adds dun. No need to pick a carrier.</span></li>
+      <li><b>Live status</b><span>Shows at the top whether it's applied right now, and tells you if a carrier update undid it.</span></li>
+      <li><b>Restore</b><span>One tap puts the APN back the way it was.</span></li>
+      <li><b>Auto update</b><span>Gets new versions from GitHub and installs them. Only installs files signed with the same key.</span></li>
+      <li><b>12 languages</b><span>English, Korean, Japanese, Chinese (Simplified and Traditional), Spanish, Portuguese, French, German, Russian, Vietnamese, Indonesian</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>FAQ</h2>
+    <div class="card">
+      <details><summary>Does hotspot use still eat into my tethering/sharing allowance?</summary><p>Probably not. Hotspot traffic goes out through the same APN as normal data instead of a tethering APN. It isn't guaranteed: if your carrier detects tethering another way, it may still count it or block it. It also uses your normal data instead, so it isn't free.</p></details>
+      <details><summary>Which phones does it work on?</summary><p>It's made for Samsung Galaxy phones on Android 13 or later (One UI 7 or later). You need Wi-Fi during setup; Wi-Fi without internet works too.</p></details>
+      <details><summary>Can I undo it?</summary><p>Yes. Tap Restore original in the app to put the APN type and default APN back.</p></details>
+      <details><summary>Do I need a PC or Shizuku?</summary><p>No. The app connects to the phone's wireless debugging itself. You enter a 6-digit pairing code in a notification once.</p></details>
+      <details><summary>Is it safe?</summary><p>All source code is on GitHub. The only place the app connects to is GitHub, for update checks, and it sends no personal data. Updates only install if signed with the same key.</p></details>
+    </div>
+    <p class="note">Getting around tethering limits may break your carrier's terms, and your line could be restricted. Use it at your own judgment.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Made by the maker of <a href="https://excelkospi.ai/?utm_source=dundun&amp;utm_medium=web&amp;utm_campaign=landing_en">ExcelKOSPI</a></p>
+    <p><a href="https://github.com/ohseyong/dundun">GitHub</a> · <a href="https://github.com/ohseyong/dundun/issues">Feedback</a> · <a href="/dundun/" hreflang="ko">한국어</a></p>
+  </div>
+</footer>
+</body>
+</html>

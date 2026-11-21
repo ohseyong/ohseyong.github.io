@@ -1,0 +1,101 @@
+:root {
+  --bg: #f6f6f4;
+  --surface: #ffffff;
+  --line: #e6e6e3;
+  --text: #16181d;
+  --muted: #62656e;
+  --accent: #2457d6;
+  --accent-text: #ffffff;
+  --radius: 16px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121316;
+    --surface: #1b1c20;
+    --line: #2e3036;
+    --text: #ececee;
+    --muted: #a3a5ad;
+    --accent: #8db1ff;
+    --accent-text: #0b1b44;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI", sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+a { color: var(--accent); }
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+
+header.top { padding: 22px 0 0; }
+header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; color: var(--text); text-decoration: none; }
+.brand svg { width: 30px; height: 30px; border-radius: 8px; background: #16181d; padding: 5px; }
+.lang { font-size: 15px; color: var(--muted); text-decoration: none; }
+
+.hero { padding: 48px 0 28px; }
+.hero h1 { font-size: 34px; line-height: 1.3; margin: 0 0 14px; letter-spacing: -0.02em; }
+.hero p { margin: 0; color: var(--muted); font-size: 18px; }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 48px; padding: 0 22px; border-radius: 12px;
+  font-weight: 600; font-size: 16px; text-decoration: none;
+}
+.btn.primary { background: var(--accent); color: var(--accent-text); }
+.btn.ghost { border: 1px solid var(--line); color: var(--text); background: var(--surface); }
+.meta { margin-top: 16px; font-size: 14px; color: var(--muted); }
+
+.shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 8px 0 8px; align-items: start; }
+.shots figure { margin: 0; }
+.shots img { width: 100%; height: auto; aspect-ratio: 2 / 3; object-fit: cover; object-position: top; display: block; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); }
+.shots figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; text-align: center; }
+
+section { padding: 36px 0 4px; }
+section h2 { font-size: 24px; line-height: 1.35; margin: 0 0 16px; letter-spacing: -0.01em; }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.list { list-style: none; margin: 0; padding: 0; }
+.list li { padding: 16px 20px; border-top: 1px solid var(--line); }
+.list li:first-child { border-top: 0; }
+.list b { display: block; margin-bottom: 2px; }
+.list span { color: var(--muted); font-size: 16px; }
+
+.steps { counter-reset: step; }
+.steps li { display: grid; grid-template-columns: 28px 1fr; column-gap: 14px; }
+.steps li::before {
+  counter-increment: step; content: counter(step);
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1.5px solid var(--accent); color: var(--accent);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 600; margin-top: 1px;
+}
+
+details { padding: 16px 20px; border-top: 1px solid var(--line); }
+details:first-child { border-top: 0; }
+summary { cursor: pointer; font-weight: 600; list-style: none; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; float: right; color: var(--muted); font-weight: 400; }
+details[open] summary::after { content: "−"; }
+details p { margin: 10px 0 0; color: var(--muted); font-size: 16px; }
+
+.note { font-size: 15px; color: var(--muted); }
+
+footer { padding: 40px 0 56px; font-size: 15px; color: var(--muted); }
+footer p { margin: 6px 0; }
+
+@media (max-width: 560px) {
+  .hero { padding-top: 32px; }
+  .hero h1 { font-size: 28px; }
+  .hero p { font-size: 17px; }
+  .shots { grid-template-columns: repeat(3, 72%); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; }
+  .shots figure { scroll-snap-align: start; }
+  .btn { flex: 1 1 auto; }
+}

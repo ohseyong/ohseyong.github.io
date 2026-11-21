@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>갤럭시 테더링 제한 해결 앱 | 던던</title>
+<meta name="description" content="데이터를 다 써서 핫스팟이 막혔을 때, 알뜰폰에서 핫스팟이 안 될 때 APN을 설정해 주는 무료 오픈소스 앱입니다. 갤럭시 One UI 7 이상, PC·루팅·Shizuku 없이 폰 하나로 끝납니다.">
+<link rel="canonical" href="https://seyong.me/dundun/">
+<link rel="alternate" hreflang="ko" href="https://seyong.me/dundun/">
+<link rel="alternate" hreflang="en" href="https://seyong.me/dundun/en/">
+<link rel="alternate" hreflang="x-default" href="https://seyong.me/dundun/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="던던">
+<meta property="og:title" content="갤럭시 테더링 제한 해결 앱 | 던던">
+<meta property="og:description" content="핫스팟이 안 될 때 APN을 설정해 주는 무료 오픈소스 앱. PC·루팅·Shizuku 없이 폰 하나로.">
+<meta property="og:url" content="https://seyong.me/dundun/">
+<meta property="og:image" content="https://seyong.me/dundun/img/og-ko.png">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#f6f6f4">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%2316181d'/%3E%3Cpath fill='%23fff' transform='translate(3 2.5) scale(.75)' d='M12,11c-1.1,0 -2,0.9 -2,2s0.9,2 2,2 2,-0.9 2,-2 -0.9,-2 -2,-2zM18,13c0,-3.31 -2.69,-6 -6,-6s-6,2.69 -6,6c0,2.22 1.21,4.15 3,5.19l1,-1.74c-1.19,-0.7 -2,-1.97 -2,-3.45 0,-2.21 1.79,-4 4,-4s4,1.79 4,4c0,1.48 -0.81,2.75 -2,3.45l1,1.74c1.79,-1.04 3,-2.97 3,-5.19zM12,3C6.48,3 2,7.48 2,13c0,3.7 2.01,6.92 4.99,8.65l1,-1.73C5.61,18.53 4,15.96 4,13c0,-4.42 3.58,-8 8,-8s8,3.58 8,8c0,2.96 -1.61,5.53 -4,6.92l1,1.73c2.99,-1.73 5,-4.95 5,-8.65 0,-5.52 -4.48,-10 -10,-10z'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="/dundun/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "던던",
+  "alternateName": "DunDun",
+  "description": "핫스팟이 안 될 때 APN을 설정해 주는 갤럭시용 무료 오픈소스 앱",
+  "operatingSystem": "Android 13+",
+  "applicationCategory": "UtilitiesApplication",
+  "url": "https://seyong.me/dundun/",
+  "downloadUrl": "https://github.com/ohseyong/dundun/releases/latest",
+  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+  "inLanguage": ["ko", "en", "ja", "zh", "es", "pt", "fr", "de", "ru", "vi", "id"],
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "핫스팟을 써도 테더링(공유) 데이터가 줄지 않나요?",
+     "acceptedAnswer": {"@type": "Answer", "text": "그럴 가능성이 큽니다. 핫스팟 트래픽이 테더링 전용 APN 대신 일반 데이터와 같은 APN으로 나가기 때문입니다. 다만 통신사가 다른 방법으로 테더링을 가려내면 공유 데이터로 잡히거나 막힐 수 있고, 공유 데이터 대신 일반 데이터를 쓰는 것이라 공짜가 되는 건 아닙니다."}},
+    {"@type": "Question", "name": "어떤 폰에서 되나요?",
+     "acceptedAnswer": {"@type": "Answer", "text": "안드로이드 13 이상 갤럭시(One UI 7 이상)를 기준으로 만들었습니다. 설정 중에 Wi‑Fi 연결이 필요하며, 인터넷이 안 되는 Wi‑Fi도 됩니다."}},
+    {"@type": "Question", "name": "원래대로 되돌릴 수 있나요?",
+     "acceptedAnswer": {"@type": "Answer", "text": "네. 앱의 '원래대로 되돌리기'를 누르면 APN 타입과 기본 APN을 처음 상태로 돌려놓습니다."}},
+    {"@type": "Question", "name": "PC나 Shizuku가 필요한가요?",
+     "acceptedAnswer": {"@type": "Answer", "text": "아니요. 앱이 폰의 무선 디버깅에 직접 연결합니다. 처음 한 번 알림에 6자리 페어링 코드를 넣으면 됩니다."}},
+    {"@type": "Question", "name": "안전한가요?",
+     "acceptedAnswer": {"@type": "Answer", "text": "소스가 GitHub에 모두 공개돼 있습니다. 앱이 인터넷에 접속하는 곳은 업데이트 확인용 GitHub뿐이고 개인 정보는 보내지 않습니다. 업데이트도 같은 키로 서명된 파일만 설치합니다."}}
+  ]
+}
+</script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/dundun/">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12,11c-1.1,0 -2,0.9 -2,2s0.9,2 2,2 2,-0.9 2,-2 -0.9,-2 -2,-2zM18,13c0,-3.31 -2.69,-6 -6,-6s-6,2.69 -6,6c0,2.22 1.21,4.15 3,5.19l1,-1.74c-1.19,-0.7 -2,-1.97 -2,-3.45 0,-2.21 1.79,-4 4,-4s4,1.79 4,4c0,1.48 -0.81,2.75 -2,3.45l1,1.74c1.79,-1.04 3,-2.97 3,-5.19zM12,3C6.48,3 2,7.48 2,13c0,3.7 2.01,6.92 4.99,8.65l1,-1.73C5.61,18.53 4,15.96 4,13c0,-4.42 3.58,-8 8,-8s8,3.58 8,8c0,2.96 -1.61,5.53 -4,6.92l1,1.73c2.99,-1.73 5,-4.95 5,-8.65 0,-5.52 -4.48,-10 -10,-10z"/></svg>
+      던던
+    </a>
+    <a class="lang" href="/dundun/en/" hreflang="en">English</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <h1>갤럭시 테더링 제한,<br>앱 하나로 해결</h1>
+    <p>데이터를 다 써서 핫스팟이 막혔을 때 APN을 설정해 주는 무료 오픈소스 앱입니다. PC, 루팅, Shizuku 없이 폰 하나로 끝납니다.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/ohseyong/dundun/releases/latest">APK 받기</a>
+      <a class="btn ghost" href="https://github.com/ohseyong/dundun">GitHub에서 보기</a>
+    </div>
+    <p class="meta">안드로이드 13 이상 · 갤럭시 One UI 7 이상 · 무료 · Apache 2.0</p>
+  </div>
+
+  <div class="shots">
+    <figure><img src="/dundun/img/ko-steps.webp" width="480" height="720" alt="던던 설정 단계 화면" loading="lazy"><figcaption>네 단계만 따라 하면 끝</figcaption></figure>
+    <figure><img src="/dundun/img/ko-code.webp" width="480" height="686" alt="페어링 창 위에 떠 있는 코드 입력 알림" loading="lazy"><figcaption>코드는 알림에서 바로 입력</figcaption></figure>
+    <figure><img src="/dundun/img/ko-done.webp" width="480" height="907" alt="적용 완료와 적용한 APN 정보" loading="lazy"><figcaption>무엇이 바뀌었는지 한눈에</figcaption></figure>
+  </div>
+
+  <section>
+    <h2>이럴 때 쓰세요</h2>
+    <ul class="list card">
+      <li><b>데이터를 다 쓰니 핫스팟이 막혔을 때</b><span>속도 제한이 걸린 뒤 노트북이나 태블릿을 핫스팟에 연결할 수 없는 경우</span></li>
+      <li><b>알뜰폰에서 핫스팟이 안 될 때</b><span>핫스팟은 켜지는데 연결한 기기에서 인터넷이 안 되는 경우</span></li>
+      <li><b>예전 방법이 너무 복잡했을 때</b><span>DunUnlocker와 Shizuku를 같이 깔고 여러 화면을 오가던 과정을 앱 하나로 줄였습니다</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>사용 방법</h2>
+    <ol class="list card steps">
+      <li><div><b>개발자 옵션 켜기</b><span>앱의 [휴대전화 정보 열기]를 누르고 소프트웨어 정보에서 빌드번호를 7번 누릅니다.</span></div></li>
+      <li><div><b>무선 디버깅 켜기</b><span>[무선 디버깅 열기]를 누르고 켭니다. 묻는 창이 뜨면 허용을 누릅니다.</span></div></li>
+      <li><div><b>6자리 코드 입력</b><span>[코드 입력 시작]을 누르고 '페어링 코드로 기기 페어링'을 띄운 뒤, 위에 뜬 알림에 숫자를 넣습니다.</span></div></li>
+      <li><div><b>적용</b><span>앱이 지금 쓰는 APN에 dun을 더하고 무선 디버깅을 끕니다. '적용 완료'가 뜨면 핫스팟을 켜면 됩니다.</span></div></li>
+    </ol>
+    <p class="note">처음 한 번만 하면 됩니다. 다시 적용하거나 되돌릴 때는 무선 디버깅만 켜고 버튼을 누르면 됩니다.</p>
+  </section>
+
+  <section>
+    <h2>기능</h2>
+    <ul class="list card">
+      <li><b>통신사 자동</b><span>지금 쓰는 APN을 그대로 복사해 dun만 더합니다. 통신사나 알뜰폰을 고를 필요가 없습니다.</span></li>
+      <li><b>지금 상태 표시</b><span>실제로 적용돼 있는지 맨 위에 보여 주고, 통신사 설정이 바뀌어 풀리면 알려 줍니다.</span></li>
+      <li><b>원래대로 되돌리기</b><span>버튼 하나로 APN을 처음 상태로 돌립니다.</span></li>
+      <li><b>자동 업데이트</b><span>새 버전이 나오면 GitHub에서 받아 설치합니다. 같은 키로 서명된 파일만 설치합니다.</span></li>
+      <li><b>12개 언어</b><span>한국어, 영어, 일본어, 중국어(간체·번체), 스페인어, 포르투갈어, 프랑스어, 독일어, 러시아어, 베트남어, 인도네시아어</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>자주 묻는 질문</h2>
+    <div class="card">
+      <details><summary>핫스팟을 써도 테더링(공유) 데이터가 줄지 않나요?</summary><p>그럴 가능성이 큽니다. 핫스팟 트래픽이 테더링 전용 APN 대신 일반 데이터와 같은 APN으로 나가기 때문입니다. 다만 통신사가 다른 방법으로 테더링을 가려내면 공유 데이터로 잡히거나 막힐 수 있고, 공유 데이터 대신 일반 데이터를 쓰는 것이라 공짜가 되는 건 아닙니다. 처음엔 조금 써 본 뒤 통신사 앱에서 사용량을 확인해 보세요.</p></details>
+      <details><summary>어떤 폰에서 되나요?</summary><p>안드로이드 13 이상 갤럭시(One UI 7 이상)를 기준으로 만들었습니다. 설정 중에 Wi‑Fi 연결이 필요하며, 인터넷이 안 되는 Wi‑Fi도 됩니다.</p></details>
+      <details><summary>원래대로 되돌릴 수 있나요?</summary><p>네. 앱의 '원래대로 되돌리기'를 누르면 APN 타입과 기본 APN을 처음 상태로 돌려놓습니다.</p></details>
+      <details><summary>PC나 Shizuku가 필요한가요?</summary><p>아니요. 앱이 폰의 무선 디버깅에 직접 연결합니다. 처음 한 번 알림에 6자리 페어링 코드를 넣으면 됩니다.</p></details>
+      <details><summary>안전한가요?</summary><p>소스가 GitHub에 모두 공개돼 있습니다. 앱이 인터넷에 접속하는 곳은 업데이트 확인용 GitHub뿐이고 개인 정보는 보내지 않습니다. 업데이트도 같은 키로 서명된 파일만 설치합니다.</p></details>
+    </div>
+    <p class="note">통신사 약관에 따라 테더링 제한을 우회하면 회선 이용이 제한될 수 있습니다. 쓰는 사람이 판단해 주세요.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>만든 곳: <a href="https://excelkospi.ai/?utm_source=dundun&amp;utm_medium=web&amp;utm_campaign=landing">엑셀코스피</a></p>
+    <p><a href="https://github.com/ohseyong/dundun">GitHub</a> · <a href="https://github.com/ohseyong/dundun/issues">문의·제보</a> · <a href="/dundun/en/" hreflang="en">English</a></p>
+  </div>
+</footer>
+</body>
+</html>
