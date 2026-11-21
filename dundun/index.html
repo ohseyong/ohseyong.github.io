@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>갤럭시 테더링 제한 해결 앱 | 던던</title>
-<meta name="description" content="데이터를 다 써서 핫스팟이 막혔을 때, 알뜰폰에서 핫스팟이 안 될 때 APN을 설정해 주는 무료 오픈소스 앱입니다. 갤럭시 One UI 7 이상, PC·루팅·Shizuku 없이 폰 하나로 끝납니다.">
+<title>안드로이드 테더링 제한 해결 앱 | 던던</title>
+<meta name="description" content="데이터를 다 써서 핫스팟이 막혔을 때, 알뜰폰에서 핫스팟이 안 될 때 APN을 설정해 주는 무료 오픈소스 앱입니다. 갤럭시 등 안드로이드 13 이상에서 PC·루팅·Shizuku 없이 폰 하나로 끝납니다.">
 <link rel="canonical" href="https://seyong.me/dundun/">
 <link rel="alternate" hreflang="ko" href="https://seyong.me/dundun/">
 <link rel="alternate" hreflang="en" href="https://seyong.me/dundun/en/">
 <link rel="alternate" hreflang="x-default" href="https://seyong.me/dundun/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="던던">
-<meta property="og:title" content="갤럭시 테더링 제한 해결 앱 | 던던">
+<meta property="og:title" content="안드로이드 테더링 제한 해결 앱 | 던던">
 <meta property="og:description" content="핫스팟이 안 될 때 APN을 설정해 주는 무료 오픈소스 앱. PC·루팅·Shizuku 없이 폰 하나로.">
 <meta property="og:url" content="https://seyong.me/dundun/">
 <meta property="og:image" content="https://seyong.me/dundun/img/og-ko.png">
@@ -27,7 +27,7 @@
   "@type": "SoftwareApplication",
   "name": "던던",
   "alternateName": "DunDun",
-  "description": "핫스팟이 안 될 때 APN을 설정해 주는 갤럭시용 무료 오픈소스 앱",
+  "description": "핫스팟이 안 될 때 APN을 설정해 주는 안드로이드용 무료 오픈소스 앱",
   "operatingSystem": "Android 13+",
   "applicationCategory": "UtilitiesApplication",
   "url": "https://seyong.me/dundun/",
@@ -44,14 +44,14 @@
   "mainEntity": [
     {"@type": "Question", "name": "핫스팟을 써도 테더링(공유) 데이터가 줄지 않나요?",
      "acceptedAnswer": {"@type": "Answer", "text": "그럴 가능성이 큽니다. 핫스팟 트래픽이 테더링 전용 APN 대신 일반 데이터와 같은 APN으로 나가기 때문입니다. 다만 통신사가 다른 방법으로 테더링을 가려내면 공유 데이터로 잡히거나 막힐 수 있고, 공유 데이터 대신 일반 데이터를 쓰는 것이라 공짜가 되는 건 아닙니다."}},
-    {"@type": "Question", "name": "어떤 폰에서 되나요?",
-     "acceptedAnswer": {"@type": "Answer", "text": "안드로이드 13 이상 갤럭시(One UI 7 이상)를 기준으로 만들었습니다. 설정 중에 Wi‑Fi 연결이 필요하며, 인터넷이 안 되는 Wi‑Fi도 됩니다."}},
+    {"@type": "Question", "name": "어떤 폰에서 되나요? 갤럭시만 되나요?",
+     "acceptedAnswer": {"@type": "Answer", "text": "안드로이드 13 이상 폰이면 됩니다. 갤럭시(One UI 7 이상)에서 많이 겪는 문제라 갤럭시를 먼저 생각하고 만들었고, 기능은 안드로이드 표준이라 다른 제조사 폰에서도 같은 방식으로 동작합니다. 설정 중에 Wi‑Fi 연결이 필요하며, 인터넷이 안 되는 Wi‑Fi도 됩니다."}},
     {"@type": "Question", "name": "원래대로 되돌릴 수 있나요?",
      "acceptedAnswer": {"@type": "Answer", "text": "네. 앱의 '원래대로 되돌리기'를 누르면 APN 타입과 기본 APN을 처음 상태로 돌려놓습니다."}},
     {"@type": "Question", "name": "PC나 Shizuku가 필요한가요?",
      "acceptedAnswer": {"@type": "Answer", "text": "아니요. 앱이 폰의 무선 디버깅에 직접 연결합니다. 처음 한 번 알림에 6자리 페어링 코드를 넣으면 됩니다."}},
     {"@type": "Question", "name": "안전한가요?",
-     "acceptedAnswer": {"@type": "Answer", "text": "소스가 GitHub에 모두 공개돼 있습니다. 앱이 인터넷에 접속하는 곳은 업데이트 확인용 GitHub뿐이고 개인 정보는 보내지 않습니다. 업데이트도 같은 키로 서명된 파일만 설치합니다."}}
+     "acceptedAnswer": {"@type": "Answer", "text": "네. 소스가 GitHub에 모두 공개돼 있고, 서버·광고·분석 도구가 없어 개인 정보를 모으지 않습니다. 앱이 하는 일은 APN에 dun을 더하는 것 하나이고, 끝나면 무선 디버깅을 바로 끕니다. 자세한 내용은 이 페이지의 '안전' 항목에 있습니다."}}
   ]
 }
 </script>
@@ -69,13 +69,13 @@
 
 <main class="wrap">
   <div class="hero">
-    <h1>갤럭시 테더링 제한,<br>앱 하나로 해결</h1>
+    <h1>안드로이드 테더링 제한,<br>앱 하나로 해결</h1>
     <p>데이터를 다 써서 핫스팟이 막혔을 때 APN을 설정해 주는 무료 오픈소스 앱입니다. PC, 루팅, Shizuku 없이 폰 하나로 끝납니다.</p>
     <div class="cta">
       <a class="btn primary" href="https://github.com/ohseyong/dundun/releases/latest">APK 받기</a>
       <a class="btn ghost" href="https://github.com/ohseyong/dundun">GitHub에서 보기</a>
     </div>
-    <p class="meta">안드로이드 13 이상 · 갤럭시 One UI 7 이상 · 무료 · Apache 2.0</p>
+    <p class="meta">안드로이드 13 이상 · 갤럭시 등 · 무료 · 오픈소스 · 개인 정보 수집 없음</p>
   </div>
 
   <div class="shots">
@@ -115,14 +115,38 @@
     </ul>
   </section>
 
+  <section id="safety">
+    <h2>안전</h2>
+    <ul class="list card">
+      <li><b>소스를 전부 공개합니다</b><span>모든 코드가 <a href="https://github.com/ohseyong/dundun">GitHub</a>에 있습니다. 누구나 읽어 보고 직접 빌드할 수 있습니다.</span></li>
+      <li><b>개인 정보를 모으지 않습니다</b><span>서버도 광고도 분석 도구도 없습니다. 앱이 인터넷으로 접속하는 곳은 새 버전 확인용 GitHub 하나뿐입니다.</span></li>
+      <li><b>하는 일은 APN 설정 하나입니다</b><span>무선 디버깅 연결은 지금 쓰는 APN에 dun을 더하는 데만 쓰고, 끝나면 무선 디버깅을 바로 끕니다. 루팅도 필요 없습니다.</span></li>
+      <li><b>언제든 되돌릴 수 있습니다</b><span>'원래대로 되돌리기'를 누르면 APN 타입과 기본 APN이 처음 상태로 돌아갑니다.</span></li>
+      <li><b>서명을 확인하고 설치합니다</b><span>모든 버전은 같은 키로 서명합니다. 자동 업데이트도 이 키로 서명된 파일만 설치합니다. 서명 인증서 SHA-256: <code>4B:4B:E3:6B:A7:5E:D7:EA:5D:86:2D:23:8D:FC:C0:7A:10:0E:57:5C:19:49:75:05:D1:12:55:F9:17:F0:C1:66</code></span></li>
+    </ul>
+
+    <h3 class="sub">요청하는 권한</h3>
+    <ul class="list card perms">
+      <li><b>인터넷</b><span>GitHub에서 새 버전 확인·받기, 폰 안의 무선 디버깅에 연결</span></li>
+      <li><b>네트워크·Wi‑Fi 상태 보기</b><span>Wi‑Fi에 연결됐는지, 지금 적용돼 있는지 확인</span></li>
+      <li><b>Wi‑Fi 멀티캐스트</b><span>폰 안에서 무선 디버깅 주소 찾기</span></li>
+      <li><b>알림·전체 화면 알림</b><span>페어링 코드를 넣는 알림을 위쪽에 띄워 두기</span></li>
+      <li><b>포그라운드 서비스</b><span>코드를 넣고 적용하는 동안 앱이 꺼지지 않게</span></li>
+      <li><b>앱 설치 요청</b><span>GitHub에서 받은 새 버전 설치</span></li>
+      <li><b>절전 해제·부팅 완료</b><span>하루 한 번 업데이트 확인 예약</span></li>
+    </ul>
+    <p class="note">연락처, 위치, 사진·파일, 전화, 카메라, 마이크 권한은 요청하지 않습니다.</p>
+    <p class="note">무선 디버깅은 켜져 있는 동안 폰에 강한 권한을 여는 기능입니다. 던던은 일이 끝나면 자동으로 끄지만, 직접 켰다면 쓰고 나서 꺼 두세요. 무선 디버깅 설정의 '페어링된 기기'에 DunDun이 남는데, 다시 적용하거나 되돌릴 일이 없으면 지워도 됩니다.</p>
+  </section>
+
   <section>
     <h2>자주 묻는 질문</h2>
     <div class="card">
       <details><summary>핫스팟을 써도 테더링(공유) 데이터가 줄지 않나요?</summary><p>그럴 가능성이 큽니다. 핫스팟 트래픽이 테더링 전용 APN 대신 일반 데이터와 같은 APN으로 나가기 때문입니다. 다만 통신사가 다른 방법으로 테더링을 가려내면 공유 데이터로 잡히거나 막힐 수 있고, 공유 데이터 대신 일반 데이터를 쓰는 것이라 공짜가 되는 건 아닙니다. 처음엔 조금 써 본 뒤 통신사 앱에서 사용량을 확인해 보세요.</p></details>
-      <details><summary>어떤 폰에서 되나요?</summary><p>안드로이드 13 이상 갤럭시(One UI 7 이상)를 기준으로 만들었습니다. 설정 중에 Wi‑Fi 연결이 필요하며, 인터넷이 안 되는 Wi‑Fi도 됩니다.</p></details>
+      <details><summary>어떤 폰에서 되나요? 갤럭시만 되나요?</summary><p>안드로이드 13 이상 폰이면 됩니다. 갤럭시(One UI 7 이상)에서 많이 겪는 문제라 갤럭시를 먼저 생각하고 만들었고, 기능은 안드로이드 표준이라 다른 제조사 폰에서도 같은 방식으로 동작합니다. 설정 중에 Wi‑Fi 연결이 필요하며, 인터넷이 안 되는 Wi‑Fi도 됩니다.</p></details>
       <details><summary>원래대로 되돌릴 수 있나요?</summary><p>네. 앱의 '원래대로 되돌리기'를 누르면 APN 타입과 기본 APN을 처음 상태로 돌려놓습니다.</p></details>
       <details><summary>PC나 Shizuku가 필요한가요?</summary><p>아니요. 앱이 폰의 무선 디버깅에 직접 연결합니다. 처음 한 번 알림에 6자리 페어링 코드를 넣으면 됩니다.</p></details>
-      <details><summary>안전한가요?</summary><p>소스가 GitHub에 모두 공개돼 있습니다. 앱이 인터넷에 접속하는 곳은 업데이트 확인용 GitHub뿐이고 개인 정보는 보내지 않습니다. 업데이트도 같은 키로 서명된 파일만 설치합니다.</p></details>
+      <details><summary>안전한가요?</summary><p>네. 소스가 GitHub에 모두 공개돼 있고, 서버·광고·분석 도구가 없어 개인 정보를 모으지 않습니다. 앱이 하는 일은 APN에 dun을 더하는 것 하나이고, 끝나면 무선 디버깅을 바로 끕니다. 자세한 내용은 이 페이지의 '안전' 항목에 있습니다.</p></details>
     </div>
     <p class="note">통신사 약관에 따라 테더링 제한을 우회하면 회선 이용이 제한될 수 있습니다. 쓰는 사람이 판단해 주세요.</p>
   </section>

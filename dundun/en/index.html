@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fix Galaxy Tethering Limits | DunDun</title>
-<meta name="description" content="A free open-source app that sets up your APN when your hotspot is blocked after you use up your data, or doesn't work on an MVNO plan. For Samsung Galaxy with One UI 7 or later. No PC, root, or Shizuku.">
+<title>Fix Android Tethering Limits | DunDun</title>
+<meta name="description" content="A free open-source app that sets up your APN when your hotspot is blocked after you use up your data, or doesn't work on an MVNO plan. For Android 13 or later, including Samsung Galaxy. No PC, root, or Shizuku.">
 <link rel="canonical" href="https://seyong.me/dundun/en/">
 <link rel="alternate" hreflang="ko" href="https://seyong.me/dundun/">
 <link rel="alternate" hreflang="en" href="https://seyong.me/dundun/en/">
 <link rel="alternate" hreflang="x-default" href="https://seyong.me/dundun/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="DunDun">
-<meta property="og:title" content="Fix Galaxy Tethering Limits | DunDun">
+<meta property="og:title" content="Fix Android Tethering Limits | DunDun">
 <meta property="og:description" content="Sets up your APN when your hotspot won't work. Free and open source. No PC, root, or Shizuku.">
 <meta property="og:url" content="https://seyong.me/dundun/en/">
 <meta property="og:image" content="https://seyong.me/dundun/img/og-en.png">
@@ -26,7 +26,7 @@
  "@type": "SoftwareApplication",
  "name": "DunDun",
  "alternateName": "던던",
- "description": "Free open-source Galaxy app that sets up your APN when your hotspot won't work",
+ "description": "Free open-source Android app that sets up your APN when your hotspot won't work",
  "operatingSystem": "Android 13+",
  "applicationCategory": "UtilitiesApplication",
  "url": "https://seyong.me/dundun/en/",
@@ -54,10 +54,10 @@
   },
   {
    "@type": "Question",
-   "name": "Which phones does it work on?",
+   "name": "Which phones does it work on? Only Galaxy?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "It's made for Samsung Galaxy phones on Android 13 or later (One UI 7 or later). You need Wi-Fi during setup; Wi-Fi without internet works too."
+    "text": "Any phone on Android 13 or later. It was built with Galaxy (One UI 7+) in mind because that's where the problem is common, but it uses standard Android features, so it works the same way on other brands. You need Wi-Fi during setup; Wi-Fi without internet works too."
    }
   },
   {
@@ -81,7 +81,7 @@
    "name": "Is it safe?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "All source code is on GitHub. The only place the app connects to is GitHub, for update checks, and it sends no personal data. Updates only install if signed with the same key."
+    "text": "Yes. All source code is on GitHub, and there is no server, ads, or analytics, so it collects no personal data. The app does one thing: add dun to your APN. It turns wireless debugging off when done. See the Safety section on this page."
    }
   }
  ]
@@ -101,13 +101,13 @@
 
 <main class="wrap">
   <div class="hero">
-    <h1>Galaxy tethering limits,<br>fixed with one app</h1>
+    <h1>Android tethering limits,<br>fixed with one app</h1>
     <p>A free open-source app that sets up your APN when your hotspot is blocked after you use up your data. No PC, root, or Shizuku. Just your phone.</p>
     <div class="cta">
       <a class="btn primary" href="https://github.com/ohseyong/dundun/releases/latest">Download APK</a>
       <a class="btn ghost" href="https://github.com/ohseyong/dundun">View on GitHub</a>
     </div>
-    <p class="meta">Android 13+ · Galaxy One UI 7+ · Free · Apache 2.0</p>
+    <p class="meta">Android 13+ · Galaxy and more · Free · Open source · No data collected</p>
   </div>
 
   <div class="shots">
@@ -147,14 +147,38 @@
     </ul>
   </section>
 
+  <section id="safety">
+    <h2>Safety</h2>
+    <ul class="list card">
+      <li><b>Fully open source</b><span>All code is on <a href="https://github.com/ohseyong/dundun">GitHub</a>. Anyone can read it and build it.</span></li>
+      <li><b>Collects no personal data</b><span>No server, no ads, no analytics. The only place the app connects to is GitHub, to check for new versions.</span></li>
+      <li><b>Does one thing</b><span>The wireless debugging connection is used only to add dun to your current APN, and wireless debugging is turned off when done. No root needed.</span></li>
+      <li><b>Undo any time</b><span>Restore original puts the APN type and default APN back.</span></li>
+      <li><b>Signature checked</b><span>Every version is signed with the same key, and auto update only installs files signed with it. Signing certificate SHA-256: <code>4B:4B:E3:6B:A7:5E:D7:EA:5D:86:2D:23:8D:FC:C0:7A:10:0E:57:5C:19:49:75:05:D1:12:55:F9:17:F0:C1:66</code></span></li>
+    </ul>
+
+    <h3 class="sub">Permissions</h3>
+    <ul class="list card perms">
+      <li><b>Internet</b><span>Check and download new versions from GitHub; connect to wireless debugging on the phone</span></li>
+      <li><b>Network and Wi-Fi state</b><span>Check Wi-Fi and whether it's applied right now</span></li>
+      <li><b>Wi-Fi multicast</b><span>Find the wireless debugging address on the phone</span></li>
+      <li><b>Notifications</b><span>Keep the pairing code notification at the top</span></li>
+      <li><b>Foreground service</b><span>Keep the app running while you enter the code and apply</span></li>
+      <li><b>Install packages</b><span>Install new versions downloaded from GitHub</span></li>
+      <li><b>Wake lock, boot completed</b><span>Schedule the daily update check</span></li>
+    </ul>
+    <p class="note">No contacts, location, photos/files, phone, camera, or microphone permissions.</p>
+    <p class="note">Wireless debugging opens powerful access while it's on. DunDun turns it off when done, but if you turned it on yourself, turn it off afterwards. DunDun stays under Paired devices in wireless debugging settings; you can remove it if you won't apply or restore again.</p>
+  </section>
+
   <section>
     <h2>FAQ</h2>
     <div class="card">
       <details><summary>Does hotspot use still eat into my tethering/sharing allowance?</summary><p>Probably not. Hotspot traffic goes out through the same APN as normal data instead of a tethering APN. It isn't guaranteed: if your carrier detects tethering another way, it may still count it or block it. It also uses your normal data instead, so it isn't free.</p></details>
-      <details><summary>Which phones does it work on?</summary><p>It's made for Samsung Galaxy phones on Android 13 or later (One UI 7 or later). You need Wi-Fi during setup; Wi-Fi without internet works too.</p></details>
+      <details><summary>Which phones does it work on? Only Galaxy?</summary><p>Any phone on Android 13 or later. It was built with Galaxy (One UI 7+) in mind because that's where the problem is common, but it uses standard Android features, so it works the same way on other brands. You need Wi-Fi during setup; Wi-Fi without internet works too.</p></details>
       <details><summary>Can I undo it?</summary><p>Yes. Tap Restore original in the app to put the APN type and default APN back.</p></details>
       <details><summary>Do I need a PC or Shizuku?</summary><p>No. The app connects to the phone's wireless debugging itself. You enter a 6-digit pairing code in a notification once.</p></details>
-      <details><summary>Is it safe?</summary><p>All source code is on GitHub. The only place the app connects to is GitHub, for update checks, and it sends no personal data. Updates only install if signed with the same key.</p></details>
+      <details><summary>Is it safe?</summary><p>Yes. All source code is on GitHub, and there is no server, ads, or analytics, so it collects no personal data. The app does one thing: add dun to your APN. It turns wireless debugging off when done. See the Safety section on this page.</p></details>
     </div>
     <p class="note">Getting around tethering limits may break your carrier's terms, and your line could be restricted. Use it at your own judgment.</p>
   </section>

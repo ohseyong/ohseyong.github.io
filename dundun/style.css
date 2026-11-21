@@ -99,3 +99,9 @@ footer p { margin: 6px 0; }
   .shots figure { scroll-snap-align: start; }
   .btn { flex: 1 1 auto; }
 }
+
+section h3.sub { font-size: 18px; margin: 24px 0 12px; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; word-break: break-all; }
+.perms li { display: grid; grid-template-columns: 10.5em 1fr; column-gap: 16px; }
+.perms li b { margin: 0; }
+@media (max-width: 560px) { .perms li { grid-template-columns: 1fr; } .perms li b { margin-bottom: 2px; } }
