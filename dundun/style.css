@@ -117,3 +117,6 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1
 .promo-item span { color: var(--muted); font-size: 15px; line-height: 1.6; }
 .promo-item em { margin-top: auto; padding-top: 10px; font-style: normal; font-weight: 600; color: var(--accent); font-size: 15px; }
 @media (max-width: 560px) { .promo { grid-template-columns: 1fr; } }
+
+.plain li { font-size: 16px; line-height: 1.65; }
+section > p { margin: 0 0 12px; }

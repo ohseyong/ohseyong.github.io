@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lift the Tethering Data Cap | DunDun</title>
-<meta name="description" content="When your hotspot is blocked because the tethering data allowance ran out, DunDun lets it use your remaining regular data. It doesn't add data. Free and open source, for Android 13+ including Galaxy. No PC, root, or Shizuku.">
+<meta name="description" content="An Android app for when your hotspot stops working because you used up the tethering allowance. It adds dun to your APN so the hotspot runs on your remaining regular data. No root, PC, or Shizuku.">
 <link rel="canonical" href="https://seyong.me/dundun/en/">
 <link rel="alternate" hreflang="ko" href="https://seyong.me/dundun/">
 <link rel="alternate" hreflang="en" href="https://seyong.me/dundun/en/">
@@ -12,13 +12,14 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="DunDun">
 <meta property="og:title" content="Lift the Tethering Data Cap | DunDun">
-<meta property="og:description" content="Use your hotspot on your regular data after the tethering allowance runs out. Free and open source. No PC, root, or Shizuku.">
+<meta property="og:description" content="Keep using your hotspot on regular data after the tethering allowance runs out. No root, PC, or Shizuku.">
 <meta property="og:url" content="https://seyong.me/dundun/en/">
 <meta property="og:image" content="https://seyong.me/dundun/img/og-en.png">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f6f6f4">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%2316181d'/%3E%3Cpath fill='%23fff' transform='translate(3 2.5) scale(.75)' d='M12,11c-1.1,0 -2,0.9 -2,2s0.9,2 2,2 2,-0.9 2,-2 -0.9,-2 -2,-2zM18,13c0,-3.31 -2.69,-6 -6,-6s-6,2.69 -6,6c0,2.22 1.21,4.15 3,5.19l1,-1.74c-1.19,-0.7 -2,-1.97 -2,-3.45 0,-2.21 1.79,-4 4,-4s4,1.79 4,4c0,1.48 -0.81,2.75 -2,3.45l1,1.74c1.79,-1.04 3,-2.97 3,-5.19zM12,3C6.48,3 2,7.48 2,13c0,3.7 2.01,6.92 4.99,8.65l1,-1.73C5.61,18.53 4,15.96 4,13c0,-4.42 3.58,-8 8,-8s8,3.58 8,8c0,2.96 -1.61,5.53 -4,6.92l1,1.73c2.99,-1.73 5,-4.95 5,-8.65 0,-5.52 -4.48,-10 -10,-10z'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="/dundun/style.css">
 <script type="application/ld+json">
 {
@@ -26,7 +27,7 @@
  "@type": "SoftwareApplication",
  "name": "DunDun",
  "alternateName": "던던",
- "description": "Free open-source Android app that lets your hotspot use regular data after the tethering allowance runs out",
+ "description": "Android app that lets your hotspot use regular data after the tethering allowance runs out",
  "operatingSystem": "Android 13+",
  "applicationCategory": "UtilitiesApplication",
  "url": "https://seyong.me/dundun/en/",
@@ -44,29 +45,44 @@
  "@context": "https://schema.org",
  "@type": "FAQPage",
  "mainEntity": [
-  {"@type": "Question", "name": "Does this make tethering unlimited?", "acceptedAnswer": {"@type": "Answer", "text": "No. The hotspot uses your regular data instead of the tethering allowance. Once your regular data runs out, your plan's speed limit still applies to the hotspot."}},
   {
    "@type": "Question",
-   "name": "Does hotspot use still eat into my tethering/sharing allowance?",
+   "name": "Does this make tethering unlimited?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "Probably not. Hotspot traffic goes out through the same APN as normal data instead of a tethering APN. It isn't guaranteed: if your carrier detects tethering another way, it may still count it or block it. It also uses your normal data instead, so it isn't free."
+    "text": "No. The hotspot uses your regular data instead of the tethering allowance. Once your regular data runs out, your plan's slow speed applies to the hotspot too."
    }
   },
   {
    "@type": "Question",
-   "name": "Which phones does it work on? Only Galaxy?",
+   "name": "Will the tethering allowance stop going down?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "Any phone on Android 13 or later. It was built with Galaxy (One UI 7+) in mind because that's where the problem is common, but it uses standard Android features, so it works the same way on other brands. You need Wi-Fi during setup; Wi-Fi without internet works too."
+    "text": "Usually, yes. Carriers mostly tell hotspot traffic apart by APN, and now it goes out through the same APN as normal data. If your carrier detects tethering another way, it may still count it or block it. Try a little first and check in your carrier's app."
    }
   },
   {
    "@type": "Question",
-   "name": "Can I undo it?",
+   "name": "How is this different from NetShare?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "Yes. Tap Restore original in the app to put the APN type and default APN back."
+    "text": "NetShare shares the connection through a proxy, so you set up a proxy on the laptop and some programs can't log in. DunDun only changes the phone's APN and you use the normal hotspot, with nothing to set up on the laptop."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Only on Galaxy?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Any phone on Android 13 or later. Galaxy phones on One UI 7+ hit this problem a lot, so it was built with them in mind, but APNs are standard Android."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What about One UI or carrier updates?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "They can undo or block it. The top of the app shows whether it's applied, so re-apply if it was undone. If an update blocks it entirely, please open a GitHub issue."
    }
   },
   {
@@ -74,15 +90,15 @@
    "name": "Do I need a PC or Shizuku?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "No. The app connects to the phone's wireless debugging itself. You enter a 6-digit pairing code in a notification once."
+    "text": "No. The app connects to the phone's wireless debugging itself. You type a pairing code into a notification once."
    }
   },
   {
    "@type": "Question",
-   "name": "Is it safe?",
+   "name": "Can I undo it?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "Yes. All source code is on GitHub, and there is no server, ads, or analytics, so it collects no personal data. The app does one thing: add dun to your APN. It turns wireless debugging off when done. See the Safety section on this page."
+    "text": "Yes. Restore original puts the APN type and default APN back, on both SIMs if you have two."
    }
   }
  ]
@@ -103,63 +119,72 @@
 <main class="wrap">
   <div class="hero">
     <h1>Lift the tethering data cap<br>with one app</h1>
-    <p>When your hotspot is blocked because the tethering data allowance ran out, DunDun sets up your APN so the hotspot can use your remaining regular data. Free and open source. No PC, root, or Shizuku.</p>
-    <p class="callout">It doesn't give you unlimited data. The hotspot just uses your regular data instead of the tethering allowance; once your regular data runs out, your plan's speed limit still applies.</p>
+    <p>For when you still have data but your laptop can't use the hotspot because the tethering allowance ran out. DunDun adds dun to your APN so the hotspot goes out on your regular data. It all happens on the phone; you don't need a PC or root.</p>
+    <p class="callout">You don't get more data. Hotspot use comes out of your regular data, and once that runs out your plan's slow speed applies.</p>
     <div class="cta">
       <a class="btn primary" href="https://github.com/ohseyong/dundun/releases/latest">Download APK</a>
       <a class="btn ghost" href="https://github.com/ohseyong/dundun">View on GitHub</a>
     </div>
-    <p class="meta">Android 13+ · Galaxy and more · Free · Open source · No data collected</p>
+    <p class="meta">Works on Android 13 and up. Free and open source.</p>
   </div>
 
   <div class="shots">
-    <figure><img src="/dundun/img/en-steps.webp" width="480" height="720" alt="DunDun setup steps" loading="lazy"><figcaption>Four steps and done</figcaption></figure>
-    <figure><img src="/dundun/img/en-code.webp" width="480" height="686" alt="Code entry notification over the pairing dialog" loading="lazy"><figcaption>Enter the code from a notification</figcaption></figure>
-    <figure><img src="/dundun/img/en-done.webp" width="480" height="840" alt="Applied, with APN details" loading="lazy"><figcaption>See exactly what changed</figcaption></figure>
+    <figure><img src="/dundun/img/en-steps.webp" width="480" height="720" alt="Setup steps" loading="lazy"><figcaption>Four steps</figcaption></figure>
+    <figure><img src="/dundun/img/en-code.webp" width="480" height="686" alt="Code notification over the pairing dialog" loading="lazy"><figcaption>Type the code right in the notification</figcaption></figure>
+    <figure><img src="/dundun/img/en-done.webp" width="480" height="840" alt="Applied, with APN details" loading="lazy"><figcaption>Shows what changed</figcaption></figure>
   </div>
 
   <section>
     <h2>When to use it</h2>
-    <ul class="list card">
-      <li><b>Your tethering allowance ran out</b><span>You still have regular data, but laptops and tablets can't use your hotspot</span></li>
-      <li><b>You used up your data and got throttled</b><span>You want to keep using the hotspot at the reduced speed</span></li>
-      <li><b>Hotspot doesn't work on an MVNO plan</b><span>The hotspot turns on, but connected devices get no internet</span></li>
-      <li><b>The old way was too complicated</b><span>No more installing DunUnlocker and Shizuku and jumping between screens</span></li>
+    <ul class="list card plain">
+      <li>Your plan says unlimited, but the hotspot hits a tethering limit when you connect a laptop</li>
+      <li>Your carrier's app says the tethering allowance is used up</li>
+      <li>The hotspot turns on, but connected devices get no internet</li>
+      <li>You're throttled and still want to use the hotspot at that speed</li>
     </ul>
   </section>
 
   <section>
     <h2>How to use</h2>
     <ol class="list card steps">
-      <li><div><b>Turn on Developer options</b><span>Tap [Open About phone], then tap Build number 7 times in Software information.</span></div></li>
-      <li><div><b>Turn on Wireless debugging</b><span>Tap [Open Wireless debugging] and turn it on. If asked, tap Allow.</span></div></li>
-      <li><div><b>Enter the 6-digit code</b><span>Tap [Start code entry], open "Pair device with pairing code", then type the number into the notification at the top.</span></div></li>
-      <li><div><b>Apply</b><span>The app adds dun to your current APN and turns wireless debugging off. When you see "Applied", turn on your hotspot.</span></div></li>
+      <li><div><b>Turn on Developer options</b><span>Tap [Open About phone] in the app, then tap Build number 7 times.</span></div></li>
+      <li><div><b>Turn on Wireless debugging</b><span>Tap [Open Wireless debugging] and turn it on. If it asks, tap Allow. You need Wi-Fi, but it doesn't need internet.</span></div></li>
+      <li><div><b>Enter the code</b><span>Tap [Start code entry] and open “Pair device with pairing code”. Type the 6 digits into the notification at the top.</span></div></li>
+      <li><div><b>Done</b><span>The app changes the APN and turns wireless debugging off. When you see “Applied”, turn on your hotspot.</span></div></li>
     </ol>
-    <p class="note">You only do this once. To apply again or restore, just turn on wireless debugging and tap the button.</p>
+    <p class="note">You only do this once. To apply again or undo, just turn on wireless debugging and tap the button. No new code needed.</p>
   </section>
 
-  <section>
-    <h2>Features</h2>
-    <ul class="list card">
-      <li><b>Works with any carrier</b><span>Copies the APN you use now and only adds dun. No need to pick a carrier.</span></li>
-      <li><b>Live status</b><span>Shows at the top whether it's applied right now, and tells you if a carrier update undid it.</span></li>
-      <li><b>Restore</b><span>One tap puts the APN back the way it was.</span></li>
-      <li><b>Auto update</b><span>Gets new versions from GitHub and installs them. Only installs files signed with the same key.</span></li>
-      <li><b>12 languages</b><span>English, Korean, Japanese, Chinese (Simplified and Traditional), Spanish, Portuguese, French, German, Russian, Vietnamese, Indonesian</span></li>
+  <section id="dual-sim">
+    <h2>Two SIMs</h2>
+    <p>Both SIMs get dun and both use that APN as default, so switching your data SIM doesn't undo anything. Restore also works per SIM and leaves the other SIM alone.</p>
+  </section>
+
+  <section id="check-apn">
+    <h2>Checking the APN</h2>
+    <p>Go to Settings → Connections → Mobile networks → Access Point Names. The selected APN is the one DunDun changed; open it and the APN type ends with dun.</p>
+    <p>Depending on the phone, dun is added to your existing APN or a second APN with the same name shows up. If you can't tell them apart, look for dun in the type. Carrier APNs like “Tethering” are left as they are. The app's done screen also lists the APN name and type for each SIM.</p>
+  </section>
+
+  <section id="more">
+    <h2>Also</h2>
+    <ul class="list card plain">
+      <li>The top of the app shows whether it's applied right now, so you see it if a carrier update undoes it.</li>
+      <li>New versions download from GitHub and install on their own. You allow it once.</li>
+      <li>Available in 12 languages, including English, Korean, Japanese, Chinese and Spanish.</li>
     </ul>
   </section>
 
   <section id="safety">
     <h2>Safety</h2>
-    <ul class="list card">
-      <li><b>Fully open source</b><span>All code is on <a href="https://github.com/ohseyong/dundun">GitHub</a>. Anyone can read it and build it.</span></li>
-      <li><b>Collects no personal data</b><span>No server, no ads, no analytics. The only place the app connects to is GitHub, to check for new versions.</span></li>
-      <li><b>Does one thing</b><span>The wireless debugging connection is used only to add dun to your current APN, and wireless debugging is turned off when done. No root needed.</span></li>
-      <li><b>Undo any time</b><span>Restore original puts the APN type and default APN back.</span></li>
-      <li><b>Signature checked</b><span>Every version is signed with the same key, and auto update only installs files signed with it. Signing certificate SHA-256: <code>4B:4B:E3:6B:A7:5E:D7:EA:5D:86:2D:23:8D:FC:C0:7A:10:0E:57:5C:19:49:75:05:D1:12:55:F9:17:F0:C1:66</code></span></li>
+    <ul class="list card plain">
+      <li>All the code is on <a href="https://github.com/ohseyong/dundun">GitHub</a>. Read it or build it yourself.</li>
+      <li>There is no server behind it and no ads or analytics in it. The only thing the app talks to online is GitHub, when it checks for a new version.</li>
+      <li>Wireless debugging is used only to change the APN, and the app turns it off right after. Some banking apps won't open while it's on, so you don't have to go back and switch it off.</li>
+      <li>You can turn Developer options off afterwards and the APN change stays.</li>
+      <li>Restore original puts everything back.</li>
+      <li>Updates only install if signed with the same key. Signing certificate SHA-256: <code>4B:4B:E3:6B:A7:5E:D7:EA:5D:86:2D:23:8D:FC:C0:7A:10:0E:57:5C:19:49:75:05:D1:12:55:F9:17:F0:C1:66</code></li>
     </ul>
-
     <h3 class="sub">Permissions</h3>
     <ul class="list card perms">
       <li><b>Internet</b><span>Check and download new versions from GitHub; connect to wireless debugging on the phone</span></li>
@@ -167,33 +192,34 @@
       <li><b>Wi-Fi multicast</b><span>Find the wireless debugging address on the phone</span></li>
       <li><b>Notifications</b><span>Keep the pairing code notification at the top</span></li>
       <li><b>Foreground service</b><span>Keep the app running while you enter the code and apply</span></li>
-      <li><b>Install and update</b><span>Install new versions from GitHub. You confirm once; later updates install without asking</span></li>
+      <li><b>Install and update</b><span>Install new versions from GitHub. Asks only the first time</span></li>
       <li><b>Wake lock, boot completed</b><span>Schedule the daily update check</span></li>
     </ul>
-    <p class="note">No contacts, location, photos/files, phone, camera, or microphone permissions.</p>
-    <p class="note">Wireless debugging opens powerful access while it's on. DunDun turns it off when done, but if you turned it on yourself, turn it off afterwards. DunDun stays under Paired devices in wireless debugging settings; you can remove it if you won't apply or restore again.</p>
+    <p class="note">It doesn't ask for contacts, location, photos or files, phone, camera, or microphone. DunDun stays under Paired devices in wireless debugging; remove it if you won't apply or restore again.</p>
   </section>
 
   <section>
     <h2>FAQ</h2>
     <div class="card">
-      <details><summary>Does this make tethering unlimited?</summary><p>No. The hotspot uses your regular data instead of the tethering allowance. Once your regular data runs out, your plan's speed limit still applies to the hotspot.</p></details>
-      <details><summary>Does hotspot use still eat into my tethering/sharing allowance?</summary><p>Probably not. Hotspot traffic goes out through the same APN as normal data instead of a tethering APN. It isn't guaranteed: if your carrier detects tethering another way, it may still count it or block it. It also uses your normal data instead, so it isn't free.</p></details>
-      <details><summary>Which phones does it work on? Only Galaxy?</summary><p>Any phone on Android 13 or later. It was built with Galaxy (One UI 7+) in mind because that's where the problem is common, but it uses standard Android features, so it works the same way on other brands. You need Wi-Fi during setup; Wi-Fi without internet works too.</p></details>
-      <details><summary>Can I undo it?</summary><p>Yes. Tap Restore original in the app to put the APN type and default APN back.</p></details>
-      <details><summary>Do I need a PC or Shizuku?</summary><p>No. The app connects to the phone's wireless debugging itself. You enter a 6-digit pairing code in a notification once.</p></details>
-      <details><summary>Is it safe?</summary><p>Yes. All source code is on GitHub, and there is no server, ads, or analytics, so it collects no personal data. The app does one thing: add dun to your APN. It turns wireless debugging off when done. See the Safety section on this page.</p></details>
+      <details><summary>Does this make tethering unlimited?</summary><p>No. The hotspot uses your regular data instead of the tethering allowance. Once your regular data runs out, your plan's slow speed applies to the hotspot too.</p></details>
+      <details><summary>Will the tethering allowance stop going down?</summary><p>Usually, yes. Carriers mostly tell hotspot traffic apart by APN, and now it goes out through the same APN as normal data. If your carrier detects tethering another way, it may still count it or block it. Try a little first and check in your carrier's app.</p></details>
+      <details><summary>How is this different from NetShare?</summary><p>NetShare shares the connection through a proxy, so you set up a proxy on the laptop and some programs can't log in. DunDun only changes the phone's APN and you use the normal hotspot, with nothing to set up on the laptop.</p></details>
+      <details><summary>Only on Galaxy?</summary><p>Any phone on Android 13 or later. Galaxy phones on One UI 7+ hit this problem a lot, so it was built with them in mind, but APNs are standard Android.</p></details>
+      <details><summary>What about One UI or carrier updates?</summary><p>They can undo or block it. The top of the app shows whether it's applied, so re-apply if it was undone. If an update blocks it entirely, please open a GitHub issue.</p></details>
+      <details><summary>Do I need a PC or Shizuku?</summary><p>No. The app connects to the phone's wireless debugging itself. You type a pairing code into a notification once.</p></details>
+      <details><summary>Can I undo it?</summary><p>Yes. Restore original puts the APN type and default APN back, on both SIMs if you have two.</p></details>
     </div>
-    <p class="note">Using the hotspot beyond your tethering allowance may break your carrier's terms, and your line could be restricted. Use it at your own judgment.</p>
+    <p class="note">Using the hotspot past your tethering allowance may break your carrier's terms, and your line could be restricted.</p>
   </section>
+
   <section id="excelkospi">
-    <h2>Made by ExcelKOSPI</h2>
-    <p class="lead">DunDun is made by the maker of ExcelKOSPI. Two of its services that go well with it (in Korean):</p>
+    <h2>Also from the maker: ExcelKOSPI</h2>
+    <p class="lead">Services run by the person who made DunDun (in Korean).</p>
     <div class="promo">
       <a class="card promo-item" href="https://excelkospi.ai/mvno?utm_source=dundun&amp;utm_medium=web&amp;utm_campaign=landing_en_mvno">
         <span class="promo-emoji" aria-hidden="true">📶</span>
         <b>Korean MVNO plan comparison</b>
-        <span>If you keep running out of data, a better plan may help. It collects official MVNO plans every 6 hours and compares price, data, network and perks, including the price after discounts end.</span>
+        <span>If you keep running out of data, a different plan might be better. It collects official MVNO plans every 6 hours and compares price, data, network and perks, including the price after discounts end.</span>
         <em>Compare plans →</em>
       </a>
       <a class="card promo-item" href="https://excelkospi.ai/?utm_source=dundun&amp;utm_medium=web&amp;utm_campaign=landing_en_promo">
