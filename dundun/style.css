@@ -107,3 +107,13 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1
 @media (max-width: 560px) { .perms li { grid-template-columns: 1fr; } .perms li b { margin-bottom: 2px; } }
 
 .hero .callout { margin-top: 14px; padding: 12px 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); color: var(--text); font-size: 15px; line-height: 1.6; }
+
+.lead { margin: 0 0 16px; color: var(--muted); }
+.promo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.promo-item { display: flex; flex-direction: column; gap: 6px; padding: 20px; text-decoration: none; color: var(--text); }
+.promo-item:hover { border-color: var(--accent); }
+.promo-emoji { font-size: 26px; line-height: 1; }
+.promo-item b { font-size: 18px; margin-top: 6px; }
+.promo-item span { color: var(--muted); font-size: 15px; line-height: 1.6; }
+.promo-item em { margin-top: auto; padding-top: 10px; font-style: normal; font-weight: 600; color: var(--accent); font-size: 15px; }
+@media (max-width: 560px) { .promo { grid-template-columns: 1fr; } }
