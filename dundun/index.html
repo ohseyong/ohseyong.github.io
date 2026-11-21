@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>안드로이드 테더링 제한 해결 앱 | 던던</title>
-<meta name="description" content="데이터를 다 써서 핫스팟이 막혔을 때, 알뜰폰에서 핫스팟이 안 될 때 APN을 설정해 주는 무료 오픈소스 앱입니다. 갤럭시 등 안드로이드 13 이상에서 PC·루팅·Shizuku 없이 폰 하나로 끝납니다.">
+<title>공유데이터 제한 해제 앱 | DunDun</title>
+<meta name="description" content="공유데이터(테더링 데이터)를 다 써서 핫스팟이 막혔을 때, 남은 일반 데이터로 핫스팟을 쓰게 해 주는 무료 오픈소스 앱 DunDun(던던). 데이터가 늘어나는 건 아니고 일반 데이터를 씁니다. 갤럭시 등 안드로이드 13 이상, PC·루팅·Shizuku 없이.">
 <link rel="canonical" href="https://seyong.me/dundun/">
 <link rel="alternate" hreflang="ko" href="https://seyong.me/dundun/">
 <link rel="alternate" hreflang="en" href="https://seyong.me/dundun/en/">
 <link rel="alternate" hreflang="x-default" href="https://seyong.me/dundun/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="던던">
-<meta property="og:title" content="안드로이드 테더링 제한 해결 앱 | 던던">
-<meta property="og:description" content="핫스팟이 안 될 때 APN을 설정해 주는 무료 오픈소스 앱. PC·루팅·Shizuku 없이 폰 하나로.">
+<meta property="og:site_name" content="DunDun">
+<meta property="og:title" content="공유데이터 제한 해제 앱 | DunDun">
+<meta property="og:description" content="공유데이터를 다 써도 남은 일반 데이터로 핫스팟을 쓰게 해 주는 무료 오픈소스 앱. PC·루팅·Shizuku 없이 폰 하나로.">
 <meta property="og:url" content="https://seyong.me/dundun/">
 <meta property="og:image" content="https://seyong.me/dundun/img/og-ko.png">
 <meta property="og:locale" content="ko_KR">
@@ -25,9 +25,9 @@
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "던던",
-  "alternateName": "DunDun",
-  "description": "핫스팟이 안 될 때 APN을 설정해 주는 안드로이드용 무료 오픈소스 앱",
+  "name": "DunDun",
+  "alternateName": "던던",
+  "description": "공유데이터를 다 써도 남은 일반 데이터로 핫스팟을 쓰게 해 주는 안드로이드용 무료 오픈소스 앱",
   "operatingSystem": "Android 13+",
   "applicationCategory": "UtilitiesApplication",
   "url": "https://seyong.me/dundun/",
@@ -42,6 +42,8 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
+    {"@type": "Question", "name": "테더링을 무제한으로 쓸 수 있게 되나요?",
+     "acceptedAnswer": {"@type": "Answer", "text": "아니요. 핫스팟이 공유데이터 대신 일반 데이터를 쓰게 될 뿐입니다. 일반 데이터를 다 쓰면 요금제의 속도 제한이 그대로 걸리고, 그 속도로 핫스팟을 쓰게 됩니다."}},
     {"@type": "Question", "name": "핫스팟을 써도 테더링(공유) 데이터가 줄지 않나요?",
      "acceptedAnswer": {"@type": "Answer", "text": "그럴 가능성이 큽니다. 핫스팟 트래픽이 테더링 전용 APN 대신 일반 데이터와 같은 APN으로 나가기 때문입니다. 다만 통신사가 다른 방법으로 테더링을 가려내면 공유 데이터로 잡히거나 막힐 수 있고, 공유 데이터 대신 일반 데이터를 쓰는 것이라 공짜가 되는 건 아닙니다."}},
     {"@type": "Question", "name": "어떤 폰에서 되나요? 갤럭시만 되나요?",
@@ -61,7 +63,7 @@
   <div class="wrap">
     <a class="brand" href="/dundun/">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12,11c-1.1,0 -2,0.9 -2,2s0.9,2 2,2 2,-0.9 2,-2 -0.9,-2 -2,-2zM18,13c0,-3.31 -2.69,-6 -6,-6s-6,2.69 -6,6c0,2.22 1.21,4.15 3,5.19l1,-1.74c-1.19,-0.7 -2,-1.97 -2,-3.45 0,-2.21 1.79,-4 4,-4s4,1.79 4,4c0,1.48 -0.81,2.75 -2,3.45l1,1.74c1.79,-1.04 3,-2.97 3,-5.19zM12,3C6.48,3 2,7.48 2,13c0,3.7 2.01,6.92 4.99,8.65l1,-1.73C5.61,18.53 4,15.96 4,13c0,-4.42 3.58,-8 8,-8s8,3.58 8,8c0,2.96 -1.61,5.53 -4,6.92l1,1.73c2.99,-1.73 5,-4.95 5,-8.65 0,-5.52 -4.48,-10 -10,-10z"/></svg>
-      던던
+      DunDun
     </a>
     <a class="lang" href="/dundun/en/" hreflang="en">English</a>
   </div>
@@ -69,8 +71,9 @@
 
 <main class="wrap">
   <div class="hero">
-    <h1>안드로이드 테더링 제한,<br>앱 하나로 해결</h1>
-    <p>데이터를 다 써서 핫스팟이 막혔을 때 APN을 설정해 주는 무료 오픈소스 앱입니다. PC, 루팅, Shizuku 없이 폰 하나로 끝납니다.</p>
+    <h1>공유데이터 제한 해제,<br>앱 하나로</h1>
+    <p>공유데이터를 다 써서 핫스팟이 막혀도, 남은 일반 데이터로 핫스팟을 쓸 수 있게 APN을 설정해 주는 무료 오픈소스 앱 DunDun(던던)입니다. PC, 루팅, Shizuku 없이 폰 하나로 끝납니다.</p>
+    <p class="callout">데이터가 무한히 생기는 앱이 아닙니다. 핫스팟이 공유데이터 대신 일반 데이터를 쓰게 바꿀 뿐이라, 일반 데이터를 다 쓰면 요금제의 속도 제한이 그대로 걸립니다.</p>
     <div class="cta">
       <a class="btn primary" href="https://github.com/ohseyong/dundun/releases/latest">APK 받기</a>
       <a class="btn ghost" href="https://github.com/ohseyong/dundun">GitHub에서 보기</a>
@@ -79,15 +82,16 @@
   </div>
 
   <div class="shots">
-    <figure><img src="/dundun/img/ko-steps.webp" width="480" height="720" alt="던던 설정 단계 화면" loading="lazy"><figcaption>네 단계만 따라 하면 끝</figcaption></figure>
+    <figure><img src="/dundun/img/ko-steps.webp" width="480" height="720" alt="DunDun 설정 단계 화면" loading="lazy"><figcaption>네 단계만 따라 하면 끝</figcaption></figure>
     <figure><img src="/dundun/img/ko-code.webp" width="480" height="686" alt="페어링 창 위에 떠 있는 코드 입력 알림" loading="lazy"><figcaption>코드는 알림에서 바로 입력</figcaption></figure>
-    <figure><img src="/dundun/img/ko-done.webp" width="480" height="907" alt="적용 완료와 적용한 APN 정보" loading="lazy"><figcaption>무엇이 바뀌었는지 한눈에</figcaption></figure>
+    <figure><img src="/dundun/img/ko-done.webp" width="480" height="929" alt="적용 완료와 적용한 APN 정보" loading="lazy"><figcaption>무엇이 바뀌었는지 한눈에</figcaption></figure>
   </div>
 
   <section>
     <h2>이럴 때 쓰세요</h2>
     <ul class="list card">
-      <li><b>데이터를 다 쓰니 핫스팟이 막혔을 때</b><span>속도 제한이 걸린 뒤 노트북이나 태블릿을 핫스팟에 연결할 수 없는 경우</span></li>
+      <li><b>공유데이터를 다 써서 핫스팟이 막혔을 때</b><span>일반 데이터는 남았는데 공유데이터 한도가 끝나 노트북이나 태블릿을 핫스팟에 연결할 수 없는 경우</span></li>
+      <li><b>데이터를 다 써서 속도 제한이 걸린 뒤 핫스팟이 막혔을 때</b><span>제한된 속도라도 핫스팟으로 쓰고 싶은 경우</span></li>
       <li><b>알뜰폰에서 핫스팟이 안 될 때</b><span>핫스팟은 켜지는데 연결한 기기에서 인터넷이 안 되는 경우</span></li>
       <li><b>예전 방법이 너무 복잡했을 때</b><span>DunUnlocker와 Shizuku를 같이 깔고 여러 화면을 오가던 과정을 앱 하나로 줄였습니다</span></li>
     </ul>
@@ -136,19 +140,20 @@
       <li><b>절전 해제·부팅 완료</b><span>하루 한 번 업데이트 확인 예약</span></li>
     </ul>
     <p class="note">연락처, 위치, 사진·파일, 전화, 카메라, 마이크 권한은 요청하지 않습니다.</p>
-    <p class="note">무선 디버깅은 켜져 있는 동안 폰에 강한 권한을 여는 기능입니다. 던던은 일이 끝나면 자동으로 끄지만, 직접 켰다면 쓰고 나서 꺼 두세요. 무선 디버깅 설정의 '페어링된 기기'에 DunDun이 남는데, 다시 적용하거나 되돌릴 일이 없으면 지워도 됩니다.</p>
+    <p class="note">무선 디버깅은 켜져 있는 동안 폰에 강한 권한을 여는 기능입니다. DunDun은 일이 끝나면 자동으로 끄지만, 직접 켰다면 쓰고 나서 꺼 두세요. 무선 디버깅 설정의 '페어링된 기기'에 DunDun이 남는데, 다시 적용하거나 되돌릴 일이 없으면 지워도 됩니다.</p>
   </section>
 
   <section>
     <h2>자주 묻는 질문</h2>
     <div class="card">
+      <details><summary>테더링을 무제한으로 쓸 수 있게 되나요?</summary><p>아니요. 핫스팟이 공유데이터 대신 일반 데이터를 쓰게 될 뿐입니다. 일반 데이터를 다 쓰면 요금제의 속도 제한이 그대로 걸리고, 그 속도로 핫스팟을 쓰게 됩니다.</p></details>
       <details><summary>핫스팟을 써도 테더링(공유) 데이터가 줄지 않나요?</summary><p>그럴 가능성이 큽니다. 핫스팟 트래픽이 테더링 전용 APN 대신 일반 데이터와 같은 APN으로 나가기 때문입니다. 다만 통신사가 다른 방법으로 테더링을 가려내면 공유 데이터로 잡히거나 막힐 수 있고, 공유 데이터 대신 일반 데이터를 쓰는 것이라 공짜가 되는 건 아닙니다. 처음엔 조금 써 본 뒤 통신사 앱에서 사용량을 확인해 보세요.</p></details>
       <details><summary>어떤 폰에서 되나요? 갤럭시만 되나요?</summary><p>안드로이드 13 이상 폰이면 됩니다. 갤럭시(One UI 7 이상)에서 많이 겪는 문제라 갤럭시를 먼저 생각하고 만들었고, 기능은 안드로이드 표준이라 다른 제조사 폰에서도 같은 방식으로 동작합니다. 설정 중에 Wi‑Fi 연결이 필요하며, 인터넷이 안 되는 Wi‑Fi도 됩니다.</p></details>
       <details><summary>원래대로 되돌릴 수 있나요?</summary><p>네. 앱의 '원래대로 되돌리기'를 누르면 APN 타입과 기본 APN을 처음 상태로 돌려놓습니다.</p></details>
       <details><summary>PC나 Shizuku가 필요한가요?</summary><p>아니요. 앱이 폰의 무선 디버깅에 직접 연결합니다. 처음 한 번 알림에 6자리 페어링 코드를 넣으면 됩니다.</p></details>
       <details><summary>안전한가요?</summary><p>네. 소스가 GitHub에 모두 공개돼 있고, 서버·광고·분석 도구가 없어 개인 정보를 모으지 않습니다. 앱이 하는 일은 APN에 dun을 더하는 것 하나이고, 끝나면 무선 디버깅을 바로 끕니다. 자세한 내용은 이 페이지의 '안전' 항목에 있습니다.</p></details>
     </div>
-    <p class="note">통신사 약관에 따라 테더링 제한을 우회하면 회선 이용이 제한될 수 있습니다. 쓰는 사람이 판단해 주세요.</p>
+    <p class="note">공유데이터 한도를 넘어 핫스팟을 쓰면 통신사 약관에 어긋날 수 있고, 회선 이용이 제한될 수 있습니다. 쓰는 사람이 판단해 주세요.</p>
   </section>
 </main>
 

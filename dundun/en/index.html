@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fix Android Tethering Limits | DunDun</title>
-<meta name="description" content="A free open-source app that sets up your APN when your hotspot is blocked after you use up your data, or doesn't work on an MVNO plan. For Android 13 or later, including Samsung Galaxy. No PC, root, or Shizuku.">
+<title>Lift the Tethering Data Cap | DunDun</title>
+<meta name="description" content="When your hotspot is blocked because the tethering data allowance ran out, DunDun lets it use your remaining regular data. It doesn't add data. Free and open source, for Android 13+ including Galaxy. No PC, root, or Shizuku.">
 <link rel="canonical" href="https://seyong.me/dundun/en/">
 <link rel="alternate" hreflang="ko" href="https://seyong.me/dundun/">
 <link rel="alternate" hreflang="en" href="https://seyong.me/dundun/en/">
 <link rel="alternate" hreflang="x-default" href="https://seyong.me/dundun/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="DunDun">
-<meta property="og:title" content="Fix Android Tethering Limits | DunDun">
-<meta property="og:description" content="Sets up your APN when your hotspot won't work. Free and open source. No PC, root, or Shizuku.">
+<meta property="og:title" content="Lift the Tethering Data Cap | DunDun">
+<meta property="og:description" content="Use your hotspot on your regular data after the tethering allowance runs out. Free and open source. No PC, root, or Shizuku.">
 <meta property="og:url" content="https://seyong.me/dundun/en/">
 <meta property="og:image" content="https://seyong.me/dundun/img/og-en.png">
 <meta property="og:locale" content="en_US">
@@ -26,7 +26,7 @@
  "@type": "SoftwareApplication",
  "name": "DunDun",
  "alternateName": "던던",
- "description": "Free open-source Android app that sets up your APN when your hotspot won't work",
+ "description": "Free open-source Android app that lets your hotspot use regular data after the tethering allowance runs out",
  "operatingSystem": "Android 13+",
  "applicationCategory": "UtilitiesApplication",
  "url": "https://seyong.me/dundun/en/",
@@ -44,6 +44,7 @@
  "@context": "https://schema.org",
  "@type": "FAQPage",
  "mainEntity": [
+  {"@type": "Question", "name": "Does this make tethering unlimited?", "acceptedAnswer": {"@type": "Answer", "text": "No. The hotspot uses your regular data instead of the tethering allowance. Once your regular data runs out, your plan's speed limit still applies to the hotspot."}},
   {
    "@type": "Question",
    "name": "Does hotspot use still eat into my tethering/sharing allowance?",
@@ -101,8 +102,9 @@
 
 <main class="wrap">
   <div class="hero">
-    <h1>Android tethering limits,<br>fixed with one app</h1>
-    <p>A free open-source app that sets up your APN when your hotspot is blocked after you use up your data. No PC, root, or Shizuku. Just your phone.</p>
+    <h1>Lift the tethering data cap<br>with one app</h1>
+    <p>When your hotspot is blocked because the tethering data allowance ran out, DunDun sets up your APN so the hotspot can use your remaining regular data. Free and open source. No PC, root, or Shizuku.</p>
+    <p class="callout">It doesn't give you unlimited data. The hotspot just uses your regular data instead of the tethering allowance; once your regular data runs out, your plan's speed limit still applies.</p>
     <div class="cta">
       <a class="btn primary" href="https://github.com/ohseyong/dundun/releases/latest">Download APK</a>
       <a class="btn ghost" href="https://github.com/ohseyong/dundun">View on GitHub</a>
@@ -119,7 +121,8 @@
   <section>
     <h2>When to use it</h2>
     <ul class="list card">
-      <li><b>Your hotspot is blocked after using up your data</b><span>Once you're throttled, laptops and tablets can't use your hotspot</span></li>
+      <li><b>Your tethering allowance ran out</b><span>You still have regular data, but laptops and tablets can't use your hotspot</span></li>
+      <li><b>You used up your data and got throttled</b><span>You want to keep using the hotspot at the reduced speed</span></li>
       <li><b>Hotspot doesn't work on an MVNO plan</b><span>The hotspot turns on, but connected devices get no internet</span></li>
       <li><b>The old way was too complicated</b><span>No more installing DunUnlocker and Shizuku and jumping between screens</span></li>
     </ul>
@@ -174,13 +177,14 @@
   <section>
     <h2>FAQ</h2>
     <div class="card">
+      <details><summary>Does this make tethering unlimited?</summary><p>No. The hotspot uses your regular data instead of the tethering allowance. Once your regular data runs out, your plan's speed limit still applies to the hotspot.</p></details>
       <details><summary>Does hotspot use still eat into my tethering/sharing allowance?</summary><p>Probably not. Hotspot traffic goes out through the same APN as normal data instead of a tethering APN. It isn't guaranteed: if your carrier detects tethering another way, it may still count it or block it. It also uses your normal data instead, so it isn't free.</p></details>
       <details><summary>Which phones does it work on? Only Galaxy?</summary><p>Any phone on Android 13 or later. It was built with Galaxy (One UI 7+) in mind because that's where the problem is common, but it uses standard Android features, so it works the same way on other brands. You need Wi-Fi during setup; Wi-Fi without internet works too.</p></details>
       <details><summary>Can I undo it?</summary><p>Yes. Tap Restore original in the app to put the APN type and default APN back.</p></details>
       <details><summary>Do I need a PC or Shizuku?</summary><p>No. The app connects to the phone's wireless debugging itself. You enter a 6-digit pairing code in a notification once.</p></details>
       <details><summary>Is it safe?</summary><p>Yes. All source code is on GitHub, and there is no server, ads, or analytics, so it collects no personal data. The app does one thing: add dun to your APN. It turns wireless debugging off when done. See the Safety section on this page.</p></details>
     </div>
-    <p class="note">Getting around tethering limits may break your carrier's terms, and your line could be restricted. Use it at your own judgment.</p>
+    <p class="note">Using the hotspot beyond your tethering allowance may break your carrier's terms, and your line could be restricted. Use it at your own judgment.</p>
   </section>
 </main>
 
