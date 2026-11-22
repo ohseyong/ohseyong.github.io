@@ -120,3 +120,13 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1
 
 .plain li { font-size: 16px; line-height: 1.65; }
 section > p { margin: 0 0 12px; }
+
+.tut-group { margin-top: 26px; }
+.tut-group h3.sub { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; }
+.num { flex: none; width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--accent); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; }
+.tut-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
+figure.tut { margin: 0; }
+.tut img { display: block; width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); }
+.tut figcaption { margin-top: 8px; font-size: 15px; line-height: 1.55; color: var(--text); }
+@media (max-width: 760px) { .tut-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .tut-grid { grid-template-columns: 1fr; gap: 20px; } .tut img { max-width: 320px; } }
