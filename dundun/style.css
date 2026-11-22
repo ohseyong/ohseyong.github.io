@@ -51,7 +51,7 @@ header.top .wrap { display: flex; align-items: center; justify-content: space-be
 }
 .btn.primary { background: var(--accent); color: var(--accent-text); }
 .btn.ghost { border: 1px solid var(--line); color: var(--text); background: var(--surface); }
-.meta { margin-top: 16px; font-size: 14px; color: var(--muted); }
+.hero .meta { margin-top: 16px; font-size: 14px; color: var(--muted); }
 
 .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 8px 0 8px; align-items: start; }
 .shots figure { margin: 0; }
